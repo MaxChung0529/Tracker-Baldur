@@ -7,18 +7,139 @@
     tools:context=".Logs">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textSize="25dp"
-        android:text="@string/nav_bar_logs" />
 
     <Button
-        android:id="@+id/button"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:text="Button"
-        app:cornerRadius="50dp" />
+        android:id="@+id/addLog"
+        android:layout_width="59dp"
+        android:layout_height="67dp"
+        android:layout_gravity="bottom|end"
+        android:translationX="-15dp"
+        android:translationY="-15dp"
+        android:visibility="visible"
+        android:elevation="5dp"
+        android:translationZ="-2dp"
+        android:stateListAnimator="@null"
+        app:cornerRadius="20dp"
+        app:icon="@drawable/baseline_add_24"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        tools:visibility="visible" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+
+        />
+
+    <Button
+        android:id="@+id/search"
+        android:layout_width="46dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        app:icon="@drawable/baseline_find_in_page_24"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp" />
+
+    <Button
+        android:id="@+id/filter"
+        android:layout_width="46dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:visibility="visible"
+        app:icon="@drawable/baseline_filter_list_alt_24"
+        tools:visibility="visible"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp" />
+
+    <Button
+        android:id="@+id/sort"
+        android:layout_width="46dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:translationX="-46dp"
+        android:visibility="visible"
+        app:icon="@drawable/baseline_filter_list_24"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        tools:visibility="visible" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:orientation="horizontal"
+        android:translationY="45dp">
+
+
+        <Button
+            android:id="@+id/Apr15"
+            android:backgroundTint="#343434"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/date1"
+            android:textSize="10dp"
+            app:cornerRadius="0dp" />
+
+        <Button
+            android:id="@+id/Apr16"
+            android:backgroundTint="#343434"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/date2"
+            android:textSize="10dp"
+            app:cornerRadius="0dp" />
+
+        <Button
+            android:id="@+id/Apr17"
+            android:backgroundTint="#5c4792"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/date3"
+            android:textSize="10dp"
+            app:cornerRadius="0dp" />
+
+        <Button
+            android:id="@+id/Apr18"
+            android:backgroundTint="#343434"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/date4"
+            android:textSize="10dp"
+            app:cornerRadius="0dp" />
+
+        <Button
+            android:id="@+id/Apr19"
+            android:backgroundTint="#343434"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/date5"
+            android:textSize="10dp"
+            app:cornerRadius="0dp" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="631dp"
+        android:translationY="100dp"
+        tools:listitem="@layout/list_item"/>
 
 </FrameLayout>

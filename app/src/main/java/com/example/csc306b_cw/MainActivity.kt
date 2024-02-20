@@ -2,11 +2,14 @@ package com.example.csc306b_cw
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.csc306b_cw.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -19,7 +22,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         //setContentView(R.layout.activity_main_view)
         setContentView(binding.root)
+
         replaceFragment(Logs())
+
+
 
         binding.bottomNavMenu.setOnItemSelectedListener {
 

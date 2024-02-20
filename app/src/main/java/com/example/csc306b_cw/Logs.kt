@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,7 +36,29 @@ class Logs : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_logs, container, false)
+        val contentView = inflater.inflate(R.layout.fragment_logs, container,false)
+        val recyclerView = contentView.findViewById<RecyclerView>(R.id.recycler)
+
+        val dataList = populateList()
+        val adapter = ItemsAdapter(dataList)
+        recyclerView.adapter = adapter
+        val layoutManager = LinearLayoutManager(this.activity)
+        recyclerView.layoutManager = layoutManager
+
+        return contentView
+    }
+
+    private fun populateList() : ArrayList<LogsData> {
+
+        val list = ArrayList<LogsData>()
+
+        val data = LogsData()
+        data.activityName = "Reading"
+        data.activityTime = "7pm - 8pm"
+        list.add(data)
+
+
+        return list
     }
 
     companion object {
