@@ -140,6 +140,6 @@
         android:layout_width="match_parent"
         android:layout_height="631dp"
         android:translationY="100dp"
-        tools:listitem="@layout/list_item"/>
+        tools:listitem="@layout/list_items"/>
 
 </FrameLayout>

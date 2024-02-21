@@ -9,11 +9,21 @@
     <string name="nav_bar_goals">Goals</string>
     <string name="nav_bar_stopwatch">Stop Watch</string>
     <string name="nav_bar_settings">Settings</string>
+    <string name="activity">Activity</string>
+    <string name="time">Time</string>
+    <string name="detail_activity_category">Category:</string>
+    <string name="detail_time">Time:</string>
+    <string name="description">Description:</string>
+
+    <!--Dummy Data-->
     <string name="date1">Apr 15</string>
     <string name="date2">Apr 16</string>
     <string name="date3">Apr 17</string>
     <string name="date4">Apr 18</string>
     <string name="date5">Apr 19</string>
-    <string name="activity">Activity</string>
-    <string name="time">Time</string>
+    <string name="reading">Reading</string>
+    <string name="tmpTime">7 pm - 8 pm</string>
+    <string name="tmpDesc">Read the first two chapter of Percy Jackson first book</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

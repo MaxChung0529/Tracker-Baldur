@@ -1,13 +1,29 @@
 package com.example.csc306b_cw
 
 import android.text.Layout
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 
 class ItemsAdapter (private val itemsArrayList : MutableList<LogsData>) : RecyclerView.Adapter<ItemsAdapter.ViewHolder>() {
+    inner class ViewHolder(itemView : View): RecyclerView.ViewHolder(itemView) {
+        var activityName = itemView.findViewById<TextView>(R.id.activity)
+        var activityTime = itemView.findViewById<TextView>(R.id.time)
+
+        //Do something when the log is clicked
+        init {
+            itemView.setOnClickListener { view : View ->
+                val position : Int = adapterPosition
+                Toast.makeText(itemView.context, itemsArrayList[position].activityName, Toast.LENGTH_LONG).show()
+
+            }
+        }
+
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -27,11 +43,5 @@ class ItemsAdapter (private val itemsArrayList : MutableList<LogsData>) : Recycl
 
     override fun getItemCount(): Int {
         return itemsArrayList.size
-    }
-
-    inner class ViewHolder(itemView : View): RecyclerView.ViewHolder(itemView) {
-        var activityName = itemView.findViewById<TextView>(R.id.activity)
-        var activityTime = itemView.findViewById<TextView>(R.id.time)
-
     }
 }
