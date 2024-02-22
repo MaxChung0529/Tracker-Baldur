@@ -10,15 +10,19 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 
 class ItemsAdapter (private val itemsArrayList : MutableList<LogsData>) : RecyclerView.Adapter<ItemsAdapter.ViewHolder>() {
+
     inner class ViewHolder(itemView : View): RecyclerView.ViewHolder(itemView) {
         var activityName = itemView.findViewById<TextView>(R.id.activity)
         var activityTime = itemView.findViewById<TextView>(R.id.time)
 
         //Do something when the log is clicked
         init {
+
             itemView.setOnClickListener { view : View ->
                 val position : Int = adapterPosition
                 Toast.makeText(itemView.context, itemsArrayList[position].activityName, Toast.LENGTH_LONG).show()
+
+                //Implement code to make popup to show details of log
 
             }
         }

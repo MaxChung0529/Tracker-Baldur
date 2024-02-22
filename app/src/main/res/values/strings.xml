@@ -14,6 +14,12 @@
     <string name="detail_activity_category">Category:</string>
     <string name="detail_time">Time:</string>
     <string name="description">Description:</string>
+    <string name="ask_cat_name">Activity title:</string>
+    <string name="cat_title_hint">(Optional)</string>
+    <string name="activity_desc">Type your activity description here(Optional)</string>
+    <string name="image_upload_button">Upload Image</string>
+    <string name="cancel_submit">Cancel</string>
+    <string name="submit">Add Log</string>
 
     <!--Dummy Data-->
     <string name="date1">Apr 15</string>
@@ -22,6 +28,8 @@
     <string name="date4">Apr 18</string>
     <string name="date5">Apr 19</string>
     <string name="reading">Reading</string>
+    <string name="workout">Workout</string>
+    <string name="church">Church</string>
     <string name="tmpTime">7 pm - 8 pm</string>
     <string name="tmpDesc">Read the first two chapter of Percy Jackson first book</string>
     <!-- TODO: Remove or change this placeholder text -->
