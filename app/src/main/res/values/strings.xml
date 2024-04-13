@@ -20,6 +20,8 @@
     <string name="image_upload_button">Upload Image</string>
     <string name="cancel_submit">Cancel</string>
     <string name="submit">Add Log</string>
+    <string name="start_time">Start:</string>
+    <string name="end_time">End:</string>
 
     <!--Dummy Data-->
     <string name="date1">Apr 15</string>
@@ -27,6 +29,10 @@
     <string name="date3">Apr 17</string>
     <string name="date4">Apr 18</string>
     <string name="date5">Apr 19</string>
+    <string name="starting_time">7 pm</string>
+    <string name="ending_time">8 pm</string>
+    <string name="duration_hour">1 hour</string>
+    <string name="duration_minute">0 minutes</string>
     <string name="reading">Reading</string>
     <string name="workout">Workout</string>
     <string name="church">Church</string>

@@ -13,4 +13,5 @@
         android:textSize="25sp"
         android:text="@string/nav_bar_settings" />
 
+
 </FrameLayout>

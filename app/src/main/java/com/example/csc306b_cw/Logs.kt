@@ -1,15 +1,16 @@
 package com.example.csc306b_cw
 
-import android.content.Intent
+import android.app.DatePickerDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.Toast
+import android.widget.Button
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import android.icu.util.Calendar
+import android.widget.Toast
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -26,6 +27,7 @@ class Logs : Fragment(){
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    var picker: DatePickerDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +35,8 @@ class Logs : Fragment(){
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
+
     }
 
     override fun onCreateView(
@@ -48,6 +52,13 @@ class Logs : Fragment(){
         recyclerView.adapter = adapter
         val layoutManager = LinearLayoutManager(this.activity)
         recyclerView.layoutManager = layoutManager
+
+        val datePickerBtn = contentView.findViewById<Button>(R.id.date_picker_btn)
+
+        datePickerBtn.setOnClickListener(View.OnClickListener {
+            val toast = Toast.makeText(this.activity, "Clicked btn", Toast.LENGTH_LONG) // in Activity
+            toast.show()
+        })
 
         return contentView
     }
