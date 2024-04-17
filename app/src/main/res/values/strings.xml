@@ -22,6 +22,20 @@
     <string name="submit">Add Log</string>
     <string name="start_time">Start:</string>
     <string name="end_time">End:</string>
+    <string name="progress">Progress:</string>
+    <string name="hours">Hours</string>
+    <string name="deadline">Deadline:</string>
+    <string name="daily_goal">Daily goal:</string>
+    <string name="daily_goal_hours">Hours</string>
+    <string name="font_size">Font Size:</string>
+    <string name="small_font">Small</string>
+    <string name="mid_font">Medium</string>
+    <string name="Large_font">Large</string>
+    <string name="theme">Theme:</string>
+    <string name="light_dark">Light / Dark </string>
+    <string name="goal_title">Goal title:</string>
+    <string name="goal_description">What\'s your goal?</string>
+    <string name="submit_goal">Add Goal</string>
 
     <!--Dummy Data-->
     <string name="date1">Apr 15</string>
@@ -38,6 +52,9 @@
     <string name="church">Church</string>
     <string name="tmpTime">7 pm - 8 pm</string>
     <string name="tmpDesc">Read the first two chapter of Percy Jackson first book</string>
+    <string name="progress_dummy">Progress</string>
+    <string name="deadline_date">Deadline Date</string>
+    <string name="daily_goal_time">1</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

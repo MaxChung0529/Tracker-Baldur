@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="datePickerDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">@color/purple</item>
+        <item name="colorPrimaryDark">@color/gray</item>
+        <item name="colorAccent">@color/dark_purple</item>
+    </style>
+
+    <style name="ScrollTimePicker" parent="Theme.AppCompat.Light.Dialog">
+<!--        <item name="android:layout_centerHorizontal">true</item>-->
+<!--        <item name="android:layout_marginTop">20dp</item>-->
+<!--        <item name="android:timePickerMode">spinner</item>-->
+    </style>
+</resources>

@@ -20,14 +20,14 @@
             android:layout_width="8dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="12dp"
-            android:backgroundTint="@color/purple"
+            android:backgroundTint="@color/black"
             android:padding="5dp" />
 
         <TextView
             android:id="@+id/activity"
             android:layout_width="243dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
+            android:layout_marginStart="12dp"
             android:text="@string/activity"
             android:textAlignment="center"
             android:textSize="18sp" />

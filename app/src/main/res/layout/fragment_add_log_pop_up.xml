@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
+    <Button
+        android:id="@+id/add_log_date_picker"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_margin="0dp"
+        android:backgroundTint="@color/dark_purple"
+        android:drawableRight="@drawable/baseline_keyboard_arrow_down_24"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:padding="0dp"
+        android:text="Current Date">
+
+    </Button>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,7 +38,7 @@
         </TextView>
 
         <EditText
-            android:id="@+id/editTextText"
+            android:id="@+id/title_input"
             android:layout_width="235dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -35,6 +50,7 @@
     </LinearLayout>
 
     <HorizontalScrollView
+        android:id="@+id/catBtnsLayout"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_marginStart="5dp"
@@ -48,7 +64,7 @@
 
 
             <Button
-                android:id="@+id/reading_button"
+                android:id="@+id/catBtn1"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
@@ -61,7 +77,7 @@
                 android:textColor="@color/black" />
 
             <Button
-                android:id="@+id/workout_button"
+                android:id="@+id/catBtn2"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
@@ -75,7 +91,7 @@
 
 
             <Button
-                android:id="@+id/church_button"
+                android:id="@+id/catBtn3"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
@@ -113,9 +129,8 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:elevation="8dp"
-            android:layout_margin="3dp"
+            android:layout_margin="0dp"
             android:stateListAnimator="@null"
-            android:text="@string/starting_time"
             android:textAlignment="center" />
 
         <TextView
@@ -136,13 +151,13 @@
             android:elevation="8dp"
             android:layout_margin="3dp"
             android:stateListAnimator="@null"
-            android:text="@string/ending_time"
             android:textAlignment="center" />
     </LinearLayout>
 
     <EditText
+        android:id="@+id/description"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="150dp"
         android:background="@drawable/custom_button"
         android:hint="@string/activity_desc"
         android:textAlignment="center" />
@@ -181,7 +196,7 @@
             android:id="@+id/cancel_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="12dp"
+            android:padding="5dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:elevation="8dp"
@@ -193,7 +208,7 @@
             android:id="@+id/submit_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="12dp"
+            android:padding="8dp"
             android:layout_margin="5dp"
             android:elevation="8dp"
             android:stateListAnimator="@null"

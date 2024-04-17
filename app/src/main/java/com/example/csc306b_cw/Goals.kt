@@ -5,6 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,7 +37,34 @@ class Goals : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_goals, container, false)
+        val contentView = inflater.inflate(R.layout.fragment_goals, container, false)
+        val recyclerView = contentView.findViewById<RecyclerView>(R.id.goalsRecycler)
+
+        val dataList = populateList()
+        val adapter = GoalsAdapter(dataList)
+        recyclerView.adapter = adapter
+        val layoutManager = LinearLayoutManager(this.activity)
+        recyclerView.layoutManager = layoutManager
+
+//        val addGoalBtn = contentView.findViewById<Button>(R.id.addGoal)
+
+        return contentView
+    }
+
+    private fun populateList() : ArrayList<GoalsData> {
+
+        val list = ArrayList<GoalsData>()
+
+        val data = GoalsData()
+        data.goalName = "Reading"
+        val hoursNum = 12
+        val goalHours = 36
+        data.progress = "$hoursNum / $goalHours"
+        //data.progress = "12 / 36"
+        data.deadline = "12/12/2024"
+        list.add(data)
+
+        return list
     }
 
     companion object {

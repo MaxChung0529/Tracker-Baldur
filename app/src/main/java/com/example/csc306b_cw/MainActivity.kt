@@ -23,15 +23,13 @@ class MainActivity : AppCompatActivity() {
         //setContentView(R.layout.activity_main_view)
         setContentView(binding.root)
 
-        replaceFragment(Logs())
-
-
+        replaceFragment(Logs(this))
 
         binding.bottomNavMenu.setOnItemSelectedListener {
 
             when (it.itemId) {
 
-                R.id.logs -> replaceFragment(Logs())
+                R.id.logs -> replaceFragment(Logs(this))
                 R.id.goals -> replaceFragment(Goals())
                 R.id.stopwatch -> replaceFragment(Stopwatch())
                 R.id.settings -> replaceFragment(Settings())
@@ -44,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun replaceFragment(fragment : Fragment) {
+    public fun replaceFragment(fragment : Fragment) {
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.frame_layout, fragment)
