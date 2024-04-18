@@ -3,23 +3,26 @@
     {
       "date": "16-04-2024",
       "activityName": "Reading",
-      "startingTime": "22:38",
-      "endingTime": "23:38",
-      "description": ""
+      "startingTime": "14:38",
+      "endingTime": "15:45",
+      "description": "",
+      "imgSrc": ""
     },
     {
       "date": "16-04-2024",
       "activityName": "Reading",
-      "startingTime": "22:38",
-      "endingTime": "23:38",
-      "description": ""
+      "startingTime": "12:00",
+      "endingTime": "13:38",
+      "description": "LOL",
+      "imgSrc": ""
     },
     {
       "date": "17-04-2024",
       "activityName": "Reading",
-      "startingTime": "12:38",
-      "endingTime": "13:38",
-      "description": "LOL"
+      "startingTime": "16:38",
+      "endingTime": "17:38",
+      "description": "LOL",
+      "imgSrc": "content://media/picker/0/com.android.providers.media.photopicker/media/1000000033"
     }
   ]
 }

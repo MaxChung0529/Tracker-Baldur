@@ -7,8 +7,6 @@
     android:translationY="-3dp"
     tools:context=".Logs">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <Button
         android:id="@+id/addLog"
         android:layout_width="59dp"
@@ -37,7 +35,8 @@
             android:layout_height="50dp"
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
-            android:theme="?attr/actionBarTheme" />
+            android:theme="?attr/actionBarTheme"
+            android:visibility="invisible" />
 
         <Button
             android:id="@+id/date_picker_btn"
@@ -81,16 +80,28 @@
         app:iconPadding="0dp"
         tools:visibility="visible" />
 
-    <Button
-        android:id="@+id/sort"
+<!--    <Button-->
+<!--        android:id="@+id/sort"-->
+<!--        android:layout_width="46dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="end"-->
+<!--        android:translationX="-46dp"-->
+<!--        android:visibility="invisible"-->
+<!--        app:icon="@drawable/baseline_filter_list_24"-->
+<!--        app:iconGravity="textStart"-->
+<!--        app:iconPadding="0dp"-->
+<!--        tools:visibility="visible" />-->
+
+    <Spinner
+        android:id="@+id/sortSpinner"
         android:layout_width="46dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_gravity="end"
         android:translationX="-46dp"
         android:visibility="visible"
-        app:icon="@drawable/baseline_filter_list_24"
         app:iconGravity="textStart"
         app:iconPadding="0dp"
-        tools:visibility="visible" />
+        tools:visibility="visible"
+        android:spinnerMode="dropdown"/>
 
 </FrameLayout>

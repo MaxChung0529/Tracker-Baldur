@@ -2,6 +2,7 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:clickable="true"
     android:layout_width="match_parent"
     android:layout_height="80dp"
@@ -19,26 +20,49 @@
             android:id="@+id/catColor"
             android:layout_width="8dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="12dp"
+            android:layout_marginStart="12dp"
             android:backgroundTint="@color/black"
             android:padding="5dp" />
 
         <TextView
             android:id="@+id/activity"
-            android:layout_width="243dp"
-            android:layout_height="wrap_content"
+            android:layout_width="180dp"
+            android:layout_height="match_parent"
             android:layout_marginStart="12dp"
             android:text="@string/activity"
             android:textAlignment="center"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:layout_gravity="center"
+            android:gravity="center"/>
 
-        <TextView
-            android:id="@+id/time"
-            android:layout_width="105dp"
-            android:layout_height="wrap_content"
-            android:text="@string/time"
-            android:textAlignment="center"
-            android:textSize="18sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/time"
+                android:textAlignment="textStart"
+                android:layout_weight="1"
+                android:textSize="18sp"
+                android:gravity="center"
+                tools:ignore="RtlCompat" />
+
+            <TextView
+                android:id="@+id/duration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/cardDuration"
+                android:textAlignment="textStart"
+                android:textSize="18sp"
+                android:gravity="center"
+                tools:ignore="RtlCompat" />
+        </LinearLayout>
+
     </LinearLayout>
 
 

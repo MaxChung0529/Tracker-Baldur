@@ -3,10 +3,10 @@ package com.example.csc306b_cw
 class LogsData (var date: String,
                 var activityName: String?,
                 var category: String?,
-                startingTime: String,
-                endingTime: String,
+                var startingTime: String,
+                var endingTime: String,
+                var duration: Double?,
                 var description: String?,
+                var imgSrc: String?
 ) {
-    var startingTime: String? = startingTime
-    var endingTime: String? = endingTime
 }

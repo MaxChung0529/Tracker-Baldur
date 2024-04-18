@@ -8,7 +8,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.PopupWindow
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -28,6 +33,7 @@ import org.json.JSONObject
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
+
 /**
  * A simple [Fragment] subclass.
  * Use the [Logs.newInstance] factory method to
@@ -39,6 +45,10 @@ class Logs(mainActivity: MainActivity) : Fragment(){
     private var param2: String? = null
     val mainAct = mainActivity
     val calendar = Calendar.getInstance()
+    var currentlyChosenYear : Int = calendar.get(Calendar.YEAR)
+    var currentlyChosenMonth : Int = calendar.get(Calendar.MONTH)
+    var currentlyChosenDay : Int = calendar.get(Calendar.DAY_OF_MONTH)
+    var dateToShow: String = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,8 +70,8 @@ class Logs(mainActivity: MainActivity) : Fragment(){
 
 //        fillRecyclerView(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), contentView)
         val date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-        val dataList = populateList(date)
-        var adapter = LogsAdapter(dataList, mainAct)
+        val dataList = populateList()
+        var adapter = LogsAdapter(dataList, mainAct, date)
 //        val recyclerView = contentView.findViewById<RecyclerView>(R.id.recycler)
         recyclerView.adapter = adapter
         val layoutManager = LinearLayoutManager(this.activity)
@@ -69,8 +79,38 @@ class Logs(mainActivity: MainActivity) : Fragment(){
 
         val datePickerBtn = contentView.findViewById<Button>(R.id.date_picker_btn)
 
-        val today = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-        datePickerBtn.setText(today.toString())
+        val sortBtn = contentView.findViewById<Spinner>(R.id.sortSpinner)
+        val sortValArray = arrayOf("Starting time - ASC", "Starting time - DESC", "Duration - ASC", "Duration - DESC")
+
+        try {
+            sortBtn.adapter =
+                ArrayAdapter(mainAct, android.R.layout.simple_spinner_dropdown_item, sortValArray)
+
+
+            sortBtn.onItemSelectedListener = object : OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    changeLogs(contentView, null, sortValArray[position])
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    val toast = Toast.makeText(mainAct, "LOL", Toast.LENGTH_LONG)
+                    toast.show()
+                }
+            }
+        }catch (e: Exception) {
+            Log.d("LOL", e.message.toString())
+        }
+
+//        sortBtn.setOnClickListener{
+////            sortLogs("")
+//        }
+
+        datePickerBtn.setText(dateToShow)
         datePickerBtn.setOnClickListener {
             showDatePicker(datePickerBtn, dataList, contentView)
         }
@@ -83,23 +123,8 @@ class Logs(mainActivity: MainActivity) : Fragment(){
         return contentView
     }
 
-    private fun fillRecyclerView(date: String, contentView: View) {
-        val dataList = populateList(date)
-        var adapter = LogsAdapter(dataList, mainAct)
-        val recyclerView = contentView.findViewById<RecyclerView>(R.id.recycler)
-        recyclerView.adapter = adapter
-        val layoutManager = LinearLayoutManager(this.activity)
-        recyclerView.layoutManager = layoutManager
-    }
-
-    private fun populateList(dateToShow: String) : ArrayList<LogsData> {
+    private fun getLogs(): ArrayList<LogsData> {
         val list = ArrayList<LogsData>()
-
-//        val file = mainAct.openFileInput("logsData.json")
-//        val inputReader = InputStreamReader(file)
-//
-//        val text = inputReader.readText()
-//        val log = Gson().fromJson(text, LogsData::class.java)
 
         try {
             val jsonString = mainAct.assets.open("test.json").bufferedReader().use { it.readText() }
@@ -107,12 +132,13 @@ class Logs(mainActivity: MainActivity) : Fragment(){
             val outputJson = JSONObject(jsonString)
             val logs = outputJson.getJSONArray("logs") as JSONArray
 
-            for (i in 0 until logs.length()){
+            for (i in 0 until logs.length()) {
                 val date = logs.getJSONObject(i).getString("date")
                 val activityName = logs.getJSONObject(i).getString("activityName")
                 val startingTime = logs.getJSONObject(i).getString("startingTime")
                 val endingTime = logs.getJSONObject(i).getString("endingTime")
                 val description = logs.getJSONObject(i).getString("description")
+                val imgSrc = logs.getJSONObject(i).getString("imgSrc")
                 if (date == dateToShow) {
                     list.add(
                         LogsData(
@@ -121,16 +147,68 @@ class Logs(mainActivity: MainActivity) : Fragment(){
                             "",
                             startingTime,
                             endingTime,
-                            description
+                            Math.round((endingTime.replace(":",".").toDouble() - startingTime.replace(":",".").toDouble()) * 100.00) / 100.00,
+                            description,
+                            imgSrc
                         )
                     )
                 }
             }
-
-
         }catch (e: Exception) {
             Log.d("LOL",e.message.toString())
         }
+        return list
+    }
+
+
+    private fun changeLogs(contentView: View, formattedDate: String?, sortString: String?) {
+        val recyclerView = contentView.findViewById<RecyclerView>(R.id.recycler)
+        recyclerView?.adapter?.notifyDataSetChanged()
+
+        if (formattedDate != null) {
+            fillRecyclerView(getLogs(), contentView)
+        }
+        if (sortString != null) {
+            fillRecyclerView(sortLogs(sortString, getLogs()), contentView)
+        }
+
+    }
+
+    private fun fillRecyclerView(dataList: ArrayList<LogsData>, contentView: View) {
+        var adapter = LogsAdapter(dataList, mainAct, dateToShow)
+        val recyclerView = contentView.findViewById<RecyclerView>(R.id.recycler)
+        recyclerView.adapter = adapter
+        val layoutManager = LinearLayoutManager(this.activity)
+        recyclerView.layoutManager = layoutManager
+    }
+
+    private fun sortLogs(criteria: String, logList: ArrayList<LogsData>): ArrayList<LogsData> {
+
+        if (criteria == "Starting time - ASC") {
+            logList.sortBy { it.startingTime }
+        }else if (criteria == "Starting time - DESC") {
+            logList.sortByDescending { it.startingTime }
+        }else if (criteria == "Duration - ASC"){
+            logList.sortBy { it.duration }
+        }else if (criteria == "Duration - DESC"){
+            logList.sortByDescending { it.duration }
+        }
+
+        return logList
+    }
+
+    private fun populateList() : ArrayList<LogsData> {
+
+//        val file = mainAct.openFileInput("logsData.json")
+//        val inputReader = InputStreamReader(file)
+//
+//        val text = inputReader.readText()
+//        val log = Gson().fromJson(text, LogsData::class.java)
+        val list = getLogs()
+
+//        sortLogs("Time-DESC",list)
+
+
 
 //        file.close()
 
@@ -144,27 +222,32 @@ class Logs(mainActivity: MainActivity) : Fragment(){
     }
 
     private fun showDatePicker(datePickerBtn: Button, dataList: ArrayList<LogsData>, contentView: View) {
+
         val datePickerDialog = DatePickerDialog(mainAct,
             {DatePicker, year: Int, month: Int, day: Int ->
                 val selectedDate = Calendar.getInstance()
                 selectedDate.set(year, month, day)
+
+                currentlyChosenYear = year
+                currentlyChosenMonth = month
+                currentlyChosenDay = day
+
                 val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
                 val formattedDate = dateFormat.format((selectedDate.time))
 
                 if (formattedDate != datePickerBtn.text.toString()) {
                     //Update logs shown
                     dataList.clear()
-                    val recyclerView = contentView.findViewById<RecyclerView>(R.id.recycler)
-                    recyclerView?.adapter?.notifyDataSetChanged()
-                    fillRecyclerView(formattedDate, contentView)
+                    dateToShow = formattedDate
+                    changeLogs(contentView, formattedDate, null)
 
                     datePickerBtn.setText(formattedDate)
                 }
 
             },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
+            currentlyChosenYear,
+            currentlyChosenMonth,
+            currentlyChosenDay
 
         )
         datePickerDialog.show()
