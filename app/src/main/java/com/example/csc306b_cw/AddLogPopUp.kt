@@ -22,6 +22,7 @@ import android.media.Image
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.provider.MediaStore.Audio.Media
 import android.util.Log
@@ -33,6 +34,7 @@ import android.widget.EditText
 import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -42,7 +44,10 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.File
+import java.io.FileOutputStream
 import java.io.InputStreamReader
+import java.io.OutputStream
 import java.io.OutputStreamWriter
 import java.time.LocalDate
 import java.time.LocalTime
@@ -73,6 +78,7 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
     private val REQUEST_STORAGE_PERMISSION = 100
     val contentResolver = mainActivity.contentResolver
     var btnChosen = false
+    var bitMapUri: Uri? = null
 
     @SuppressLint("ResourceAsColor")
     override fun onCreateView(
@@ -97,6 +103,7 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
         btnsValues.add("Church")
         btnsValues.add("Workout")
 
+
         try {
             val buttonsScroll = popUpView.findViewById<LinearLayout>(R.id.catBtnScroll)
             var catBtns = java.util.ArrayList<Button>()
@@ -114,6 +121,7 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
                 btn.setTextColor(R.color.black)
                 btn.elevation = 8F
                 btn.isSelected = false
+//                btn.background = mainActivity.getDrawable(R.drawable.category_btns)
                 btn.backgroundTintList = mainActivity.getColorStateList(R.color.light_gray)
 
                 catBtns.add(btn)
@@ -158,19 +166,11 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
         }
 
         imageView = popUpView.findViewById<ImageView>(R.id.imageView)
+
         val galleryImage = registerForActivityResult(ActivityResultContracts.GetContent(),
             ActivityResultCallback {
-                imageView?.setImageURI(it)
-//
-//                val resolver = mainActivity.contentResolver
-//                val imgName = System.currentTimeMillis().toString()
-//                val contentValue = ContentValues()
-//                contentValue.put(MediaStore.Images.Media.DISPLAY_NAME, "$imgName.jpg")
-//                contentValue.put(MediaStore.Images.Media.RELATIVE_PATH, "Images/")
-//                val finalUri = it?.let { it1 -> resolver.insert(it1, contentValue) }
-
-//                imageSrc = finalUri.toString()
-                imageSrc = it.toString()
+                bitMapUri = it
+                imageView?.setImageURI(bitMapUri)
             })
 
         val uploadImageBtn = popUpView.findViewById<Button>(R.id.upload_image)
@@ -190,26 +190,32 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
             val text = addLog(title, startTimeBtn, endTimeBtn, description)
             if (text == "Wrong data"){
                 var builder = AlertDialog.Builder(mainActivity)
-                builder.setTitle("Inputted time is wrong! Try again!")
-
+                if (title.text.toString() == "") {
+                    builder.setTitle("Title cannot be empty! You can press on the buttons fill it in!")
+                }else {
+                    builder.setTitle("Inputted time is wrong! Try again!")
+                }
                 builder.setPositiveButton("Okay") { dialog, which ->
                 }
 
                 builder.show()
             }else{
-                val entry = createJsonData(title.text.toString(), "Reading", startTimeBtn.text.toString(), endTimeBtn.text.toString(), description.text.toString(), imageSrc)
-
-                var fileOut = mainActivity.openFileOutput("logsData.json", Context.MODE_PRIVATE)
-//                fileOut.close()
-//                fileOut = mainActivity.openFileOutput("logsData.json", Context.MODE_PRIVATE)
-
-                val outputWriter = OutputStreamWriter(fileOut)
-                outputWriter.write(entry.toString() + ",\n")
-                Log.d("LogText", entry.toString())
-                outputWriter.close()
+//                val entry = createJsonData(title.text.toString(), "Reading", startTimeBtn.text.toString(), endTimeBtn.text.toString(), description.text.toString(), imageSrc)
+//
+//                var fileOut = mainActivity.openFileOutput("logsData.json", Context.MODE_PRIVATE)
+////                fileOut.close()
+////                fileOut = mainActivity.openFileOutput("logsData.json", Context.MODE_PRIVATE)
+//
+//                val outputWriter = OutputStreamWriter(fileOut)
+//                outputWriter.write(entry.toString() + ",\n")
+//                Log.d("LogText", entry.toString())
+//                outputWriter.close()
                 dismiss()
 
-                getInternal()
+
+                imageSrc = saveImage(MediaStore.Images.Media.getBitmap(mainActivity.contentResolver, bitMapUri))
+
+//                getInternal()
 
             }
         }
@@ -224,6 +230,30 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
 
         // Inflate the layout for this fragment
         return popUpView
+    }
+
+    private fun saveImage(bitmap: Bitmap): String{
+        var fileOutputStream : OutputStream
+        var file: File? = null
+        val root = mainActivity.getExternalFilesDir(null)?.absolutePath
+        var myDir = File("$root/TrackerBaldur")
+
+        if (!myDir.exists()) {
+            myDir.mkdirs()
+        }
+
+        val fileName = "Images-" + System.currentTimeMillis() + ".png"
+        file = File(myDir, fileName)
+        try {
+            fileOutputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
+            Toast.makeText(mainActivity, "Image saved", Toast.LENGTH_LONG).show()
+            fileOutputStream.flush()
+            fileOutputStream.close()
+        }catch (e: Exception) {
+            Log.d("Images-saving", e.message.toString())
+        }
+        return fileName
     }
 
     private fun getInternal() {
@@ -321,16 +351,14 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
     }
     private fun addLog(title: EditText, startTimeBtn: Button, endTimeBtn: Button, description: EditText): String?{
 
-        val startingTime = startTimeBtn.text.split(":").toTypedArray()
-        val endingTime = endTimeBtn.text.split(":").toTypedArray()
+        val startingTime = startTimeBtn.text.toString().replace(":",".").toDouble()
+        val endingTime = endTimeBtn.text.toString().replace(":",".").toDouble()
         var textToShow = ""
 
-        if ((endingTime[0].toInt() > startingTime[0].toInt() + 1)
-            or ((endingTime[0].toInt() == startingTime[0].toInt() + 1) and (endingTime[1].toInt() >= startingTime[1].toInt()))
-        ) {
-            textToShow = "Log added"
+        textToShow = if (endingTime - startingTime >= 1.00 && title.text.toString() != "") {
+            "Log added"
         }else {
-            textToShow = "Wrong data"
+            "Wrong data"
         }
         return textToShow
     }

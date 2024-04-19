@@ -15,7 +15,7 @@
     <string name="detail_time">Time:</string>
     <string name="description">Description:</string>
     <string name="ask_cat_name">Activity title:</string>
-    <string name="cat_title_hint">(Optional)</string>
+    <string name="cat_title_hint">(Required)</string>
     <string name="activity_desc">Type your activity description here(Optional)</string>
     <string name="image_upload_button">Upload Image</string>
     <string name="cancel_submit">Cancel</string>

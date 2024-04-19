@@ -86,15 +86,11 @@ class LogsAdapter (private val itemsArrayList : MutableList<LogsData>, mainActiv
         val item = itemsArrayList[position]
 
         //Set category colour
-        if (item.activityName == "Reading" || item.category == "Reading"){
+        if (item.activityName == "Reading"){
             holder.catColor.setBackgroundColor(mainAct.getColor(R.color.purple))
         }
 
-        if (item.activityName == null) {
-            holder.activityName.text = item.category
-        }else {
-            holder.activityName.text = item.activityName
-        }
+        holder.activityName.text = item.activityName
         holder.activityTime.text = "${item.startingTime} - ${item.endingTime}"
         holder.activityDuration.text = "${ item.duration.toString().replace(".", " Hours ") } Minutes"
 

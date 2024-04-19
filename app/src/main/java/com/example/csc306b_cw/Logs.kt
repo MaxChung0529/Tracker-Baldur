@@ -106,9 +106,10 @@ class Logs(mainActivity: MainActivity) : Fragment(){
             Log.d("LOL", e.message.toString())
         }
 
-//        sortBtn.setOnClickListener{
-////            sortLogs("")
-//        }
+        val filterBtn = contentView.findViewById<Button>(R.id.filter)
+        filterBtn.setOnClickListener{
+            filterLogs()
+        }
 
         datePickerBtn.setText(dateToShow)
         datePickerBtn.setOnClickListener {
@@ -144,10 +145,11 @@ class Logs(mainActivity: MainActivity) : Fragment(){
                         LogsData(
                             date,
                             activityName,
-                            "",
                             startingTime,
                             endingTime,
-                            Math.round((endingTime.replace(":",".").toDouble() - startingTime.replace(":",".").toDouble()) * 100.00) / 100.00,
+                            Math.round((endingTime.replace(":",".").toDouble()
+                                    - startingTime.replace(":",".").toDouble()) * 100.00)
+                                    / 100.00,
                             description,
                             imgSrc
                         )
@@ -197,6 +199,10 @@ class Logs(mainActivity: MainActivity) : Fragment(){
         return logList
     }
 
+    private fun filterLogs() {
+
+    }
+
     private fun populateList() : ArrayList<LogsData> {
 
 //        val file = mainAct.openFileInput("logsData.json")
@@ -205,18 +211,12 @@ class Logs(mainActivity: MainActivity) : Fragment(){
 //        val text = inputReader.readText()
 //        val log = Gson().fromJson(text, LogsData::class.java)
         val list = getLogs()
-
-//        sortLogs("Time-DESC",list)
-
-
-
 //        file.close()
 
         return list
     }
 
     private fun showPopUp(){
-
         val showPopUp = AddLogPopUp(mainAct)
         showPopUp.show((activity as AppCompatActivity).supportFragmentManager, "showPopUp")
     }

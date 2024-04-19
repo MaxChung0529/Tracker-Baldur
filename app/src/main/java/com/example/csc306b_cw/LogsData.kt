@@ -2,7 +2,6 @@ package com.example.csc306b_cw
 
 class LogsData (var date: String,
                 var activityName: String?,
-                var category: String?,
                 var startingTime: String,
                 var endingTime: String,
                 var duration: Double?,
