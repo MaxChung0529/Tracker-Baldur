@@ -94,7 +94,9 @@ class Logs(mainActivity: MainActivity) : Fragment(){
                     position: Int,
                     id: Long
                 ) {
+                    val choice = parent?.getItemAtPosition(position).toString()
                     changeLogs(contentView, null, sortValArray[position])
+
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {

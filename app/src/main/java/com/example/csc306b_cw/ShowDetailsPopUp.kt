@@ -65,8 +65,9 @@ class ShowDetailsPopUp(mainAct: MainActivity, detailsObj: JSONObject) : DialogFr
 
         try {
             if (detailsObj.getString("imgSrc") != "") {
-                popUpView.findViewById<ImageView>(R.id.detailImage)
-                    .setImageURI(Uri.parse(detailsObj.getString("imgSrc")))
+                val detailImage = popUpView.findViewById<ImageView>(R.id.detailImage)
+                detailImage.setImageURI(Uri.parse(detailsObj.getString("imgSrc")))
+//                detailImage.set
             }
         }catch (e: Exception){
             Log.d("ImgSrcLOL", e.message.toString())

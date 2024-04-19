@@ -1,9 +1,13 @@
 package com.example.csc306b_cw
 
-class GoalsData {
-    var goalName: String? = null
-//    var hoursNum: Int? = null
-//    var goalHours: Int? = null
-    var progress: String? = null
-    var deadline: String? = null;
+class GoalsData (
+    var goalName: String? = null,
+    var interval: Int? = null,
+    var unit: String? = null,
+    var durationPerUnit: Int? = null,
+    var progress: String? = null,
+    var deadline: String? = null,
+    var description: String? = null,
+    var imgSrc: String? = null)
+{
 }

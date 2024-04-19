@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -8,7 +9,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="75dp"
-        android:layout_marginTop="25dp"
         android:orientation="horizontal">
 
         <TextView
@@ -44,6 +44,7 @@
 
 
         <LinearLayout
+            android:id="@+id/goalCatBtnScroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
@@ -62,35 +63,24 @@
                 android:text="@string/reading"
                 android:textColor="@color/black" />
 
-            <Button
-                android:id="@+id/catBtn2"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:backgroundTint="@color/light_gray"
-                android:drawableLeft="@drawable/baseline_directions_bike_24"
-                android:elevation="8dp"
-                android:stateListAnimator="@null"
-                android:text="@string/workout"
-                android:textColor="@color/black" />
-
-
-            <Button
-                android:id="@+id/catBtn3"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:backgroundTint="@color/light_gray"
-                android:drawableLeft="@drawable/baseline_church_24"
-                android:elevation="8dp"
-                android:stateListAnimator="@null"
-                android:text="@string/church"
-                android:textColor="@color/black" />
 
         </LinearLayout>
     </HorizontalScrollView>
+
+    <Button
+        android:id="@+id/deadline_picker"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_margin="0dp"
+        android:backgroundTint="@color/dark_purple"
+        android:drawableEnd="@drawable/baseline_keyboard_arrow_down_24"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:padding="0dp"
+        android:text="@string/deadline"
+        android:textSize="18sp"
+        app:cornerRadius="0dp">
+    </Button>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -102,37 +92,128 @@
 
         <TextView
             android:id="@+id/deadline_text"
-            android:layout_width="100dp"
+            android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textAlignment="center"
             android:textSize="19.5sp"
-            android:layout_marginEnd="20dp"
-            android:text="@string/deadline"/>
+            android:layout_marginEnd="10dp"
+            android:text="@string/interval"/>
 
         <Spinner
-            android:id="@+id/spinner"
+            android:id="@+id/intervalSpinner"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"/>
 
+        <Spinner
+            android:id="@+id/intervalUnitSpinner"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/intervalLogDuration"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:textSize="19.5sp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
+            android:text="@string/intervalLogDuration"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="1">
+
+                <Spinner
+                    android:id="@+id/intervalDurationHourSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center" />
+
+                <TextView
+                    android:id="@+id/intervalDurationHour"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/hours"
+                    android:textSize="19.5sp"
+                    android:gravity="center"
+                    android:textAlignment="textStart"
+                    tools:ignore="NestedWeights,RtlCompat" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="1">
+
+                <Spinner
+                    android:id="@+id/intervalDurationMinuteSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center" />
+
+                <TextView
+                    android:id="@+id/intervalDurationMinute"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/goal_minute"
+                    android:textSize="19.5sp"
+                    android:gravity="center"
+                    android:textAlignment="textStart"
+                    tools:ignore="NestedWeights,RtlCompat" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/goal_total_hours"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:background="@drawable/custom_button"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textSize="25sp"/>
 
     <EditText
         android:id="@+id/goal_description"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="@drawable/custom_button"
-        android:hint="@string/goal_description"
-        android:textAlignment="center" />
+        android:layout_height="75dp"
+        android:ems="10"
+        android:inputType="text"
+        android:text="@string/goal_description" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="220dp"
+        android:layout_height="200dp"
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/upload_image"
+            android:id="@+id/goal_upload_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -142,12 +223,12 @@
             android:text="@string/image_upload_button" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/goal_image"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:padding="5dp"
-            android:src="@drawable/percy"
+            android:src="@drawable/backgroundstuff"
             tools:ignore="InefficientWeight" />
     </LinearLayout>
 
@@ -157,7 +238,7 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/cancel_btn"
+            android:id="@+id/goal_cancel_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
@@ -169,7 +250,7 @@
             android:text="@string/cancel_submit" />
 
         <Button
-            android:id="@+id/submit_btn"
+            android:id="@+id/goal_submit_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"

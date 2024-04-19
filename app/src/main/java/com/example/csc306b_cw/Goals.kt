@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -19,10 +20,11 @@ private const val ARG_PARAM2 = "param2"
  * Use the [Goals.newInstance] factory method to
  * create an instance of this fragment.
  */
-class Goals : Fragment() {
+class Goals(mainActivity: MainActivity) : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    val mainActivity = mainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,9 +48,17 @@ class Goals : Fragment() {
         val layoutManager = LinearLayoutManager(this.activity)
         recyclerView.layoutManager = layoutManager
 
-//        val addGoalBtn = contentView.findViewById<Button>(R.id.addGoal)
+        val addGoalBtn = contentView.findViewById<Button>(R.id.addGoal)
+        addGoalBtn.setOnClickListener{
+            showPopUp()
+        }
 
         return contentView
+    }
+
+    private fun showPopUp(){
+        val showPopUp = AddGoalPopUp(mainActivity)
+        showPopUp.show((activity as AppCompatActivity).supportFragmentManager, "showPopUp")
     }
 
     private fun populateList() : ArrayList<GoalsData> {
@@ -67,23 +77,23 @@ class Goals : Fragment() {
         return list
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment Goals.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            Goals().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
+//    companion object {
+//        /**
+//         * Use this factory method to create a new instance of
+//         * this fragment using the provided parameters.
+//         *
+//         * @param param1 Parameter 1.
+//         * @param param2 Parameter 2.
+//         * @return A new instance of fragment Goals.
+//         */
+//        // TODO: Rename and change types and number of parameters
+//        @JvmStatic
+//        fun newInstance(param1: String, param2: String) =
+//            Goals().apply {
+//                arguments = Bundle().apply {
+//                    putString(ARG_PARAM1, param1)
+//                    putString(ARG_PARAM2, param2)
+//                }
+//            }
+//    }
 }

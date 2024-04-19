@@ -12,6 +12,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.ImageDecoder
@@ -38,6 +39,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.marginLeft
 import androidx.fragment.app.DialogFragment
@@ -90,6 +92,13 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
         val startTimeBtn = popUpView.findViewById<Button>(R.id.start_time_picker)
         val endTimeBtn = popUpView.findViewById<Button>(R.id.end_time_picker)
 
+        val DarkModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val isDarkModeOn = DarkModeFlags == Configuration.UI_MODE_NIGHT_YES
+        if (isDarkModeOn) {
+            popUpView.findViewById<ImageView>(R.id.log_image).setImageDrawable(
+                mainActivity.getDrawable(R.drawable.backgroundstuffdark))
+        }
+
         val timeFormat = DateTimeFormatter.ofPattern("HH:mm")
         val currentTime = LocalTime.now()
         startTimeBtn.setText(currentTime.format(timeFormat))
@@ -110,7 +119,6 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
             for (i in 0..btnsValues.size - 1) {
                 val btn = Button(buttonsScroll.context)
 
-//                val drawableImg = mainActivity.getDrawable(R.drawable.baseline_book_24)
                 val drawableImg = btn.context.resources.getDrawable(R.drawable.baseline_book_24)
                 drawableImg?.setBounds(5, 5, 5, 5)
 
@@ -121,7 +129,6 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
                 btn.setTextColor(R.color.black)
                 btn.elevation = 8F
                 btn.isSelected = false
-//                btn.background = mainActivity.getDrawable(R.drawable.category_btns)
                 btn.backgroundTintList = mainActivity.getColorStateList(R.color.light_gray)
 
                 catBtns.add(btn)
@@ -165,7 +172,7 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
             showDatePicker(date_picker)
         }
 
-        imageView = popUpView.findViewById<ImageView>(R.id.imageView)
+        imageView = popUpView.findViewById<ImageView>(R.id.log_image)
 
         val galleryImage = registerForActivityResult(ActivityResultContracts.GetContent(),
             ActivityResultCallback {

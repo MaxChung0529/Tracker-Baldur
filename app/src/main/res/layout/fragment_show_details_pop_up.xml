@@ -94,7 +94,8 @@ tools:context=".ShowDetailsPopUp">
             android:layout_gravity="center"
             android:text="@string/duration"
             android:textAlignment="textEnd"
-            android:textSize="19.5sp" />
+            android:textSize="19.5sp"
+            tools:ignore="RtlCompat" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -166,10 +167,11 @@ tools:context=".ShowDetailsPopUp">
 
         <ImageView
             android:id="@+id/detailImage"
-            android:layout_width="match_parent"
+            android:layout_width="400dp"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:padding="3dp"
-            android:src="@drawable/backgroundstuff">
+            android:src="@drawable/backgroundstuffdark">
 
         </ImageView>
     </LinearLayout>

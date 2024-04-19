@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
             when (it.itemId) {
 
                 R.id.logs -> replaceFragment(Logs(this))
-                R.id.goals -> replaceFragment(Goals())
+                R.id.goals -> replaceFragment(Goals(this))
                 R.id.stopwatch -> replaceFragment(Stopwatch())
                 R.id.settings -> replaceFragment(Settings())
 
