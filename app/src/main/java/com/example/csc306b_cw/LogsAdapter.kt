@@ -22,6 +22,7 @@ class LogsAdapter (private val itemsArrayList : MutableList<LogsData>, mainActiv
         var activityName = itemView.findViewById<TextView>(R.id.activity)
         var activityTime = itemView.findViewById<TextView>(R.id.time)
         var activityDuration = itemView.findViewById<TextView>(R.id.duration)
+        var activityDate = itemView.findViewById<TextView>(R.id.activityDate)
         var catColor = itemView.findViewById<Button>(R.id.catColor)
 
         //Do something when the log is clicked
@@ -32,6 +33,7 @@ class LogsAdapter (private val itemsArrayList : MutableList<LogsData>, mainActiv
 
                 val titleToSearch = itemView.findViewById<TextView>(R.id.activity).text
                 val timeToSearch = itemView.findViewById<TextView>(R.id.time).text
+                val dateToSearch = itemView.findViewById<TextView>(R.id.activityDate).text
                 var detailsToShow: JSONObject? = null
 
                 try {
@@ -48,7 +50,7 @@ class LogsAdapter (private val itemsArrayList : MutableList<LogsData>, mainActiv
                         val endingTime = logs.getJSONObject(i).getString("endingTime")
                         val formattedTime = "$startingTime - $endingTime"
 
-                        if (activityName == titleToSearch && formattedTime == timeToSearch && date == logsData) {
+                        if (activityName == titleToSearch && formattedTime == timeToSearch && date == dateToSearch) {
                             detailsToShow = logs.getJSONObject(i)
                         }
                     }
@@ -93,6 +95,7 @@ class LogsAdapter (private val itemsArrayList : MutableList<LogsData>, mainActiv
         holder.activityName.text = item.activityName
         holder.activityTime.text = "${item.startingTime} - ${item.endingTime}"
         holder.activityDuration.text = "${ item.duration.toString().replace(".", " Hours ") } Minutes"
+        holder.activityDate.text = item.date
 
     }
 

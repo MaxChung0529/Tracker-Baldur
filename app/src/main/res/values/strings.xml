@@ -49,6 +49,7 @@
     <string name="filterTitleHint">Filter Title:</string>
     <string name="optional">(Optional)</string>
     <string name="filterDuration">Filter\nDuration:</string>
+    <string name="cardDate">Date</string>
 
 
 

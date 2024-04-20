@@ -42,6 +42,7 @@ class ShowDetailsPopUp(mainAct: MainActivity, detailsObj: JSONObject) : DialogFr
         val start = detailsObj.getString("startingTime")
         val end = detailsObj.getString("endingTime")
         val formattedTime = "$start - $end"
+        popUpView.findViewById<TextView>(R.id.detailDate).setText(detailsObj.getString("date"))
         popUpView.findViewById<TextView>(R.id.detailCatTimePeriod).setText(formattedTime)
         popUpView.findViewById<TextView>(R.id.detailDescContent).setText(detailsObj.getString("description"))
 

@@ -24,16 +24,34 @@
             android:backgroundTint="@color/black"
             android:padding="5dp" />
 
-        <TextView
-            android:id="@+id/activity"
+        <LinearLayout
             android:layout_width="180dp"
             android:layout_height="match_parent"
-            android:layout_marginStart="12dp"
-            android:text="@string/activity"
-            android:textAlignment="center"
-            android:textSize="18sp"
-            android:layout_gravity="center"
-            android:gravity="center"/>
+            android:orientation="vertical"
+            android:layout_marginStart="12dp">
+
+            <TextView
+                android:id="@+id/activity"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:layout_gravity="center"
+                android:text="@string/activity"
+                android:textAlignment="center"
+                android:gravity="bottom"
+                tools:ignore="RtlCompat"
+                android:textSize="19.5sp" />
+
+            <TextView
+                android:id="@+id/activityDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/cardDate"
+                android:textAlignment="center"
+                android:gravity="bottom"
+                tools:ignore="RtlCompat" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
