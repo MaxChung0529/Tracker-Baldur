@@ -1,0 +1,14 @@
+{
+  "goals": [
+    {
+      "goalName": "Reading",
+      "interval": "2",
+      "unit": "Day(s)",
+      "durationPerUnit": 1.75,
+      "progress": "12/36",
+      "deadline": "24-9-2024",
+      "description": "LOL",
+      "imgSrc": ""
+    }
+  ]
+}

@@ -4,7 +4,7 @@ class GoalsData (
     var goalName: String? = null,
     var interval: Int? = null,
     var unit: String? = null,
-    var durationPerUnit: Int? = null,
+    var durationPerUnit: Double? = null,
     var progress: String? = null,
     var deadline: String? = null,
     var description: String? = null,

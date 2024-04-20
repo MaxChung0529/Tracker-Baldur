@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.io.InputStreamReader
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -118,7 +119,7 @@ class Logs(mainActivity: MainActivity) : Fragment(){
             showDatePicker(datePickerBtn, dataList, contentView)
         }
 
-        val addLogBtn = contentView.findViewById<Button>(R.id.addLog)
+        val addLogBtn = contentView.findViewById<FloatingActionButton>(R.id.addLog)
         addLogBtn.setOnClickListener{
             showPopUp()
         }

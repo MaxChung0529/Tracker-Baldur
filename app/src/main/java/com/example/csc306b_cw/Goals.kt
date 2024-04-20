@@ -1,6 +1,7 @@
 package com.example.csc306b_cw
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,9 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import org.json.JSONArray
+import org.json.JSONObject
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -42,23 +46,60 @@ class Goals(mainActivity: MainActivity) : Fragment() {
         val contentView = inflater.inflate(R.layout.fragment_goals, container, false)
         val recyclerView = contentView.findViewById<RecyclerView>(R.id.goalsRecycler)
 
-        val dataList = populateList()
-        val adapter = GoalsAdapter(dataList)
+        val adapter = GoalsAdapter(getGoals(), mainActivity)
         recyclerView.adapter = adapter
         val layoutManager = LinearLayoutManager(this.activity)
         recyclerView.layoutManager = layoutManager
 
-        val addGoalBtn = contentView.findViewById<Button>(R.id.addGoal)
+        val addGoalBtn = contentView.findViewById<FloatingActionButton>(R.id.addGoal)
         addGoalBtn.setOnClickListener{
             showPopUp()
         }
 
+        fillRecyclerView(contentView)
         return contentView
     }
 
     private fun showPopUp(){
         val showPopUp = AddGoalPopUp(mainActivity)
         showPopUp.show((activity as AppCompatActivity).supportFragmentManager, "showPopUp")
+    }
+
+    private fun fillRecyclerView(contentView: View) {
+        var adapter = GoalsAdapter(getGoals(), mainActivity)
+        val recyclerView = contentView.findViewById<RecyclerView>(R.id.goalsRecycler)
+        recyclerView.adapter = adapter
+        val layoutManager = LinearLayoutManager(this.activity)
+        recyclerView.layoutManager = layoutManager
+    }
+
+    private fun getGoals(): ArrayList<GoalsData> {
+        val list = ArrayList<GoalsData>()
+
+        try {
+            val jsonString = mainActivity.assets.open("goalsTest.json").bufferedReader().use { it.readText() }
+
+            val outputJson = JSONObject(jsonString)
+            val logs = outputJson.getJSONArray("goals") as JSONArray
+
+            for (i in 0 until logs.length()) {
+                val goalName = logs.getJSONObject(i).getString("goalName")
+                val interval = logs.getJSONObject(i).getInt("interval")
+                val intervalUnit = logs.getJSONObject(i).getString("unit")
+                val durationPerUnit = logs.getJSONObject(i).getDouble("durationPerUnit")
+                val progress = logs.getJSONObject(i).getString("progress")
+                val deadline = logs.getJSONObject(i).getString("deadline")
+                val description = logs.getJSONObject(i).getString("description")
+                val imgSrc = logs.getJSONObject(i).getString("imgSrc")
+                list.add(
+                    GoalsData(goalName, interval, intervalUnit, durationPerUnit, progress, deadline, description, imgSrc)
+                )
+                }
+        }catch (e: Exception) {
+            Log.d("LOL",e.message.toString())
+        }
+        return list
+
     }
 
     private fun populateList() : ArrayList<GoalsData> {

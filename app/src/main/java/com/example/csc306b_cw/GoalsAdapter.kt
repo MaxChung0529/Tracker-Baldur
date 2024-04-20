@@ -9,7 +9,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 
-class GoalsAdapter (private val goalsArrayList : MutableList<GoalsData>) : RecyclerView.Adapter<GoalsAdapter.ViewHolder>() {
+class GoalsAdapter (private val goalsArrayList : MutableList<GoalsData>, mainActivity: MainActivity) : RecyclerView.Adapter<GoalsAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView : View): RecyclerView.ViewHolder(itemView) {
 

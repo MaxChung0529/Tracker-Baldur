@@ -2,6 +2,7 @@ package com.example.csc306b_cw
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -21,6 +22,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val DarkModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val isDarkModeOn = DarkModeFlags == Configuration.UI_MODE_NIGHT_YES
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         //setContentView(R.layout.activity_main_view)
@@ -42,6 +46,10 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             true
+        }
+
+        if (isDarkModeOn) {
+            replaceFragment(Settings())
         }
     }
 

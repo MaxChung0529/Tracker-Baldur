@@ -1,5 +1,6 @@
 package com.example.csc306b_cw
 
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -21,11 +22,11 @@ private const val ARG_PARAM2 = "param2"
  * Use the [Settings.newInstance] factory method to
  * create an instance of this fragment.
  */
-class Settings : Fragment() {
+class Settings() : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    private var isDarkTheme = false
+//    private var isDarkTheme = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,13 +45,22 @@ class Settings : Fragment() {
         val settingView =  inflater.inflate(R.layout.fragment_settings, container, false)
 
         val themeSwitch = settingView.findViewById<Switch>(R.id.theme_switch)
+
+        val DarkModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val isDarkModeOn = DarkModeFlags == Configuration.UI_MODE_NIGHT_YES
+
+        if (isDarkModeOn) {
+            themeSwitch.isChecked = true
+        }else {
+            themeSwitch.isChecked = false
+        }
+
         themeSwitch.setOnClickListener{
-            if (isDarkTheme) {
-                isDarkTheme = false
+            if (isDarkModeOn) {
                 themeSwitch.isChecked = false
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
             }else{
-                isDarkTheme = true
                 themeSwitch.isChecked = true
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             }
