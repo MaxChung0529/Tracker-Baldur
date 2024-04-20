@@ -45,6 +45,11 @@
     <string name="interval">New log every</string>
     <string name="intervalLogDuration">Each log for </string>
     <string name="goal_minute">Minute(s)</string>
+    <string name="filterDate">Any Date</string>
+    <string name="filterTitleHint">Filter Title:</string>
+    <string name="optional">(Optional)</string>
+    <string name="filterDuration">Filter\nDuration:</string>
+
 
 
     <!--Dummy Data-->

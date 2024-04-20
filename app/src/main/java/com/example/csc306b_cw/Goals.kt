@@ -28,6 +28,7 @@ class Goals(mainActivity: MainActivity) : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+//    val mainActivity = activity as MainActivity
     val mainActivity = mainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,22 +101,6 @@ class Goals(mainActivity: MainActivity) : Fragment() {
         }
         return list
 
-    }
-
-    private fun populateList() : ArrayList<GoalsData> {
-
-        val list = ArrayList<GoalsData>()
-
-        val data = GoalsData()
-        data.goalName = "Reading"
-        val hoursNum = 12
-        val goalHours = 36
-        data.progress = "$hoursNum / $goalHours"
-        //data.progress = "12 / 36"
-        data.deadline = "12/12/2024"
-        list.add(data)
-
-        return list
     }
 
 //    companion object {

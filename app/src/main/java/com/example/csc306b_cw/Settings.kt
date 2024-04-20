@@ -1,8 +1,11 @@
 package com.example.csc306b_cw
 
+import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -26,7 +29,7 @@ class Settings() : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-//    private var isDarkTheme = false
+//    private var mainActivity = mainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,13 +52,11 @@ class Settings() : Fragment() {
         val DarkModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         val isDarkModeOn = DarkModeFlags == Configuration.UI_MODE_NIGHT_YES
 
-        if (isDarkModeOn) {
-            themeSwitch.isChecked = true
-        }else {
-            themeSwitch.isChecked = false
-        }
-
         themeSwitch.setOnClickListener{
+
+            val parent = activity as MainActivity
+            parent.justSwitchedMode()
+
             if (isDarkModeOn) {
                 themeSwitch.isChecked = false
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -80,7 +81,7 @@ class Settings() : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(param1: String, param2: String, mainActivity: MainActivity) =
             Settings().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)

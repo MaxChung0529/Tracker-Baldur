@@ -25,7 +25,7 @@
             android:layout_height="match_parent"
             tools:listitem="@layout/goal_cards" />
 
-    </LinearLayout>.
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addGoal"
@@ -43,5 +43,6 @@
         app:iconGravity="textStart"
         app:iconPadding="0dp"
         tools:visibility="visible"
-        android:src="@drawable/baseline_add_24" />
+        android:src="@drawable/baseline_add_24"
+        android:contentDescription="TODO" />
 </FrameLayout>
