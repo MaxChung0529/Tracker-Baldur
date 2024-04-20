@@ -54,6 +54,7 @@ class Logs(mainActivity: MainActivity) : Fragment(){
     var currentlyChosenDay : Int = calendar.get(Calendar.DAY_OF_MONTH)
     var dateToShow: String = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
     var needToFilter = false
+    var currentLogList = ArrayList<LogsData>()
     lateinit var contentView: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,7 +75,7 @@ class Logs(mainActivity: MainActivity) : Fragment(){
 
 //        fillRecyclerView(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), contentView)
         val date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-        val dataList = populateList()
+        val dataList = getDateLogs()
         var adapter = LogsAdapter(dataList, mainAct, date)
 //        val recyclerView = contentView.findViewById<RecyclerView>(R.id.recycler)
         recyclerView.adapter = adapter
@@ -132,7 +133,7 @@ class Logs(mainActivity: MainActivity) : Fragment(){
         return contentView
     }
 
-    private fun getLogs(): ArrayList<LogsData> {
+    private fun getDateLogs(): ArrayList<LogsData> {
         val list = ArrayList<LogsData>()
 
         try {
@@ -167,6 +168,7 @@ class Logs(mainActivity: MainActivity) : Fragment(){
         }catch (e: Exception) {
             Log.d("LOL",e.message.toString())
         }
+        currentLogList = list
         return list
     }
 
@@ -176,11 +178,11 @@ class Logs(mainActivity: MainActivity) : Fragment(){
 
         //Change Date
         if (formattedDate != null) {
-            fillRecyclerView(sortLogs("ASC", getLogs()), contentView)
+            fillRecyclerView(sortLogs("ASC", getDateLogs()), contentView)
         }
         //Change Sorting Order
         if (sortString != null) {
-            fillRecyclerView(sortLogs(sortString, getLogs()), contentView)
+            fillRecyclerView(sortLogs(sortString, currentLogList), contentView)
         }
         //Filter Logs
         if (filter == true) {
@@ -273,22 +275,10 @@ class Logs(mainActivity: MainActivity) : Fragment(){
         }catch (e: Exception) {
             Log.d("LOL",e.message.toString())
         }
+        currentLogList = list
         return list
 
 
-    }
-
-    private fun populateList() : ArrayList<LogsData> {
-
-//        val file = mainAct.openFileInput("logsData.json")
-//        val inputReader = InputStreamReader(file)
-//
-//        val text = inputReader.readText()
-//        val log = Gson().fromJson(text, LogsData::class.java)
-        val list = getLogs()
-//        file.close()
-
-        return list
     }
 
     private fun showFilterPopUp(){
