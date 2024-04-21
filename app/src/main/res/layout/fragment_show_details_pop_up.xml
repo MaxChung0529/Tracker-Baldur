@@ -229,6 +229,17 @@
                 android:textAlignment="center"
                 android:gravity="center"
                 android:layout_gravity="center"
+                android:textSize="19.5sp"
+                android:layout_marginEnd="25dp"/>
+
+            <Button
+                android:id="@+id/deleteBtn"
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:text="@string/deleteBtn"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:layout_gravity="center"
                 android:textSize="19.5sp"/>
         </LinearLayout>
 

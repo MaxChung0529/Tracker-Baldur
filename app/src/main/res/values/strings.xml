@@ -51,6 +51,7 @@
     <string name="filterDuration">Filter\nDuration:</string>
     <string name="cardDate">Date</string>
     <string name="editBtn">Edit Log</string>
+    <string name="deleteBtn">Delete Log</string>
     <string name="overview">Overview</string>
 
 

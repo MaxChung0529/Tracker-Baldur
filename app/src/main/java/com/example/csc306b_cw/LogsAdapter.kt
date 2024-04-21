@@ -13,9 +13,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.File
 
 class LogsAdapter (private val itemsArrayList : MutableList<LogsData>, mainActivity: MainActivity, logsData: String) : RecyclerView.Adapter<LogsAdapter.ViewHolder>() {
-    val mainAct = mainActivity
+    val mainActivity = mainActivity
     var logsData = logsData
 
     inner class ViewHolder(itemView : View): RecyclerView.ViewHolder(itemView) {
@@ -37,10 +38,7 @@ class LogsAdapter (private val itemsArrayList : MutableList<LogsData>, mainActiv
                 var detailsToShow: JSONObject? = null
 
                 try {
-                    val jsonString = mainAct.assets.open("test.json").bufferedReader().use { it.readText() }
-
-                    val outputJson = JSONObject(jsonString)
-                    val logs = outputJson.getJSONArray("logs") as JSONArray
+                    val logs = getStoredLogs()
 
                     for (i in 0 until logs.length()){
                         val date = logs.getJSONObject(i).getString("date")
@@ -59,13 +57,13 @@ class LogsAdapter (private val itemsArrayList : MutableList<LogsData>, mainActiv
                 }
 
                 if (detailsToShow == null) {
-                    val toast = Toast.makeText(mainAct, "Details not found", Toast.LENGTH_LONG)
+                    val toast = Toast.makeText(mainActivity, "Details not found", Toast.LENGTH_LONG)
                     toast.show()
                 }else {
-                    //Implement code to make popup to show details of log
-                    val detailPopUp = ShowDetailsPopUp(mainAct, detailsToShow)
+                    //Implement code to makes popup to show details of log
+                    val detailPopUp = ShowDetailsPopUp(mainActivity, detailsToShow)
                     detailPopUp.show(
-                        (mainAct as AppCompatActivity).supportFragmentManager,
+                        (mainActivity as AppCompatActivity).supportFragmentManager,
                         "showPopUp"
                     )
                 }
@@ -89,7 +87,7 @@ class LogsAdapter (private val itemsArrayList : MutableList<LogsData>, mainActiv
 
         //Set category colour
         if (item.activityName == "Reading"){
-            holder.catColor.setBackgroundColor(mainAct.getColor(R.color.purple))
+            holder.catColor.setBackgroundColor(mainActivity.getColor(R.color.purple))
         }
 
         holder.activityName.text = item.activityName
@@ -97,6 +95,22 @@ class LogsAdapter (private val itemsArrayList : MutableList<LogsData>, mainActiv
         holder.activityDuration.text = "${ item.duration.toString().replace(".", " Hours ") } Minutes"
         holder.activityDate.text = item.date
 
+    }
+
+
+    private fun getStoredLogs(): JSONArray {
+        var file: File? = null
+        val root = mainActivity.getExternalFilesDir(null)?.absolutePath
+        var myDir = File("$root/TrackerBaldur")
+
+        val fileName = "logsData.json"
+        file = File(myDir, fileName)
+
+        val jsonString = file.bufferedReader().use { it.readText() }
+
+        val outputJson = JSONObject(jsonString)
+        val logs = outputJson.getJSONArray("logs") as JSONArray
+        return logs
     }
 
     override fun getItemCount(): Int {

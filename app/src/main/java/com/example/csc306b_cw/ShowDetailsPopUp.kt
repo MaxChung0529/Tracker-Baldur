@@ -1,6 +1,7 @@
 package com.example.csc306b_cw
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -10,9 +11,14 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import org.json.JSONArray
 import org.json.JSONObject
+import java.io.BufferedWriter
+import java.io.File
+import java.io.FileWriter
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
@@ -52,6 +58,11 @@ class ShowDetailsPopUp(mainAct: MainActivity, detailsObj: JSONObject) : DialogFr
             editLog()
         }
 
+        val deleteLogBtn = popUpView.findViewById<Button>(R.id.deleteBtn)
+        deleteLogBtn.setOnClickListener{
+            confirmDelete()
+        }
+
         val dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
         val startingTime = LocalTime.parse(start, dateTimeFormatter)
         val endingTime = LocalTime.parse(end, dateTimeFormatter)
@@ -84,6 +95,71 @@ class ShowDetailsPopUp(mainAct: MainActivity, detailsObj: JSONObject) : DialogFr
     }
 
     private fun editLog() {
+        dismiss()
+        val showPopUp = AddLogPopUp(mainActivity)
+        showPopUp.show((activity as AppCompatActivity).supportFragmentManager, "showPopUp")
+    }
 
+    private fun confirmDelete() {
+        var builder = AlertDialog.Builder(mainActivity)
+        builder.setTitle("You sure you want to delete the log?")
+        builder.setPositiveButton("Yes") { dialog, which ->
+            deleteLog()
+            dismiss()
+        }
+        builder.setNegativeButton("No") {dialog, which ->
+        }
+        builder.show()
+    }
+
+    private fun deleteLog() {
+        val storedLogs = getStoredLogs()
+
+        var file: File? = null
+        val root = mainActivity.getExternalFilesDir(null)?.absolutePath
+        var myDir = File("$root/TrackerBaldur")
+
+        if (!myDir.exists()) {
+            myDir.mkdirs()
+        }
+
+        var tmpJSONArray = JSONArray()
+        for (i in 0 until storedLogs.length()) {
+            val checkObj = storedLogs.getJSONObject(i)
+            if (checkObj.get("activityName") != detailsObj.get("activityName")
+                || checkObj.get("startingTime") != detailsObj.get("startingTime")
+                || checkObj.get("endingTime") != detailsObj.get("endingTime")) {
+                tmpJSONArray.put(storedLogs.getJSONObject(i))
+            }
+        }
+        val logsArray = JSONObject()
+
+        logsArray.put("logs",tmpJSONArray)
+
+        val fileName = "logsData.json"
+        file = File(myDir, fileName)
+        try {
+            val output = BufferedWriter(FileWriter(file))
+            output.write(logsArray.toString())
+            output.close()
+        }catch (e: Exception) {
+            Log.d("logs-saving", e.message.toString())
+        }
+    }
+
+
+    private fun getStoredLogs(): JSONArray {
+        var file: File? = null
+        val root = mainActivity.getExternalFilesDir(null)?.absolutePath
+        var myDir = File("$root/TrackerBaldur")
+
+        val fileName = "logsData.json"
+        file = File(myDir, fileName)
+
+        val jsonString = file.bufferedReader().use { it.readText() }
+
+        val outputJson = JSONObject(jsonString)
+        val logs = outputJson.getJSONArray("logs") as JSONArray
+        return logs
     }
 }

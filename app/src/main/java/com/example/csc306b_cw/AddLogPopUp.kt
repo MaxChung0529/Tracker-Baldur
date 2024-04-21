@@ -4,16 +4,12 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Bitmap
-import android.graphics.BlendMode
-import android.graphics.ColorFilter
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.Icon
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -29,16 +25,17 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.BufferedWriter
 import java.io.File
 import java.io.FileOutputStream
+import java.io.FileWriter
 import java.io.InputStreamReader
 import java.io.OutputStream
+import java.io.OutputStreamWriter
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -58,15 +55,14 @@ private const val ARG_PARAM2 = "param2"
 class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
     val mainActivity = mainAct
     val calendar = Calendar.getInstance()
-    var pickedPhoto: Uri? = null
-    var pickedBitMap: Bitmap? = null
     var imageView: ImageView? = null
     var imageSrc: String? = null
-    private val PICK_IMAGE_CODE = 200
-    private val REQUEST_STORAGE_PERMISSION = 100
-    val contentResolver = mainActivity.contentResolver
     var btnChosen = false
     var bitMapUri: Uri? = null
+    var chosenDate: String = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+    var currentlyChosenYear : Int = calendar.get(Calendar.YEAR)
+    var currentlyChosenMonth : Int = calendar.get(Calendar.MONTH)
+    var currentlyChosenDay : Int = calendar.get(Calendar.DAY_OF_MONTH)
 
     @SuppressLint("ResourceAsColor", "UseCompatLoadingForDrawables")
     override fun onCreateView(
@@ -167,10 +163,10 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
             Log.d("IDK", e.message.toString())
         }
 
-        val date_picker = popUpView.findViewById<Button>(R.id.add_log_date_picker)
-        date_picker.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")).toString())
-        date_picker.setOnClickListener{
-            showDatePicker(date_picker)
+        val datePicker = popUpView.findViewById<Button>(R.id.add_log_date_picker)
+        datePicker.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")).toString())
+        datePicker.setOnClickListener{
+            showDatePicker(datePicker)
         }
 
         imageView = popUpView.findViewById<ImageView>(R.id.log_image)
@@ -195,7 +191,8 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
         submit_btn.setOnClickListener{
             val title = popUpView.findViewById<EditText>(R.id.title_input)
             val description = popUpView.findViewById<EditText>(R.id.description)
-            val text = addLog(title, startTimeBtn, endTimeBtn, description)
+//            val text = addLog(title, startTimeBtn, endTimeBtn)
+            val text = addLog(title, startTimeBtn, endTimeBtn, popUpView)
             if (text == "Wrong data"){
                 var builder = AlertDialog.Builder(mainActivity)
                 if (title.text.toString() == "") {
@@ -208,22 +205,50 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
 
                 builder.show()
             }else{
-//                val entry = createJsonData(title.text.toString(), "Reading", startTimeBtn.text.toString(), endTimeBtn.text.toString(), description.text.toString(), imageSrc)
-//
-//                var fileOut = mainActivity.openFileOutput("logsData.json", Context.MODE_PRIVATE)
-////                fileOut.close()
-////                fileOut = mainActivity.openFileOutput("logsData.json", Context.MODE_PRIVATE)
-//
-//                val outputWriter = OutputStreamWriter(fileOut)
-//                outputWriter.write(entry.toString() + ",\n")
-//                Log.d("LogText", entry.toString())
-//                outputWriter.close()
+
+                val storedLogs = getStoredLogs()
+
+                try {
+                    imageSrc = saveImage(MediaStore.Images.Media.getBitmap(mainActivity.contentResolver, bitMapUri))
+                }catch (e: Exception) {
+                    Log.d("ImageURI", e.message.toString())
+                    imageSrc = ""
+                }
+
+                val entry = createJsonData(datePicker.text.toString(), title.text.toString()
+                    , startTimeBtn.text.toString(), endTimeBtn.text.toString()
+                    , description.text.toString(), imageSrc)
+
+                var file: File? = null
+                val root = mainActivity.getExternalFilesDir(null)?.absolutePath
+                var myDir = File("$root/TrackerBaldur")
+
+                if (!myDir.exists()) {
+                    myDir.mkdirs()
+                }
+
+                var tmpJSONArray = JSONArray()
+                for (i in 0 until storedLogs.length()) {
+                    tmpJSONArray.put(storedLogs.getJSONObject(i))
+                }
+                tmpJSONArray.put(entry)
+
+                val logsArray = JSONObject()
+
+                logsArray.put("logs",tmpJSONArray)
+
+                val fileName = "logsData.json"
+                file = File(myDir, fileName)
+                try {
+                    val output = BufferedWriter(FileWriter(file))
+                    output.write(logsArray.toString())
+                    output.close()
+                }catch (e: Exception) {
+                    Log.d("logs-saving", e.message.toString())
+                }
                 dismiss()
+                Toast.makeText(mainActivity, "Log saved", Toast.LENGTH_LONG).show()
 
-
-                imageSrc = saveImage(MediaStore.Images.Media.getBitmap(mainActivity.contentResolver, bitMapUri))
-
-//                getInternal()
 
             }
         }
@@ -239,6 +264,22 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
         // Inflate the layout for this fragment
         return popUpView
     }
+
+    private fun getStoredLogs(): JSONArray {
+        var file: File? = null
+        val root = mainActivity.getExternalFilesDir(null)?.absolutePath
+        var myDir = File("$root/TrackerBaldur")
+
+        val fileName = "logsData.json"
+        file = File(myDir, fileName)
+
+        val jsonString = file.bufferedReader().use { it.readText() }
+
+        val outputJson = JSONObject(jsonString)
+        val logs = outputJson.getJSONArray("logs") as JSONArray
+        return logs
+    }
+
     private fun createParams() : ViewGroup.LayoutParams {
         var left = 10
         var right = 10
@@ -275,17 +316,6 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
         return fileName
     }
 
-    private fun getInternal() {
-        val file = mainActivity.openFileInput("logsData.json")
-        val inputReader = InputStreamReader(file)
-
-        val outputJson = JSONObject(inputReader.readText())
-        val logs = outputJson.getJSONArray("logs") as JSONArray
-
-        file.close()
-
-    }
-
     private fun browseImage(galleryImage: ActivityResultLauncher<String>) {
         try {
             galleryImage.launch("image/*")
@@ -298,35 +328,38 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
             {DatePicker, year: Int, month: Int, day: Int ->
                 val selectedDate = Calendar.getInstance()
                 selectedDate.set(year, month, day)
+
+                currentlyChosenYear = year
+                currentlyChosenMonth = month
+                currentlyChosenDay = day
+
                 val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
                 val formattedDate = dateFormat.format((selectedDate.time))
                 datePickerBtn.setText(formattedDate)
+                chosenDate = formattedDate
 
             },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
+            currentlyChosenYear,
+            currentlyChosenMonth,
+            currentlyChosenDay
 
         )
         datePickerDialog.show()
     }
 
-    private fun createJsonData(title: String?, category: String?, startTime: String, endTime: String, description: String?, imgSrc: String?): JSONObject {
+    private fun createJsonData(date: String, title: String?, startTime: String, endTime: String, description: String?, imgSrc: String?): JSONObject {
         var json = JSONObject()
 
-        json.put("date", "16-04-2024")
-
-        if (title == null) {
-            json.put("activityName", category)
-        }else {
-            json.put("activityName", title)
-        }
+        json.put("date", date)
+        json.put("activityName", title)
         json.put("startingTime", startTime)
         json.put("endingTime", endTime)
         if (description != null){
             json.put("description", description)
+        }else {
+            json.put("description", "")
         }
-        json.put("imgSrsc", imgSrc)
+        json.put("imgSrc", imgSrc)
 
         return json
     }
@@ -368,16 +401,27 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
 //        TimePickerDialog(mainActivity, R.style.ScrollTimePicker, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
         TimePickerDialog(mainActivity, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
     }
-    private fun addLog(title: EditText, startTimeBtn: Button, endTimeBtn: Button, description: EditText): String?{
+    private fun addLog(title: EditText, startTimeBtn: Button, endTimeBtn: Button, popupView: View): String?{
 
         val startingTime = startTimeBtn.text.toString().replace(":",".").toDouble()
         val endingTime = endTimeBtn.text.toString().replace(":",".").toDouble()
         var textToShow = ""
 
-        textToShow = if (endingTime - startingTime >= 1.00 && title.text.toString() != "") {
-            "Log added"
-        }else {
-            "Wrong data"
+        val storedLogs = getStoredLogs()
+        for (i in 0 until storedLogs.length()) {
+            val tmpLog = storedLogs.getJSONObject(i)
+            val tmpLogStart = tmpLog.getString("startingTime").toString().replace(":",".").toDouble()
+            val tmpLogEnd = tmpLog.getString("endingTime").toString().replace(":",".").toDouble()
+
+            if (endingTime - startingTime < 1.00 || title.text.toString() == "" || (tmpLog.get("date") == chosenDate
+                && ((tmpLogStart <= startingTime
+                        || startingTime >= tmpLogEnd)
+                || (tmpLogStart <= endingTime
+                        || endingTime >= tmpLogEnd)))) {
+                textToShow = "Wrong data"
+            }else {
+                textToShow = "Log added"
+            }
         }
         return textToShow
     }

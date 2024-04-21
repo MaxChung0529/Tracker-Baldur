@@ -29,6 +29,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.File
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -53,9 +54,9 @@ class Logs(mainActivity: MainActivity) : Fragment(){
     var currentlyChosenMonth : Int = calendar.get(Calendar.MONTH)
     var currentlyChosenDay : Int = calendar.get(Calendar.DAY_OF_MONTH)
     var dateToShow: String = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-    var needToFilter = false
     var currentLogList = ArrayList<LogsData>()
     lateinit var contentView: View
+    lateinit var sortSpinner: Spinner
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,8 +87,6 @@ class Logs(mainActivity: MainActivity) : Fragment(){
         filterLogBtn.setOnClickListener{
             showFilterPopUp()
         }
-        if (needToFilter) {
-        }
 
         val datePickerBtn = contentView.findViewById<Button>(R.id.date_picker_btn)
 
@@ -96,15 +95,15 @@ class Logs(mainActivity: MainActivity) : Fragment(){
             showDatePicker(datePickerBtn, dataList, contentView)
         }
 
-        val sortBtn = contentView.findViewById<Spinner>(R.id.sortSpinner)
+        sortSpinner = contentView.findViewById<Spinner>(R.id.sortSpinner)
         val sortValArray = arrayOf("Starting time - ASC", "Starting time - DESC", "Duration - ASC", "Duration - DESC")
 
         try {
-            sortBtn.adapter =
+            sortSpinner.adapter =
                 ArrayAdapter(mainAct, android.R.layout.simple_spinner_dropdown_item, sortValArray)
 
 
-            sortBtn.onItemSelectedListener = object : OnItemSelectedListener {
+            sortSpinner.onItemSelectedListener = object : OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>?,
                     view: View?,
@@ -137,8 +136,15 @@ class Logs(mainActivity: MainActivity) : Fragment(){
         val list = ArrayList<LogsData>()
 
         try {
-            val jsonString = mainAct.assets.open("test.json").bufferedReader().use { it.readText() }
+//            val jsonString = mainAct.assets.open("test.json").bufferedReader().use { it.readText() }
 
+            val root = mainAct.getExternalFilesDir(null)?.absolutePath
+            var myDir = File("$root/TrackerBaldur")
+
+            val fileName = "logsData.json"
+            val file = File(myDir, fileName)
+
+            val jsonString = file.bufferedReader().use { it.readText() }
             val outputJson = JSONObject(jsonString)
             val logs = outputJson.getJSONArray("logs") as JSONArray
 
@@ -186,10 +192,9 @@ class Logs(mainActivity: MainActivity) : Fragment(){
         }
         //Filter Logs
         if (filter == true) {
+            sortSpinner.setSelection(0)
             fillRecyclerView(sortLogs("ASC", filterLogs(contentView)), contentView)
         }
-
-
     }
 
     private fun fillRecyclerView(dataList: ArrayList<LogsData>, contentView: View) {
@@ -233,7 +238,15 @@ class Logs(mainActivity: MainActivity) : Fragment(){
         val list = ArrayList<LogsData>()
 
         try {
-            val jsonString = mainAct.assets.open("test.json").bufferedReader().use { it.readText() }
+//            val jsonString = mainAct.assets.open("test.json").bufferedReader().use { it.readText() }
+
+            val root = mainAct.getExternalFilesDir(null)?.absolutePath
+            var myDir = File("$root/TrackerBaldur")
+
+            val fileName = "logsData.json"
+            val file = File(myDir, fileName)
+
+            val jsonString = file.bufferedReader().use { it.readText() }
 
             val outputJson = JSONObject(jsonString)
             val logs = outputJson.getJSONArray("logs") as JSONArray
