@@ -74,11 +74,9 @@ class Logs(mainActivity: MainActivity) : Fragment(){
         contentView = inflater.inflate(R.layout.fragment_logs, container,false)
         val recyclerView = contentView.findViewById<RecyclerView>(R.id.recycler)
 
-//        fillRecyclerView(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), contentView)
         val date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
         val dataList = getDateLogs()
         var adapter = LogsAdapter(dataList, mainAct, date)
-//        val recyclerView = contentView.findViewById<RecyclerView>(R.id.recycler)
         recyclerView.adapter = adapter
         val layoutManager = LinearLayoutManager(this.activity)
         recyclerView.layoutManager = layoutManager
@@ -132,12 +130,15 @@ class Logs(mainActivity: MainActivity) : Fragment(){
         return contentView
     }
 
+    fun refresh() {
+        fillRecyclerView(sortLogs("ASC", getDateLogs()), contentView)
+
+    }
+
     private fun getDateLogs(): ArrayList<LogsData> {
         val list = ArrayList<LogsData>()
 
         try {
-//            val jsonString = mainAct.assets.open("test.json").bufferedReader().use { it.readText() }
-
             val root = mainAct.getExternalFilesDir(null)?.absolutePath
             var myDir = File("$root/TrackerBaldur")
 

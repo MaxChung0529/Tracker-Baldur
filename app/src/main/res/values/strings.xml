@@ -53,6 +53,7 @@
     <string name="editBtn">Edit Log</string>
     <string name="deleteBtn">Delete Log</string>
     <string name="overview">Overview</string>
+    <string name="logTag">Logs</string>
 
 
     <!--Dummy Data-->

@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private var justSwitched = false
+    var logFragment = Logs(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,13 +34,13 @@ class MainActivity : AppCompatActivity() {
         //setContentView(R.layout.activity_main_view)
         setContentView(binding.root)
 
-        replaceFragment(Logs(this))
+        replaceFragment(logFragment)
 
         binding.bottomNavMenu.setOnItemSelectedListener {
 
             when (it.itemId) {
 
-                R.id.logs -> replaceFragment(Logs(this))
+                R.id.logs -> replaceFragment(logFragment)
                 R.id.goals -> replaceFragment(Goals(this))
                 R.id.stopwatch -> replaceFragment(Stopwatch())
                 R.id.overview -> replaceFragment(Overview())

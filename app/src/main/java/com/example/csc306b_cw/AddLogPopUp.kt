@@ -27,6 +27,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentController
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedWriter
@@ -40,6 +41,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import kotlin.math.log
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -55,6 +57,7 @@ private const val ARG_PARAM2 = "param2"
 class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
     val mainActivity = mainAct
     val calendar = Calendar.getInstance()
+    val calendarTime = Calendar.getInstance()
     var imageView: ImageView? = null
     var imageSrc: String? = null
     var btnChosen = false
@@ -193,18 +196,7 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
             val description = popUpView.findViewById<EditText>(R.id.description)
 //            val text = addLog(title, startTimeBtn, endTimeBtn)
             val text = addLog(title, startTimeBtn, endTimeBtn, popUpView)
-            if (text == "Wrong data"){
-                var builder = AlertDialog.Builder(mainActivity)
-                if (title.text.toString() == "") {
-                    builder.setTitle("Title cannot be empty! You can press on the buttons fill it in!")
-                }else {
-                    builder.setTitle("Inputted time is wrong! Try again!")
-                }
-                builder.setPositiveButton("Okay") { dialog, which ->
-                }
-
-                builder.show()
-            }else{
+            if (text == "Log added"){
 
                 val storedLogs = getStoredLogs()
 
@@ -249,7 +241,22 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
                 dismiss()
                 Toast.makeText(mainActivity, "Log saved", Toast.LENGTH_LONG).show()
 
+                mainActivity.logFragment.refresh()
 
+
+            }else {
+                var builder = AlertDialog.Builder(mainActivity)
+                if (text == "Empty Title") {
+                    builder.setTitle("Title cannot be empty! You can press on the buttons fill it in!")
+                }else if (text == "Too Short"){
+                    builder.setTitle("Log needs to be at least an hour!")
+                }else if (text == "Overlap"){
+                    builder.setTitle("Time overlapped with other logs! Try again!")
+                }
+                builder.setPositiveButton("Okay") { dialog, which ->
+                }
+
+                builder.show()
             }
         }
 
@@ -365,41 +372,37 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
     }
 
     private fun pickStartTime(startTimeBtn: Button, endTimeBtn: Button): String?{
-        val cal = Calendar.getInstance()
         var startTime: String? = null
         val timeSetListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
-            cal.set(Calendar.HOUR_OF_DAY, hour)
-            cal.set(Calendar.MINUTE, minute)
-            startTime = SimpleDateFormat("HH:mm").format(cal.time)
+            calendarTime.set(Calendar.HOUR_OF_DAY, hour)
+            calendarTime.set(Calendar.MINUTE, minute)
+            startTime = SimpleDateFormat("HH:mm").format(calendarTime.time)
 
             startTimeBtn.setText(startTime)
 
-            cal.add(Calendar.HOUR_OF_DAY, 1)
+            calendarTime.add(Calendar.HOUR_OF_DAY, 1)
 
-            endTimeBtn.setText(SimpleDateFormat("HH:mm").format(cal.time))
+            endTimeBtn.setText(SimpleDateFormat("HH:mm").format(calendarTime.time))
         }
-//        TimePickerDialog(mainActivity, R.style.ScrollTimePicker, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
-        TimePickerDialog(mainActivity, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
+        TimePickerDialog(mainActivity, timeSetListener, calendarTime.get(Calendar.HOUR_OF_DAY), calendarTime.get(Calendar.MINUTE), true).show()
         return startTime
     }
 
     private fun pickEndTime(startTimeBtn: Button, endTimeBtn: Button){
-        val cal = Calendar.getInstance()
         var endTime: String? = null
         var moreThanOneHour = false;
 
 
         val timeSetListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
 
-                cal.set(Calendar.HOUR_OF_DAY, hour)
-                cal.set(Calendar.MINUTE, minute)
-                endTime = SimpleDateFormat("HH:mm").format(cal.time)
+            calendarTime.set(Calendar.HOUR_OF_DAY, hour)
+            calendarTime.set(Calendar.MINUTE, minute)
+                endTime = SimpleDateFormat("HH:mm").format(calendarTime.time)
 
                 endTimeBtn.setText(endTime)
         }
 
-//        TimePickerDialog(mainActivity, R.style.ScrollTimePicker, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
-        TimePickerDialog(mainActivity, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
+        TimePickerDialog(mainActivity, timeSetListener, calendarTime.get(Calendar.HOUR_OF_DAY), calendarTime.get(Calendar.MINUTE), true).show()
     }
     private fun addLog(title: EditText, startTimeBtn: Button, endTimeBtn: Button, popupView: View): String?{
 
@@ -413,12 +416,19 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
             val tmpLogStart = tmpLog.getString("startingTime").toString().replace(":",".").toDouble()
             val tmpLogEnd = tmpLog.getString("endingTime").toString().replace(":",".").toDouble()
 
-            if (endingTime - startingTime < 1.00 || title.text.toString() == "" || (tmpLog.get("date") == chosenDate
-                && ((tmpLogStart <= startingTime
-                        || startingTime >= tmpLogEnd)
-                || (tmpLogStart <= endingTime
-                        || endingTime >= tmpLogEnd)))) {
-                textToShow = "Wrong data"
+            if (endingTime - startingTime < 1.00
+                || title.text.toString() == ""
+                || (tmpLog.get("date") == chosenDate
+                && ((tmpLogStart <= startingTime && startingTime <= tmpLogEnd)
+                || (tmpLogStart <= endingTime && endingTime <= tmpLogEnd)))
+                ) {
+                if (endingTime - startingTime < 1.00) {
+                    textToShow = "Too Short"
+                }else if (title.text.toString() == "") {
+                    textToShow = "Empty Title"
+                }else {
+                    textToShow = "Overlap"
+                }
             }else {
                 textToShow = "Log added"
             }

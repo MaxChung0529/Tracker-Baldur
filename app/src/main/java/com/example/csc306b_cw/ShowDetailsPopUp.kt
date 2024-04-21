@@ -106,6 +106,7 @@ class ShowDetailsPopUp(mainAct: MainActivity, detailsObj: JSONObject) : DialogFr
         builder.setPositiveButton("Yes") { dialog, which ->
             deleteLog()
             dismiss()
+            mainActivity.logFragment.refresh()
         }
         builder.setNegativeButton("No") {dialog, which ->
         }
