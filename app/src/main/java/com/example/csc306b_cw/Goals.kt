@@ -88,12 +88,13 @@ class Goals(mainActivity: MainActivity) : Fragment() {
                 val interval = logs.getJSONObject(i).getInt("interval")
                 val intervalUnit = logs.getJSONObject(i).getString("unit")
                 val durationPerUnit = logs.getJSONObject(i).getDouble("durationPerUnit")
-                val progress = logs.getJSONObject(i).getString("progress")
+                val progressNow = logs.getJSONObject(i).getDouble("progressNow")
+                val progressGoal = logs.getJSONObject(i).getDouble("progressGoal")
                 val deadline = logs.getJSONObject(i).getString("deadline")
                 val description = logs.getJSONObject(i).getString("description")
                 val imgSrc = logs.getJSONObject(i).getString("imgSrc")
                 list.add(
-                    GoalsData(goalName, interval, intervalUnit, durationPerUnit, progress, deadline, description, imgSrc)
+                    GoalsData(goalName, interval, intervalUnit, durationPerUnit, progressNow, progressGoal, deadline, description, imgSrc)
                 )
                 }
         }catch (e: Exception) {

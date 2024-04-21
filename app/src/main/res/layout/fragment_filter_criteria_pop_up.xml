@@ -97,7 +97,8 @@
             android:text="@string/filterDuration"
             android:layout_gravity="center"
             android:gravity="start"
-            android:textSize="19.5sp"/>
+            android:textSize="19.5sp"
+            android:layout_marginStart="5dp"/>
 
         <Spinner
             android:id="@+id/greaterOrLessThanSpinner"

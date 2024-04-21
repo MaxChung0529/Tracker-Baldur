@@ -1,47 +1,36 @@
 package com.example.csc306b_cw
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.app.Instrumentation.ActivityResult
 import android.app.TimePickerDialog
-import android.content.ContentResolver
-import android.content.ContentValues
-import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.Bitmap
-import android.graphics.Color
-import android.graphics.ImageDecoder
+import android.graphics.BlendMode
+import android.graphics.ColorFilter
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.Icon
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
-import android.media.Image
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
-import android.provider.MediaStore.Audio.Media
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.view.marginLeft
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import org.json.JSONArray
@@ -50,13 +39,10 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStreamReader
 import java.io.OutputStream
-import java.io.OutputStreamWriter
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
-import java.util.ArrayList
 import java.util.Locale
-import kotlin.Exception
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -82,7 +68,7 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
     var btnChosen = false
     var bitMapUri: Uri? = null
 
-    @SuppressLint("ResourceAsColor")
+    @SuppressLint("ResourceAsColor", "UseCompatLoadingForDrawables")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -106,29 +92,42 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
 
         val titleInput = popUpView.findViewById<EditText>(R.id.title_input)
 
-        val btnsValues = ArrayList<String>()
-        btnsValues.add("Reading")
-        btnsValues.add("Work")
-        btnsValues.add("Church")
-        btnsValues.add("Workout")
+        val btnColorPairs = ArrayList<Pair<String, Int>>()
+        btnColorPairs.add(Pair("Reading", R.color.purple))
+        btnColorPairs.add(Pair("Work", R.color.blue))
+        btnColorPairs.add(Pair("Church", R.color.green))
+        btnColorPairs.add(Pair("Workout", R.color.red))
+
+        val btnsIcons = ArrayList<ButtonIcons>()
+        btnsIcons.add(ButtonIcons("Reading", R.color.purple, R.drawable.baseline_book_24))
+        btnsIcons.add(ButtonIcons("Work", R.color.blue, R.drawable.baseline_work_24))
+        btnsIcons.add(ButtonIcons("Church", R.color.green, R.drawable.baseline_church_24))
+        btnsIcons.add(ButtonIcons("Workout", R.color.red, R.drawable.baseline_directions_bike_24))
 
 
         try {
             val buttonsScroll = popUpView.findViewById<LinearLayout>(R.id.catBtnScroll)
             var catBtns = java.util.ArrayList<Button>()
-            for (i in 0..btnsValues.size - 1) {
+            for (i in 0..btnsIcons.size - 1) {
                 val btn = Button(buttonsScroll.context)
+                btn.layoutParams = createParams()
+                btn.setBackgroundColor(R.color.light_gray)
 
-                val drawableImg = btn.context.resources.getDrawable(R.drawable.baseline_book_24)
-                drawableImg?.setBounds(5, 5, 5, 5)
-
-                btn.setCompoundDrawables(drawableImg, null,null,null)
-
-                btn.setText(btnsValues.get(i))
+                btn.setText(btnColorPairs.get(i).first)
                 btn.height = 40
                 btn.setTextColor(R.color.black)
                 btn.elevation = 8F
                 btn.isSelected = false
+
+                val btnIcon = mainActivity.getDrawable(btnsIcons.get(i).vector)
+                if (btnIcon != null) {
+//                    btnIcon.setTint(btnColorPairs.get(i).second)
+                    btnIcon.setTintList(mainActivity.getColorStateList(btnsIcons.get(i).color))
+                }
+
+                btn.setCompoundDrawablesWithIntrinsicBounds(btnIcon, null, null, null)
+
+//                btn.setBackgroundColor()
                 btn.backgroundTintList = mainActivity.getColorStateList(R.color.light_gray)
 
                 catBtns.add(btn)
@@ -137,7 +136,8 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
 
                     if (!btnChosen) {
                         btn.isSelected = true
-                        btn.backgroundTintList = mainActivity.getColorStateList(R.color.purple)
+//                        btn.backgroundTintList = mainActivity.getColorStateList(btnColorPairs.get(i).second)
+                        btn.backgroundTintList = mainActivity.getColorStateList(R.color.gray)
                         btnChosen = true
                         titleInput.setText(btn.text)
 
@@ -153,7 +153,8 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
                                 catBtns.get(i).backgroundTintList = mainActivity.getColorStateList(R.color.light_gray)
                             }
                             btn.isSelected = true
-                            btn.backgroundTintList = mainActivity.getColorStateList(R.color.purple)
+//                            btn.backgroundTintList = mainActivity.getColorStateList(btnColorPairs.get(i).second)
+                            btn.backgroundTintList = mainActivity.getColorStateList(R.color.gray)
                             btnChosen = true
                             titleInput.setText(btn.text)
                         }
@@ -238,7 +239,18 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
         // Inflate the layout for this fragment
         return popUpView
     }
+    private fun createParams() : ViewGroup.LayoutParams {
+        var left = 10
+        var right = 10
 
+        val params = ConstraintLayout.LayoutParams(
+            ConstraintLayout.LayoutParams.MATCH_PARENT,
+            ConstraintLayout.LayoutParams.WRAP_CONTENT
+        )
+        params.setMargins(left, 0, right, 0)
+
+        return params
+    }
     private fun saveImage(bitmap: Bitmap): String{
         var fileOutputStream : OutputStream
         var file: File? = null

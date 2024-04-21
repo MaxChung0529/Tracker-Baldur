@@ -1,217 +1,237 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-tools:context=".ShowDetailsPopUp">
-
-<LinearLayout
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <Button
-        android:id="@+id/catColor"
-        android:layout_width="match_parent"
-        android:layout_height="15dp"
-        android:insetLeft="12dp"
-        android:insetRight="12dp"
-        android:translationY="5dp"
-        android:backgroundTint="@color/purple"/>
+    android:layout_height="wrap_content"
+    tools:context=".ShowDetailsPopUp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:minHeight="28dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/detailCat"
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textAlignment="textEnd"
-            android:text="@string/detail_activity_category"
-            android:textSize="19.5sp"
-            tools:ignore="RtlCompat" />
-
-        <TextView
-            android:id="@+id/detailCatName"
+        <Button
+            android:id="@+id/catColor"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/reading"
-            android:textAlignment="center"
-            android:textSize="19.5sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/log_detail_date"
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/cardDate"
-            android:textAlignment="textEnd"
-            android:textSize="19.5sp"
-            tools:ignore="RtlCompat" />
+            android:layout_height="15dp"
+            android:backgroundTint="@color/purple"
+            android:insetLeft="12dp"
+            android:insetRight="12dp"
+            android:translationY="5dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:layout_gravity="center"
-            android:gravity="center">
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:minHeight="28dp"
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/detailDate"
-                android:layout_width="wrap_content"
+                android:id="@+id/detailCat"
+                android:layout_width="110dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:gravity="center"
+                android:text="@string/detail_activity_category"
+                android:textAlignment="textEnd"
+                android:textSize="19.5sp"
+                tools:ignore="RtlCompat" />
+
+            <TextView
+                android:id="@+id/detailCatName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/reading"
+                android:textAlignment="center"
+                android:textSize="19.5sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/log_detail_date"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:text="@string/cardDate"
-                android:textAlignment="textStart"
+                android:textAlignment="textEnd"
                 android:textSize="19.5sp"
                 tools:ignore="RtlCompat" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/detailDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:gravity="center"
+                    android:text="@string/cardDate"
+                    android:textAlignment="textStart"
+                    android:textSize="19.5sp"
+                    tools:ignore="RtlCompat" />
+            </LinearLayout>
+
         </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:minHeight="28dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/detailCatTime"
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textAlignment="textEnd"
-            android:textSize="19.5sp"
-            android:text="@string/detail_time"
-            tools:ignore="RtlCompat" />
-
-        <TextView
-            android:id="@+id/detailCatTimePeriod"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/tmpTime"
-            android:textAlignment="center"
-            android:textSize="19.5sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:minHeight="28dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/detailCatTime"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/detail_time"
+                android:textAlignment="textEnd"
+                android:textSize="19.5sp"
+                tools:ignore="RtlCompat" />
+
+            <TextView
+                android:id="@+id/detailCatTimePeriod"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/tmpTime"
+                android:textAlignment="center"
+                android:textSize="19.5sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+            </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal">
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/duration"
+                android:textAlignment="textEnd"
+                android:textSize="19.5sp"
+                tools:ignore="RtlCompat" />
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/duration"
-            android:textAlignment="textEnd"
-            android:textSize="19.5sp"
-            tools:ignore="RtlCompat" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/detailHour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:gravity="center"
+                    android:text="@string/duration_hour"
+                    android:textAlignment="textStart"
+                    android:textSize="19.5sp"
+                    tools:ignore="RtlCompat" />
+
+                <TextView
+                    android:id="@+id/detailMinute"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:text="@string/duration_minute"
+                    android:textAlignment="textStart"
+                    android:textSize="19.5sp"
+                    tools:ignore="RtlCompat" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/detailDesc"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/description"
+                android:textAlignment="textEnd"
+                android:textSize="19.5sp"
+                tools:ignore="RtlCompat" />
+
+            <TextView
+                android:id="@+id/detailDescContent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="@string/tmpDesc"
+                android:textAlignment="textStart"
+                android:textSize="19.5sp"
+                tools:ignore="RtlCompat" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_weight="5"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/detailImage"
+                android:layout_width="400dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:padding="3dp"
+                android:src="@drawable/backgroundstuffdark">
+
+            </ImageView>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:layout_gravity="center"
-            android:gravity="center">
+            android:gravity="center"
+            android:paddingTop="10dp">
 
-            <TextView
-                android:id="@+id/detailHour"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
+            <Button
+                android:id="@+id/editBtn"
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:text="@string/editBtn"
+                android:textAlignment="center"
                 android:gravity="center"
-                android:text="@string/duration_hour"
-                android:textAlignment="textStart"
-                android:textSize="19.5sp"
-                tools:ignore="RtlCompat" />
-
-            <TextView
-                android:id="@+id/detailMinute"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:text="@string/duration_minute"
-                android:textAlignment="textStart"
-                android:textSize="19.5sp"
-                tools:ignore="RtlCompat" />
+                android:textSize="19.5sp"/>
         </LinearLayout>
 
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/detailDesc"
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:text="@string/description"
-            android:textSize="19.5sp"
-            android:layout_gravity="center"
-            android:textAlignment="textEnd"
-            tools:ignore="RtlCompat" />
-
-        <TextView
-            android:padding="8dp"
-            android:id="@+id/detailDescContent"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textAlignment="textStart"
-            android:text="@string/tmpDesc"
-            android:textSize="19.5sp"
-            tools:ignore="RtlCompat"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_weight="5"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/detailImage"
-            android:layout_width="400dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:padding="3dp"
-            android:src="@drawable/backgroundstuffdark">
-
-        </ImageView>
-    </LinearLayout>
-</LinearLayout>
 
 </FrameLayout>

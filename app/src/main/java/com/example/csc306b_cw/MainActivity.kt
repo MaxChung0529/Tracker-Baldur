@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.logs -> replaceFragment(Logs(this))
                 R.id.goals -> replaceFragment(Goals(this))
                 R.id.stopwatch -> replaceFragment(Stopwatch())
+                R.id.overview -> replaceFragment(Overview())
                 R.id.settings -> replaceFragment(Settings())
 
                 else ->{

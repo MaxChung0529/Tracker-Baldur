@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
@@ -46,6 +47,11 @@ class ShowDetailsPopUp(mainAct: MainActivity, detailsObj: JSONObject) : DialogFr
         popUpView.findViewById<TextView>(R.id.detailCatTimePeriod).setText(formattedTime)
         popUpView.findViewById<TextView>(R.id.detailDescContent).setText(detailsObj.getString("description"))
 
+        val editLogBtn = popUpView.findViewById<Button>(R.id.editBtn)
+        editLogBtn.setOnClickListener{
+            editLog()
+        }
+
         val dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
         val startingTime = LocalTime.parse(start, dateTimeFormatter)
         val endingTime = LocalTime.parse(end, dateTimeFormatter)
@@ -68,7 +74,6 @@ class ShowDetailsPopUp(mainAct: MainActivity, detailsObj: JSONObject) : DialogFr
             if (detailsObj.getString("imgSrc") != "") {
                 val detailImage = popUpView.findViewById<ImageView>(R.id.detailImage)
                 detailImage.setImageURI(Uri.parse(detailsObj.getString("imgSrc")))
-//                detailImage.set
             }
         }catch (e: Exception){
             Log.d("ImgSrcLOL", e.message.toString())
@@ -76,5 +81,9 @@ class ShowDetailsPopUp(mainAct: MainActivity, detailsObj: JSONObject) : DialogFr
 
         // Inflate the layout for this fragment
         return popUpView
+    }
+
+    private fun editLog() {
+
     }
 }

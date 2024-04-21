@@ -5,8 +5,9 @@
       "interval": "2",
       "unit": "Day(s)",
       "durationPerUnit": 1.75,
-      "progress": "12/36",
-      "deadline": "24-9-2024",
+      "progressNow": 12.00,
+      "progressGoal": 36.00,
+      "deadline": "24-8-2024",
       "description": "LOL",
       "imgSrc": ""
     }

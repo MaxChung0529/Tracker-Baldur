@@ -148,7 +148,7 @@ class FilterCriteriaPopUp(mainActivity: MainActivity, logFragment: Logs) : Dialo
         }
 
         val greaterLessSpinner = popupView.findViewById<Spinner>(R.id.greaterOrLessThanSpinner)
-        val greaterLessVal = arrayOf("", ">", ">=", "<", "<=", "=")
+        val greaterLessVal = arrayOf(">", ">=", "<", "<=", "=")
 
         greaterLessSpinner.adapter =
             ArrayAdapter(popupView.context, android.R.layout.simple_spinner_dropdown_item, greaterLessVal)
