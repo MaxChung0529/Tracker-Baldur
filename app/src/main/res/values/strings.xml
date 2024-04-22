@@ -55,6 +55,7 @@
     <string name="overview">Overview</string>
     <string name="logTag">Logs</string>
     <string name="submitEditedLog">Edit Log</string>
+    <string name="totalHoursLogged">Total Hours Logged:</string>
 
 
     <!--Dummy Data-->

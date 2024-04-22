@@ -85,10 +85,7 @@ class LogsAdapter (private val itemsArrayList : MutableList<LogsData>, mainActiv
 
         val item = itemsArrayList[position]
 
-        //Set category colour
-        if (item.activityName == "Reading"){
-            holder.catColor.setBackgroundColor(mainActivity.getColor(R.color.purple))
-        }
+        holder.catColor.setBackgroundColor(mainActivity.getColor(findColour(item.activityName)))
 
         holder.activityName.text = item.activityName
         holder.activityTime.text = "${item.startingTime} - ${item.endingTime}"
@@ -111,6 +108,29 @@ class LogsAdapter (private val itemsArrayList : MutableList<LogsData>, mainActiv
         val outputJson = JSONObject(jsonString)
         val logs = outputJson.getJSONArray("logs") as JSONArray
         return logs
+    }
+
+    @SuppressLint("DiscouragedApi")
+    fun findColour(name: String?): Int{
+        val coloursJSONString = mainActivity.assets.open("catColors.json").bufferedReader().use {
+            it.readText()
+        }
+
+        val outputJson = JSONObject(coloursJSONString)
+        val colours = outputJson.getJSONArray("colours") as JSONArray
+
+        for (i in 0 until colours.length()) {
+            if (name == colours.getJSONObject(i).getString("Name")) {
+                val colorName = colours.getJSONObject(i).getString("Colour")
+
+                val res = mainActivity.getResources()
+                val packageName: String = mainActivity.getPackageName()
+
+                val colorId = res.getIdentifier(colorName, "color", packageName)
+                return colorId
+            }
+        }
+        return -1
     }
 
     override fun getItemCount(): Int {

@@ -132,7 +132,6 @@ class Logs(mainActivity: MainActivity) : Fragment(){
 
     fun refresh() {
         fillRecyclerView(sortLogs("ASC", getDateLogs()), contentView)
-
     }
 
     private fun getDateLogs(): ArrayList<LogsData> {

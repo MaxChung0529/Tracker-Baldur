@@ -28,8 +28,12 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.DialogFragment
+import org.json.JSONArray
+import org.json.JSONObject
+import java.io.BufferedWriter
 import java.io.File
 import java.io.FileOutputStream
+import java.io.FileWriter
 import java.io.OutputStream
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -62,6 +66,7 @@ class AddGoalPopUp(mainAct: MainActivity) : DialogFragment() {
     var chosenHour: Int = 1
     var chosenMinute: Double = 0.00
     var chosenDate: String = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+    var totalHrs = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -288,9 +293,24 @@ class AddGoalPopUp(mainAct: MainActivity) : DialogFragment() {
             if (goalTitle.text.toString() != ""
                     && goalTitle.text != null
                     && totalHours.text != "Total hour(s): 0.0") {
-                submitLog()
                 Toast.makeText(mainActivity, "Goal added!", Toast.LENGTH_LONG).show()
-                imageSrc = saveImage(MediaStore.Images.Media.getBitmap(mainActivity.contentResolver, bitMapUri))
+
+                try {
+                    imageSrc = saveImage(
+                        MediaStore.Images.Media.getBitmap(
+                            mainActivity.contentResolver,
+                            bitMapUri
+                        )
+                    )
+                }catch (e: Exception) {
+                    Log.d("ImageURI", e.message.toString())
+                    imageSrc = ""
+                }
+
+                submitGoals(goalTitle.text.toString(), chosenInterval.toString(), chosenIntervalUnit
+                    , chosenHour.toDouble() + chosenMinute, 0.0
+                    , totalHrs, chosenDate, goalDescription.text.toString(), imageSrc)
+
                 dismiss()
             }else if (goalTitle.text == null) {
                 val builder = AlertDialog.Builder(mainActivity)
@@ -339,7 +359,7 @@ class AddGoalPopUp(mainAct: MainActivity) : DialogFragment() {
         val hourDifference = (dayDifference / days)
         val eachLogDuration = chosenHour + (chosenMinute / 0.6)
 
-        val totalHrs = eachLogDuration * hourDifference
+        totalHrs = eachLogDuration * hourDifference
         totalView.setText("Total hour(s): ${totalHrs}")
     }
 
@@ -393,10 +413,119 @@ class AddGoalPopUp(mainAct: MainActivity) : DialogFragment() {
         }catch (e: Exception) {
             Log.d("Images-saving", e.message.toString())
         }
-        return fileName
+        return file.toString()
     }
 
-    private fun submitLog() {
+    private fun createJsonData(goalName: String?, interval: String?, unit: String?, duration: Double?
+                               , progressNow: Double?, progressGoal: Double?, deadline: String?
+                               , description: String?, imgSrc: String?): JSONObject {
+        var json = JSONObject()
+
+        json.put("goalName", goalName)
+        json.put("interval", interval)
+        json.put("unit", unit)
+        json.put("durationPerUnit", duration)
+        json.put("progressNow", progressNow)
+        json.put("progressGoal", progressGoal)
+        json.put("deadline", deadline)
+        json.put("description", description)
+        json.put("imgSrc", imgSrc)
+
+        return json
+    }
+
+
+    private fun getStoredGoals(): JSONArray {
+        var file: File? = null
+        val root = mainActivity.getExternalFilesDir(null)?.absolutePath
+        var myDir = File("$root/TrackerBaldur")
+
+        val fileName = "goalsData.json"
+        file = File(myDir, fileName)
+
+        try {
+            val jsonString = file.bufferedReader().use { it.readText() }
+
+            val outputJson = JSONObject(jsonString)
+            val goals = outputJson.getJSONArray("goals") as JSONArray
+            return goals
+        }catch (e: Exception) {
+            file.createNewFile()
+            val goals = JSONArray()
+            return goals
+        }
+    }
+    private fun submitGoals(goalName: String?, interval: String?, unit: String?, duration: Double?
+                          , progressNow: Double?, progressGoal: Double?, deadline: String?
+                          , description: String?, imgSrc: String?) {
+
+        val storedGoals = getStoredGoals()
+
+        val entry = createJsonData(goalName, interval
+            , unit, duration, progressNow, progressGoal, deadline
+            , description, imageSrc)
+
+
+        var file: File? = null
+        val root = mainActivity.getExternalFilesDir(null)?.absolutePath
+        val myDir = File("$root/TrackerBaldur")
+
+        if (!myDir.exists()) {
+            myDir.mkdirs()
+        }
+
+        val tmpJSONArray = JSONArray()
+
+        if (storedGoals.length() > 0) {
+            for (i in 0 until storedGoals.length()) {
+                tmpJSONArray.put(storedGoals.getJSONObject(i))
+            }
+        }
+
+        tmpJSONArray.put(entry)
+
+        val logsArray = JSONObject()
+
+        logsArray.put("goals",tmpJSONArray)
+
+        val fileName = "goalsData.json"
+        file = File(myDir, fileName)
+        try {
+            val output = BufferedWriter(FileWriter(file))
+            output.write(logsArray.toString())
+            output.close()
+        }catch (e: Exception) {
+            Log.d("goal-saving", e.message.toString())
+        }
+        dismiss()
+
+//        val root = mainActivity.getExternalFilesDir(null)?.absolutePath
+//        var myDir = File("$root/TrackerBaldur")
+//
+//        val fileName = "goalsData.json"
+//        val file = File(myDir, fileName)
+//
+//        if (!myDir.exists()) {
+//            myDir.mkdirs()
+//        }
+//
+//        var tmpJSONArray = JSONArray()
+//        for (i in 0 until storedGoals.length()) {
+//            tmpJSONArray.put(storedGoals.getJSONObject(i))
+//        }
+//        tmpJSONArray.put(entry)
+//
+//        val logsArray = JSONObject()
+//
+//        logsArray.put("goals",tmpJSONArray)
+//
+//        try {
+//            val output = BufferedWriter(FileWriter(file))
+//            output.write(logsArray.toString())
+//            output.close()
+//        }catch (e: Exception) {
+//            Log.d("goals-saving", e.message.toString())
+//        }
 
     }
 

@@ -91,12 +91,6 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
 
         val titleInput = popUpView.findViewById<EditText>(R.id.title_input)
 
-        val btnColorPairs = ArrayList<Pair<String, Int>>()
-        btnColorPairs.add(Pair("Reading", R.color.purple))
-        btnColorPairs.add(Pair("Work", R.color.blue))
-        btnColorPairs.add(Pair("Church", R.color.green))
-        btnColorPairs.add(Pair("Workout", R.color.red))
-
         val btnsIcons = ArrayList<ButtonIcons>()
         btnsIcons.add(ButtonIcons("Reading", R.color.purple, R.drawable.baseline_book_24))
         btnsIcons.add(ButtonIcons("Work", R.color.blue, R.drawable.baseline_work_24))
@@ -112,7 +106,7 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
                 btn.layoutParams = createParams()
                 btn.setBackgroundColor(R.color.light_gray)
 
-                btn.setText(btnColorPairs.get(i).first)
+                btn.setText(btnsIcons.get(i).category)
                 btn.height = 40
                 btn.setTextColor(R.color.black)
                 btn.elevation = 8F
@@ -120,8 +114,7 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
 
                 val btnIcon = mainActivity.getDrawable(btnsIcons.get(i).vector)
                 if (btnIcon != null) {
-//                    btnIcon.setTint(btnColorPairs.get(i).second)
-                    btnIcon.setTintList(mainActivity.getColorStateList(btnsIcons.get(i).color))
+                    btnIcon.setTintList(mainActivity.getColorStateList(findColour(btnsIcons.get(i).category)))
                 }
 
                 btn.setCompoundDrawablesWithIntrinsicBounds(btnIcon, null, null, null)
@@ -218,9 +211,13 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
                 }
 
                 var tmpJSONArray = JSONArray()
-                for (i in 0 until storedLogs.length()) {
-                    tmpJSONArray.put(storedLogs.getJSONObject(i))
+
+                if (storedLogs.length() > 0) {
+                    for (i in 0 until storedLogs.length()) {
+                        tmpJSONArray.put(storedLogs.getJSONObject(i))
+                    }
                 }
+
                 tmpJSONArray.put(entry)
 
                 val logsArray = JSONObject()
@@ -278,11 +275,18 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
         val fileName = "logsData.json"
         file = File(myDir, fileName)
 
-        val jsonString = file.bufferedReader().use { it.readText() }
+        try {
 
-        val outputJson = JSONObject(jsonString)
-        val logs = outputJson.getJSONArray("logs") as JSONArray
-        return logs
+            val jsonString = file.bufferedReader().use { it.readText() }
+
+            val outputJson = JSONObject(jsonString)
+            val logs = outputJson.getJSONArray("logs") as JSONArray
+            return logs
+        }catch (e: Exception) {
+            file.createNewFile()
+            val logs = JSONArray()
+            return logs
+        }
     }
 
     private fun createParams() : ViewGroup.LayoutParams {
@@ -318,7 +322,7 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
         }catch (e: Exception) {
             Log.d("Images-saving", e.message.toString())
         }
-        return fileName
+        return file.toString()
     }
 
     private fun browseImage(galleryImage: ActivityResultLauncher<String>) {
@@ -409,28 +413,59 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
         var textToShow = ""
 
         val storedLogs = getStoredLogs()
-        for (i in 0 until storedLogs.length()) {
-            val tmpLog = storedLogs.getJSONObject(i)
-            val tmpLogStart = tmpLog.getString("startingTime").toString().replace(":",".").toDouble()
-            val tmpLogEnd = tmpLog.getString("endingTime").toString().replace(":",".").toDouble()
 
-            if (endingTime - startingTime < 1.00
-                || title.text.toString() == ""
-                || (tmpLog.get("date") == chosenDate
-                && ((tmpLogStart <= startingTime && startingTime <= tmpLogEnd)
-                || (tmpLogStart <= endingTime && endingTime <= tmpLogEnd)))
+        if (storedLogs.length() > 0) {
+
+            for (i in 0 until storedLogs.length()) {
+                val tmpLog = storedLogs.getJSONObject(i)
+                val tmpLogStart =
+                    tmpLog.getString("startingTime").toString().replace(":", ".").toDouble()
+                val tmpLogEnd =
+                    tmpLog.getString("endingTime").toString().replace(":", ".").toDouble()
+
+                if (endingTime - startingTime < 1.00
+                    || title.text.toString() == ""
+                    || (tmpLog.get("date") == chosenDate
+                            && ((tmpLogStart <= startingTime && startingTime <= tmpLogEnd)
+                            || (tmpLogStart <= endingTime && endingTime <= tmpLogEnd)))
                 ) {
-                if (endingTime - startingTime < 1.00) {
-                    textToShow = "Too Short"
-                }else if (title.text.toString() == "") {
-                    textToShow = "Empty Title"
-                }else {
-                    textToShow = "Overlap"
+                    if (endingTime - startingTime < 1.00) {
+                        textToShow = "Too Short"
+                    } else if (title.text.toString() == "") {
+                        textToShow = "Empty Title"
+                    } else {
+                        textToShow = "Overlap"
+                    }
+                } else {
+                    textToShow = "Log added"
                 }
-            }else {
-                textToShow = "Log added"
             }
+        }else {
+            textToShow = "Log added"
         }
         return textToShow
+    }
+
+    @SuppressLint("DiscouragedApi")
+    fun findColour(name: String?): Int {
+        val coloursJSONString = mainActivity.assets.open("catColors.json").bufferedReader().use {
+            it.readText()
+        }
+
+        val outputJson = JSONObject(coloursJSONString)
+        val colours = outputJson.getJSONArray("colours") as JSONArray
+
+        for (i in 0 until colours.length()) {
+            if (name == colours.getJSONObject(i).getString("Name")) {
+                val colorName = colours.getJSONObject(i).getString("Colour")
+
+                val res = mainActivity.getResources()
+                val packageName: String = mainActivity.getPackageName()
+
+                val colorId = res.getIdentifier(colorName, "color", packageName)
+                return colorId
+            }
+        }
+        return -1
     }
 }

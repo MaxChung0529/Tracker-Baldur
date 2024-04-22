@@ -59,6 +59,9 @@ class ShowDetailsPopUp(mainAct: MainActivity, detailsObj: JSONObject) : DialogFr
         popUpView.findViewById<TextView>(R.id.detailCatTimePeriod).setText(formattedTime)
         popUpView.findViewById<TextView>(R.id.detailDescContent).setText(detailsObj.getString("description"))
 
+        val catColour = popUpView.findViewById<Button>(R.id.catColor)
+        catColour.setBackgroundColor(mainActivity.getColor(findColour(detailsObj.getString("activityName"))))
+
 
         val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult(),
             ActivityResultCallback {
@@ -121,49 +124,28 @@ class ShowDetailsPopUp(mainAct: MainActivity, detailsObj: JSONObject) : DialogFr
         return popUpView
     }
 
-    private fun replaceLog(newLog: Intent) {
-        deleteLog()
 
-        if (newLog != null) {
-            val storedLogs = getStoredLogs()
+    @SuppressLint("DiscouragedApi")
+    fun findColour(name: String?): Int {
+        val coloursJSONString = mainActivity.assets.open("catColors.json").bufferedReader().use {
+            it.readText()
+        }
 
-            val entry = createJsonData(
-                newLog.getStringExtra("date"),
-                newLog.getStringExtra("activityName"),
-                newLog.getStringExtra("startingTime"),
-                newLog.getStringExtra("endingTime"),
-                newLog.getStringExtra("description"),
-                newLog.getStringExtra("imgSrc")
-            )
+        val outputJson = JSONObject(coloursJSONString)
+        val colours = outputJson.getJSONArray("colours") as JSONArray
 
-            var file: File? = null
-            val root = mainActivity.getExternalFilesDir(null)?.absolutePath
-            var myDir = File("$root/TrackerBaldur")
+        for (i in 0 until colours.length()) {
+            if (name == colours.getJSONObject(i).getString("Name")) {
+                val colorName = colours.getJSONObject(i).getString("Colour")
 
-            if (!myDir.exists()) {
-                myDir.mkdirs()
-            }
+                val res = mainActivity.getResources()
+                val packageName: String = mainActivity.getPackageName()
 
-            var tmpJSONArray = JSONArray()
-            for (i in 0 until storedLogs.length()) {
-                tmpJSONArray.put(storedLogs.getJSONObject(i))
-            }
-            tmpJSONArray.put(entry)
-
-            val logsArray = JSONObject()
-
-            logsArray.put("logs", tmpJSONArray)
-
-            val fileName = "logsData.json"
-            file = File(myDir, fileName)
-            try {
-                val output = BufferedWriter(FileWriter(file))
-                output.write(logsArray.toString())
-                output.close()
-            } catch (e: Exception) {
-                Log.d("logs-saving", e.message.toString())
+                val colorId = res.getIdentifier(colorName, "color", packageName)
+                return colorId
             }
         }
+        return -1
     }
 
     private fun confirmDelete() {
