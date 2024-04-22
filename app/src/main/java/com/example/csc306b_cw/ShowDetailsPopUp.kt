@@ -1,9 +1,13 @@
 package com.example.csc306b_cw
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.AlertDialog
+import android.app.Instrumentation.ActivityResult
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +15,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -53,9 +59,30 @@ class ShowDetailsPopUp(mainAct: MainActivity, detailsObj: JSONObject) : DialogFr
         popUpView.findViewById<TextView>(R.id.detailCatTimePeriod).setText(formattedTime)
         popUpView.findViewById<TextView>(R.id.detailDescContent).setText(detailsObj.getString("description"))
 
+
+        val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult(),
+            ActivityResultCallback {
+                if (it.resultCode == Activity.RESULT_OK) {
+                    mainActivity.logFragment.refresh()
+                    dismiss()
+                }
+            })
+
+
         val editLogBtn = popUpView.findViewById<Button>(R.id.editBtn)
         editLogBtn.setOnClickListener{
-            editLog()
+            //Implicit Intent?
+            val editLogIntent = Intent(mainActivity, EditLogActivity::class.java)
+            editLogIntent.putExtra("date", detailsObj.getString("date"))
+            editLogIntent.putExtra("activityName", detailsObj.getString("activityName"))
+            editLogIntent.putExtra("startingTime", detailsObj.getString("startingTime"))
+            editLogIntent.putExtra("endingTime", detailsObj.getString("endingTime"))
+            editLogIntent.putExtra("description", detailsObj.getString("description"))
+            editLogIntent.putExtra("imgSrc",detailsObj.getString("imgSrc"))
+
+//            startActivity(editLogIntent)
+            startForResult.launch(editLogIntent)
+//            dismiss()
         }
 
         val deleteLogBtn = popUpView.findViewById<Button>(R.id.deleteBtn)
@@ -94,10 +121,49 @@ class ShowDetailsPopUp(mainAct: MainActivity, detailsObj: JSONObject) : DialogFr
         return popUpView
     }
 
-    private fun editLog() {
-        dismiss()
-        val showPopUp = AddLogPopUp(mainActivity)
-        showPopUp.show((activity as AppCompatActivity).supportFragmentManager, "showPopUp")
+    private fun replaceLog(newLog: Intent) {
+        deleteLog()
+
+        if (newLog != null) {
+            val storedLogs = getStoredLogs()
+
+            val entry = createJsonData(
+                newLog.getStringExtra("date"),
+                newLog.getStringExtra("activityName"),
+                newLog.getStringExtra("startingTime"),
+                newLog.getStringExtra("endingTime"),
+                newLog.getStringExtra("description"),
+                newLog.getStringExtra("imgSrc")
+            )
+
+            var file: File? = null
+            val root = mainActivity.getExternalFilesDir(null)?.absolutePath
+            var myDir = File("$root/TrackerBaldur")
+
+            if (!myDir.exists()) {
+                myDir.mkdirs()
+            }
+
+            var tmpJSONArray = JSONArray()
+            for (i in 0 until storedLogs.length()) {
+                tmpJSONArray.put(storedLogs.getJSONObject(i))
+            }
+            tmpJSONArray.put(entry)
+
+            val logsArray = JSONObject()
+
+            logsArray.put("logs", tmpJSONArray)
+
+            val fileName = "logsData.json"
+            file = File(myDir, fileName)
+            try {
+                val output = BufferedWriter(FileWriter(file))
+                output.write(logsArray.toString())
+                output.close()
+            } catch (e: Exception) {
+                Log.d("logs-saving", e.message.toString())
+            }
+        }
     }
 
     private fun confirmDelete() {
@@ -127,7 +193,8 @@ class ShowDetailsPopUp(mainAct: MainActivity, detailsObj: JSONObject) : DialogFr
         var tmpJSONArray = JSONArray()
         for (i in 0 until storedLogs.length()) {
             val checkObj = storedLogs.getJSONObject(i)
-            if (checkObj.get("activityName") != detailsObj.get("activityName")
+            if (checkObj.get("date") != detailsObj.get("date")
+                || checkObj.get("activityName") != detailsObj.get("activityName")
                 || checkObj.get("startingTime") != detailsObj.get("startingTime")
                 || checkObj.get("endingTime") != detailsObj.get("endingTime")) {
                 tmpJSONArray.put(storedLogs.getJSONObject(i))
@@ -146,6 +213,23 @@ class ShowDetailsPopUp(mainAct: MainActivity, detailsObj: JSONObject) : DialogFr
         }catch (e: Exception) {
             Log.d("logs-saving", e.message.toString())
         }
+    }
+
+    private fun createJsonData(date: String?, title: String?, startTime: String?, endTime: String?, description: String?, imgSrc: String?): JSONObject {
+        var json = JSONObject()
+
+        json.put("date", date)
+        json.put("activityName", title)
+        json.put("startingTime", startTime)
+        json.put("endingTime", endTime)
+        if (description != null){
+            json.put("description", description)
+        }else {
+            json.put("description", "")
+        }
+        json.put("imgSrc", imgSrc)
+
+        return json
     }
 
 

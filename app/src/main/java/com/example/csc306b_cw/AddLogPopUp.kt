@@ -135,7 +135,6 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
 
                     if (!btnChosen) {
                         btn.isSelected = true
-//                        btn.backgroundTintList = mainActivity.getColorStateList(btnColorPairs.get(i).second)
                         btn.backgroundTintList = mainActivity.getColorStateList(R.color.gray)
                         btnChosen = true
                         titleInput.setText(btn.text)
@@ -152,7 +151,6 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
                                 catBtns.get(i).backgroundTintList = mainActivity.getColorStateList(R.color.light_gray)
                             }
                             btn.isSelected = true
-//                            btn.backgroundTintList = mainActivity.getColorStateList(btnColorPairs.get(i).second)
                             btn.backgroundTintList = mainActivity.getColorStateList(R.color.gray)
                             btnChosen = true
                             titleInput.setText(btn.text)
