@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Switch
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
 import org.json.JSONArray
@@ -75,7 +76,11 @@ class Settings(mainActivity: MainActivity) : Fragment() {
 
         val exportBtn = settingView.findViewById<Button>(R.id.exportBtn)
         exportBtn.setOnClickListener{
-            FileOutputStream("logsData.cs").apply { writeCsv() }
+            val root = mainActivity.getExternalFilesDir(null)?.absolutePath
+            var myDir = File("$root/TrackerBaldur")
+            val file = File(myDir, "logsData.csv")
+
+            FileOutputStream(file).apply { writeCsv() }
         }
 
         return settingView
@@ -126,6 +131,8 @@ class Settings(mainActivity: MainActivity) : Fragment() {
         }
         writer.flush()
         writer.close()
+
+        Toast.makeText(mainActivity, "Logs export to ${file}", Toast.LENGTH_LONG).show()
     }
     private fun getStoredLogs(): JSONArray {
         var file: File? = null
