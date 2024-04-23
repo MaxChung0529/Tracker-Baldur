@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var justSwitched = false
     var logFragment = Logs(this)
+    var goalFragment = Goals(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +42,7 @@ class MainActivity : AppCompatActivity() {
             when (it.itemId) {
 
                 R.id.logs -> replaceFragment(logFragment)
-                R.id.goals -> replaceFragment(Goals(this))
+                R.id.goals -> replaceFragment(goalFragment)
                 R.id.stopwatch -> replaceFragment(Stopwatch())
                 R.id.overview -> replaceFragment(Overview())
                 R.id.settings -> replaceFragment(Settings(this))

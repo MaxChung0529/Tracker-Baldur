@@ -31,6 +31,7 @@ class Goals(mainActivity: MainActivity) : Fragment() {
     private var param2: String? = null
 //    val mainActivity = activity as MainActivity
     val mainActivity = mainActivity
+    lateinit var contentView: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +46,7 @@ class Goals(mainActivity: MainActivity) : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val contentView = inflater.inflate(R.layout.fragment_goals, container, false)
+        contentView = inflater.inflate(R.layout.fragment_goals, container, false)
         val recyclerView = contentView.findViewById<RecyclerView>(R.id.goalsRecycler)
 
         val adapter = GoalsAdapter(getStoredGoals(), mainActivity)
@@ -65,6 +66,10 @@ class Goals(mainActivity: MainActivity) : Fragment() {
     private fun showPopUp(){
         val showPopUp = AddGoalPopUp(mainActivity)
         showPopUp.show((activity as AppCompatActivity).supportFragmentManager, "showPopUp")
+    }
+
+    fun refresh() {
+        fillRecyclerView(contentView)
     }
 
     private fun fillRecyclerView(contentView: View) {

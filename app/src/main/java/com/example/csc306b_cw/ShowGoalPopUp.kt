@@ -17,6 +17,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.DialogFragment
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.BufferedWriter
+import java.io.File
+import java.io.FileWriter
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
@@ -157,8 +160,58 @@ class ShowGoalPopUp(mainAct: MainActivity, detailsObj: JSONObject) : DialogFragm
         return -1
     }
 
-    private fun deleteGoal() {
+    private fun getStoredGoals(): JSONArray {
+        var file: File? = null
+        val root = mainActivity.getExternalFilesDir(null)?.absolutePath
+        var myDir = File("$root/TrackerBaldur")
 
+        val fileName = "goalsData.json"
+        file = File(myDir, fileName)
+
+        val jsonString = file.bufferedReader().use { it.readText() }
+
+        val outputJson = JSONObject(jsonString)
+        val goals = outputJson.getJSONArray("goals") as JSONArray
+        return goals
+    }
+
+    private fun deleteGoal() {
+        val storedGoals = getStoredGoals()
+
+        var file: File? = null
+        val root = mainActivity.getExternalFilesDir(null)?.absolutePath
+        var myDir = File("$root/TrackerBaldur")
+
+        if (!myDir.exists()) {
+            myDir.mkdirs()
+        }
+
+        var tmpJSONArray = JSONArray()
+        for (i in 0 until storedGoals.length()) {
+            val checkObj = storedGoals.getJSONObject(i)
+            if (checkObj.get("deadline") != detailsObj.get("deadline")
+                || checkObj.get("interval") != detailsObj.get("interval")
+                || checkObj.get("unit") != detailsObj.get("unit")
+                || checkObj.get("goalName") != detailsObj.get("goalName")
+                || checkObj.get("description") != detailsObj.get("description")) {
+                tmpJSONArray.put(storedGoals.getJSONObject(i))
+            }
+        }
+        val goalsArray = JSONObject()
+
+        goalsArray.put("goals",tmpJSONArray)
+
+        val fileName = "goalsData.json"
+        file = File(myDir, fileName)
+        try {
+            val output = BufferedWriter(FileWriter(file))
+            output.write(goalsArray.toString())
+            output.close()
+        }catch (e: Exception) {
+            Log.d("goals-saving", e.message.toString())
+        }
+        mainActivity.goalFragment.refresh()
+        dismiss()
     }
 
 //    companion object {
