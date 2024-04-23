@@ -119,7 +119,6 @@ class AddLogPopUp(mainAct: MainActivity) : DialogFragment() {
 
                 btn.setCompoundDrawablesWithIntrinsicBounds(btnIcon, null, null, null)
 
-//                btn.setBackgroundColor()
                 btn.backgroundTintList = mainActivity.getColorStateList(R.color.light_gray)
 
                 catBtns.add(btn)

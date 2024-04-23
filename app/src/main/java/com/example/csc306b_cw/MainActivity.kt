@@ -30,6 +30,8 @@ class MainActivity : AppCompatActivity() {
     private var justSwitched = false
     var logFragment = Logs(this)
     var goalFragment = Goals(this)
+    var overviewFragment = Overview(this)
+    var settingFragment = Settings(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +41,6 @@ class MainActivity : AppCompatActivity() {
         val isDarkModeOn = DarkModeFlags == Configuration.UI_MODE_NIGHT_YES
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-        //setContentView(R.layout.activity_main_view)
         setContentView(binding.root)
 
         replaceFragment(logFragment)
@@ -51,8 +52,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.logs -> replaceFragment(logFragment)
                 R.id.goals -> replaceFragment(goalFragment)
                 R.id.stopwatch -> replaceFragment(Stopwatch())
-                R.id.overview -> replaceFragment(Overview())
-                R.id.settings -> replaceFragment(Settings(this))
+                R.id.overview -> replaceFragment(overviewFragment)
+                R.id.settings -> replaceFragment(settingFragment)
 
                 else ->{
 
@@ -61,17 +62,15 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        if (justSwitched) {
-            replaceFragment(Settings(this))
-            justSwitchedMode()
-        }
-    }
+        val sharedPreferences = getSharedPreferences("DarkModePref", Context.MODE_PRIVATE)
+        justSwitched = sharedPreferences.getBoolean("justSwitched", false)
 
-    fun justSwitchedMode() {
         if (justSwitched) {
-            justSwitched = false
-        }else {
-            justSwitched = true
+            replaceFragment(settingFragment)
+            val editor = sharedPreferences.edit()
+            editor.clear()
+            editor.putBoolean("justSwitched", false)
+            editor.commit()
         }
     }
 

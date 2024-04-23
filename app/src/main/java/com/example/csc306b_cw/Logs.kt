@@ -302,7 +302,6 @@ class Logs(mainActivity: MainActivity) : Fragment(){
         val list = ArrayList<LogsData>()
 
         try {
-//            val jsonString = mainAct.assets.open("test.json").bufferedReader().use { it.readText() }
 
             val root = mainAct.getExternalFilesDir(null)?.absolutePath
             var myDir = File("$root/TrackerBaldur")

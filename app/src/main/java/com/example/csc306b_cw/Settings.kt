@@ -59,10 +59,14 @@ class Settings(mainActivity: MainActivity) : Fragment() {
         val DarkModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         val isDarkModeOn = DarkModeFlags == Configuration.UI_MODE_NIGHT_YES
 
+
+
         themeSwitch.setOnClickListener{
 
-            val parent = activity as MainActivity
-            parent.justSwitchedMode()
+            val sharedPreferences = mainActivity.getSharedPreferences("DarkModePref", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.putBoolean("justSwitched", true)
+            editor.commit()
 
             if (isDarkModeOn) {
                 themeSwitch.isChecked = false
@@ -78,14 +82,18 @@ class Settings(mainActivity: MainActivity) : Fragment() {
         exportBtn.setOnClickListener{
             val root = mainActivity.getExternalFilesDir(null)?.absolutePath
             var myDir = File("$root/TrackerBaldur")
-            val file = File(myDir, "logsData.csv")
+            val dataFile = File(myDir, "logsData.csv")
 
-            FileOutputStream(file).apply { writeCsv() }
+            FileOutputStream(dataFile).apply { writeDataCsv() }
+
+            val goalsFile = File(myDir, "goalsData.csv")
+
+            FileOutputStream(dataFile).apply { writeGoalCsv() }
         }
 
         return settingView
     }
-    fun OutputStream.writeCsv() {
+    fun OutputStream.writeDataCsv() {
 
         val logsData = ArrayList<LogsData>()
         val root = mainActivity.getExternalFilesDir(null)?.absolutePath
@@ -134,19 +142,50 @@ class Settings(mainActivity: MainActivity) : Fragment() {
 
         Toast.makeText(mainActivity, "Logs export to ${file}", Toast.LENGTH_LONG).show()
     }
-    private fun getStoredLogs(): JSONArray {
-        var file: File? = null
+
+    fun OutputStream.writeGoalCsv() {
+
+        val goalsData = ArrayList<GoalsData>()
         val root = mainActivity.getExternalFilesDir(null)?.absolutePath
         var myDir = File("$root/TrackerBaldur")
 
-        val fileName = "logsData.json"
-        file = File(myDir, fileName)
+        val fileName = "goalsData.json"
+        val file = File(myDir, fileName)
 
         val jsonString = file.bufferedReader().use { it.readText() }
-
         val outputJson = JSONObject(jsonString)
-        val logs = outputJson.getJSONArray("logs") as JSONArray
-        return logs
+        val goals = outputJson.getJSONArray("goals") as JSONArray
+
+        for (i in 0 until goals.length()) {
+            val goalName = goals.getJSONObject(i).getString("goalName")
+            val interval = goals.getJSONObject(i).getString("interval")
+            val unit = goals.getJSONObject(i).getString("unit")
+            val durationPerUnit = goals.getJSONObject(i).getDouble("durationPerUnit")
+            val progressNow = goals.getJSONObject(i).getDouble("progressNow")
+            val progressGoal = goals.getJSONObject(i).getDouble("progressGoal")
+            val deadline = goals.getJSONObject(i).getString("deadline")
+            val description = goals.getJSONObject(i).getString("description")
+            val imgSrc = goals.getJSONObject(i).getString("imgSrc")
+            goalsData.add(
+                GoalsData(
+                    goalName, interval.toInt(), unit, durationPerUnit, progressNow,progressGoal, deadline, description, imgSrc
+                )
+            )
+        }
+
+        val outFile = File(myDir, "goalsData.csv")
+
+        val writer = outFile.bufferedWriter()
+        writer.write(""" "Goal Title", "Deadline", "Time", "Duration/Log", "Log Interval", "Progress", "Description", "Image"""")
+        writer.newLine()
+        goalsData.forEach {
+            writer.write("${it.goalName}, ${it.deadline}, \"${it.durationPerUnit} Hour(s)\", ${it.interval} ${it.unit}, ${it.progressNow}/${it.progressGoal} Hour(s), ${it.description}, ${it.imgSrc}")
+            writer.newLine()
+        }
+        writer.flush()
+        writer.close()
+
+        Toast.makeText(mainActivity, "Goals export to ${file}", Toast.LENGTH_LONG).show()
     }
 
 //    companion object {
