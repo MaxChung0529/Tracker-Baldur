@@ -498,35 +498,37 @@ class AddGoalPopUp(mainAct: MainActivity) : DialogFragment() {
             Log.d("goal-saving", e.message.toString())
         }
         dismiss()
+    }
 
-//        val root = mainActivity.getExternalFilesDir(null)?.absolutePath
-//        var myDir = File("$root/TrackerBaldur")
-//
-//        val fileName = "goalsData.json"
-//        val file = File(myDir, fileName)
-//
-//        if (!myDir.exists()) {
-//            myDir.mkdirs()
-//        }
-//
-//        var tmpJSONArray = JSONArray()
-//        for (i in 0 until storedGoals.length()) {
-//            tmpJSONArray.put(storedGoals.getJSONObject(i))
-//        }
-//        tmpJSONArray.put(entry)
-//
-//        val logsArray = JSONObject()
-//
-//        logsArray.put("goals",tmpJSONArray)
-//
-//        try {
-//            val output = BufferedWriter(FileWriter(file))
-//            output.write(logsArray.toString())
-//            output.close()
-//        }catch (e: Exception) {
-//            Log.d("goals-saving", e.message.toString())
-//        }
 
+    @SuppressLint("DiscouragedApi")
+    fun findColour(name: String?): Int {
+
+        var file: File? = null
+        val root = mainActivity.getExternalFilesDir(null)?.absolutePath
+        var myDir = File("$root/TrackerBaldur")
+        val fileName = "colours.json"
+        file = File(myDir, fileName)
+
+        val coloursJSONString = file.bufferedReader().use {
+            it.readText()
+        }
+
+        val outputJson = JSONObject(coloursJSONString)
+        val colours = outputJson.getJSONArray("colours") as JSONArray
+
+        for (i in 0 until colours.length()) {
+            if (name == colours.getJSONObject(i).getString("Name")) {
+                val colorName = colours.getJSONObject(i).getString("Colour")
+
+                val res = mainActivity.getResources()
+                val packageName: String = mainActivity.getPackageName()
+
+                val colorId = res.getIdentifier(colorName, "color", packageName)
+                return colorId
+            }
+        }
+        return -1
     }
 
 //    companion object {

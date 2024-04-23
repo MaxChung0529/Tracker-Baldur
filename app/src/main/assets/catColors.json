@@ -15,6 +15,14 @@
     {
       "Name": "Workout",
       "Colour": "red"
+    },
+    {
+      "Name": "Social",
+      "Colour": "red"
+    },
+    {
+      "Name": "Gaming",
+      "Colour": "red"
     }
   ]
 }

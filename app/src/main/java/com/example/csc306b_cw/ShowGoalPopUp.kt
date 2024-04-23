@@ -70,61 +70,6 @@ class ShowGoalPopUp(mainAct: MainActivity, detailsObj: JSONObject) : DialogFragm
         popupView.findViewById<TextView>(R.id.goal_deadline).setText(detailsObj.getString("deadline"))
         popupView.findViewById<TextView>(R.id.goalDetailDescContent).setText(detailsObj.getString("description"))
 
-        val deleteGoalBtn = popupView.findViewById<Button>(R.id.deleteGoalBtn)
-        deleteGoalBtn.setOnClickListener{
-            deleteGoal()
-        }
-
-
-//        val startForResult = registerForActivityResult(
-//            ActivityResultContracts.StartActivityForResult(),
-//            ActivityResultCallback {
-//                if (it.resultCode == Activity.RESULT_OK) {
-//                    mainActivity.logFragment.refresh()
-//                    dismiss()
-//                }
-//            })
-
-
-//        val editLogBtn = popupView.findViewById<Button>(R.id.editBtn)
-//        editLogBtn.setOnClickListener{
-//            //Implicit Intent?
-//            val editLogIntent = Intent(mainActivity, EditLogActivity::class.java)
-//            editLogIntent.putExtra("date", detailsObj.getString("date"))
-//            editLogIntent.putExtra("activityName", detailsObj.getString("activityName"))
-//            editLogIntent.putExtra("startingTime", detailsObj.getString("startingTime"))
-//            editLogIntent.putExtra("endingTime", detailsObj.getString("endingTime"))
-//            editLogIntent.putExtra("description", detailsObj.getString("description"))
-//            editLogIntent.putExtra("imgSrc",detailsObj.getString("imgSrc"))
-//
-////            startActivity(editLogIntent)
-////            startForResult.launch(editLogIntent)
-////            dismiss()
-//        }
-
-//        val deleteLogBtn = popUpView.findViewById<Button>(R.id.deleteBtn)
-//        deleteLogBtn.setOnClickListener{
-//            confirmDelete()
-//        }
-
-//        val dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
-//        val startingTime = LocalTime.parse(start, dateTimeFormatter)
-//        val endingTime = LocalTime.parse(end, dateTimeFormatter)
-//
-//        val hourDiff = endingTime.hour - startingTime.hour
-//        val minuteDiff = endingTime.minute - startingTime.minute
-//
-//        if (hourDiff.toInt() > 1){
-//            popUpView.findViewById<TextView>(R.id.detailHour).setText("$hourDiff hours")
-//        }else {
-//            popUpView.findViewById<TextView>(R.id.detailHour).setText("$hourDiff hour")
-//        }
-//        if (minuteDiff.toInt() > 1){
-//            popUpView.findViewById<TextView>(R.id.detailMinute).setText("$minuteDiff minutes")
-//        }else {
-//            popUpView.findViewById<TextView>(R.id.detailMinute).setText("$minuteDiff minute")
-//        }
-
         try {
             if (detailsObj.getString("imgSrc") != "") {
                 val detailImage = popupView.findViewById<ImageView>(R.id.goalDetailImage)
@@ -132,6 +77,12 @@ class ShowGoalPopUp(mainAct: MainActivity, detailsObj: JSONObject) : DialogFragm
             }
         }catch (e: Exception){
             Log.d("ImgSrcLOL", e.message.toString())
+        }
+
+
+        val deleteGoalBtn = popupView.findViewById<Button>(R.id.deleteGoalBtn)
+        deleteGoalBtn.setOnClickListener{
+            deleteGoal()
         }
 
         return popupView

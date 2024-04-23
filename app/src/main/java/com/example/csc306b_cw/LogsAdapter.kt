@@ -112,7 +112,14 @@ class LogsAdapter (private val itemsArrayList : MutableList<LogsData>, mainActiv
 
     @SuppressLint("DiscouragedApi")
     fun findColour(name: String?): Int{
-        val coloursJSONString = mainActivity.assets.open("catColors.json").bufferedReader().use {
+
+        var file: File? = null
+        val root = mainActivity.getExternalFilesDir(null)?.absolutePath
+        var myDir = File("$root/TrackerBaldur")
+        val fileName = "colours.json"
+        file = File(myDir, fileName)
+
+        val coloursJSONString = file.bufferedReader().use {
             it.readText()
         }
 
