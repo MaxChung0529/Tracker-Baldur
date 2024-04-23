@@ -14,6 +14,7 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.EditText
 import android.widget.PopupWindow
 import android.widget.Spinner
 import android.widget.Toast
@@ -81,6 +82,7 @@ class Logs(mainActivity: MainActivity) : Fragment(){
         val layoutManager = LinearLayoutManager(this.activity)
         recyclerView.layoutManager = layoutManager
 
+
         val filterLogBtn = contentView.findViewById<Button>(R.id.filter)
         filterLogBtn.setOnClickListener{
             showFilterPopUp()
@@ -93,8 +95,16 @@ class Logs(mainActivity: MainActivity) : Fragment(){
             showDatePicker(datePickerBtn, dataList, contentView)
         }
 
+        val searchInput = contentView.findViewById<EditText>(R.id.searchInput)
+        val searchBtn = contentView.findViewById<Button>(R.id.search)
+        searchBtn.setOnClickListener{
+            if (searchInput.text.toString() != "") {
+                searchLogs(searchInput.text.toString(), datePickerBtn)
+            }
+        }
+
         sortSpinner = contentView.findViewById<Spinner>(R.id.sortSpinner)
-        val sortValArray = arrayOf("Starting time - ASC", "Starting time - DESC", "Duration - ASC", "Duration - DESC")
+        val sortValArray = arrayOf("Starting time(ASC)", "Starting time(DESC)", "Duration(ASC)", "Duration(DESC)")
 
         try {
             sortSpinner.adapter =
@@ -132,6 +142,23 @@ class Logs(mainActivity: MainActivity) : Fragment(){
 
     fun refresh() {
         fillRecyclerView(sortLogs("ASC", getDateLogs()), contentView)
+    }
+
+
+
+    private fun getStoredLogs(): JSONArray {
+        var file: File? = null
+        val root = mainAct.getExternalFilesDir(null)?.absolutePath
+        var myDir = File("$root/TrackerBaldur")
+
+        val fileName = "logsData.json"
+        file = File(myDir, fileName)
+
+        val jsonString = file.bufferedReader().use { it.readText() }
+
+        val outputJson = JSONObject(jsonString)
+        val logs = outputJson.getJSONArray("logs") as JSONArray
+        return logs
     }
 
     private fun getDateLogs(): ArrayList<LogsData> {
@@ -205,13 +232,50 @@ class Logs(mainActivity: MainActivity) : Fragment(){
         recyclerView.layoutManager = layoutManager
     }
 
+    private fun searchLogs(words: String, datePickerBtn: Button) {
+        val storedLogs = getStoredLogs()
+        val searchedLogsList = ArrayList<LogsData>()
+
+        for (i in 0 until storedLogs.length()) {
+            val tmpLog = storedLogs.getJSONObject(i)
+            val date = tmpLog.getString("date")
+            val activityName = tmpLog.getString("activityName")
+            val startingTime = tmpLog.getString("startingTime")
+            val endingTime = tmpLog.getString("endingTime")
+            val description = tmpLog.getString("description")
+            val imgSrc = tmpLog.getString("imgSrc")
+
+            if (activityName.lowercase().contains(words.lowercase())
+                || description.lowercase().contains(words.lowercase())) {
+
+                searchedLogsList.add(
+                    LogsData(
+                        date,
+                        activityName,
+                        startingTime,
+                        endingTime,
+                        Math.round((endingTime.replace(":",".").toDouble()
+                                - startingTime.replace(":",".").toDouble()) * 100.00)
+                                / 100.00,
+                        description,
+                        imgSrc
+                    )
+                )
+            }
+
+        }
+
+        datePickerBtn.setText(mainAct.getString(R.string.allDate))
+        fillRecyclerView(searchedLogsList, contentView)
+    }
+
     private fun sortLogs(criteria: String, logList: ArrayList<LogsData>): ArrayList<LogsData> {
 
-        if (criteria == "Starting time - DESC") {
+        if (criteria == "Starting time(DESC)") {
             logList.sortByDescending { it.startingTime }
-        }else if (criteria == "Duration - ASC"){
+        }else if (criteria == "Duration(ASC)"){
             logList.sortBy { it.duration }
-        }else if (criteria == "Duration - DESC"){
+        }else if (criteria == "Duration(DESC)"){
             logList.sortByDescending { it.duration }
         }else {
             logList.sortBy { it.startingTime }

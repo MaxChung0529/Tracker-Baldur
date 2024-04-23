@@ -67,6 +67,11 @@ class ShowGoalPopUp(mainAct: MainActivity, detailsObj: JSONObject) : DialogFragm
         popupView.findViewById<TextView>(R.id.goal_deadline).setText(detailsObj.getString("deadline"))
         popupView.findViewById<TextView>(R.id.goalDetailDescContent).setText(detailsObj.getString("description"))
 
+        val deleteGoalBtn = popupView.findViewById<Button>(R.id.deleteGoalBtn)
+        deleteGoalBtn.setOnClickListener{
+            deleteGoal()
+        }
+
 
 //        val startForResult = registerForActivityResult(
 //            ActivityResultContracts.StartActivityForResult(),
@@ -150,6 +155,10 @@ class ShowGoalPopUp(mainAct: MainActivity, detailsObj: JSONObject) : DialogFragm
             }
         }
         return -1
+    }
+
+    private fun deleteGoal() {
+
     }
 
 //    companion object {

@@ -56,6 +56,9 @@
     <string name="logTag">Logs</string>
     <string name="submitEditedLog">Edit Log</string>
     <string name="totalHoursLogged">Total Hours Logged:</string>
+    <string name="deleteGoal">Delete Goal</string>
+    <string name="Search">Search</string>
+    <string name="allDate">All Date</string>
 
 
     <!--Dummy Data-->

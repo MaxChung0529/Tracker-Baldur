@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.goals -> replaceFragment(Goals(this))
                 R.id.stopwatch -> replaceFragment(Stopwatch())
                 R.id.overview -> replaceFragment(Overview())
-                R.id.settings -> replaceFragment(Settings())
+                R.id.settings -> replaceFragment(Settings(this))
 
                 else ->{
 
@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (justSwitched) {
-            replaceFragment(Settings())
+            replaceFragment(Settings(this))
             justSwitchedMode()
         }
     }
