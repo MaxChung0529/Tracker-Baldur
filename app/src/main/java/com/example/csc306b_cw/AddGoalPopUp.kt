@@ -312,6 +312,7 @@ class AddGoalPopUp(mainAct: MainActivity) : DialogFragment() {
                     , totalHrs, chosenDate, goalDescription.text.toString(), imageSrc)
 
                 dismiss()
+                mainActivity.goalFragment.refresh()
             }else if (goalTitle.text == null) {
                 val builder = AlertDialog.Builder(mainActivity)
                 builder.setTitle("Title cannot be empty! You can press on the buttons fill it in!")

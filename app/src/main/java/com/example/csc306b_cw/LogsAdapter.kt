@@ -61,7 +61,7 @@ class LogsAdapter (private val itemsArrayList : MutableList<LogsData>, mainActiv
                     toast.show()
                 }else {
                     //Implement code to makes popup to show details of log
-                    val detailPopUp = ShowDetailsPopUp(mainActivity, detailsToShow)
+                    val detailPopUp = ShowDetailsPopUp(detailsToShow)
                     detailPopUp.show(
                         (mainActivity as AppCompatActivity).supportFragmentManager,
                         "showPopUp"

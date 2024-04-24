@@ -44,12 +44,12 @@ private const val ARG_PARAM2 = "param2"
  * Use the [Logs.newInstance] factory method to
  * create an instance of this fragment.
  */
-class Logs(mainActivity: MainActivity) : Fragment(){
+class Logs() : Fragment(){
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-//    val mainAct = activity as MainActivity
-    val mainAct = mainActivity
+    lateinit var mainAct : MainActivity
+//    val mainAct = mainActivity
     val calendar = Calendar.getInstance()
     var currentlyChosenYear : Int = calendar.get(Calendar.YEAR)
     var currentlyChosenMonth : Int = calendar.get(Calendar.MONTH)
@@ -71,6 +71,8 @@ class Logs(mainActivity: MainActivity) : Fragment(){
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        mainAct = context as MainActivity
         // Inflate the layout for this fragment
         contentView = inflater.inflate(R.layout.fragment_logs, container,false)
         val recyclerView = contentView.findViewById<RecyclerView>(R.id.recycler)

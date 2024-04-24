@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.csc306b_cw.databinding.ActivityMainBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedWriter
@@ -27,14 +28,16 @@ import kotlin.properties.Delegates
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private var justSwitched = false
-    var logFragment = Logs(this)
-    var goalFragment = Goals(this)
-    var overviewFragment = Overview(this)
-    var settingFragment = Settings(this)
+    private lateinit var bottomNavBar: BottomNavigationView
+    var justSwitched = false
+    var logFragment = Logs()
+    var goalFragment = Goals()
+    var overviewFragment = Overview()
+    var settingFragment = Settings()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         getDefaultColours()
 
         val DarkModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
@@ -42,7 +45,6 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         replaceFragment(logFragment)
 
         binding.bottomNavMenu.setOnItemSelectedListener {
@@ -75,10 +77,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun replaceFragment(fragment : Fragment) {
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.frame_layout, fragment)
-        fragmentTransaction.commit()
+
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.frame_layout, fragment)
+            commitAllowingStateLoss()
+        }
     }
 
     fun getDefaultColours() {

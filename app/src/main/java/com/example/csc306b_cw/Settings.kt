@@ -32,11 +32,11 @@ private const val ARG_PARAM2 = "param2"
  * Use the [Settings.newInstance] factory method to
  * create an instance of this fragment.
  */
-class Settings(mainActivity: MainActivity) : Fragment() {
+class Settings() : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    private var mainActivity = mainActivity
+    lateinit var mainActivity: MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,15 +51,15 @@ class Settings(mainActivity: MainActivity) : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        mainActivity = context as MainActivity
+
         // Inflate the layout for this fragment
         val settingView =  inflater.inflate(R.layout.fragment_settings, container, false)
 
         val themeSwitch = settingView.findViewById<Switch>(R.id.theme_switch)
 
         val DarkModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        val isDarkModeOn = DarkModeFlags == Configuration.UI_MODE_NIGHT_YES
-
-
+        var isDarkModeOn = DarkModeFlags == Configuration.UI_MODE_NIGHT_YES
 
         themeSwitch.setOnClickListener{
 

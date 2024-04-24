@@ -39,8 +39,8 @@ private const val ARG_PARAM2 = "param2"
  * Use the [AddLogPopUp.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ShowDetailsPopUp(mainAct: MainActivity, detailsObj: JSONObject) : DialogFragment() {
-    val mainActivity = mainAct
+class ShowDetailsPopUp(detailsObj: JSONObject) : DialogFragment() {
+    lateinit var mainActivity: MainActivity
     val detailsObj = detailsObj
 
     @SuppressLint("SetTextI18n")
@@ -48,6 +48,8 @@ class ShowDetailsPopUp(mainAct: MainActivity, detailsObj: JSONObject) : DialogFr
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        mainActivity = context as MainActivity
 
         val popUpView = inflater.inflate(R.layout.fragment_show_details_pop_up, container, true)
 

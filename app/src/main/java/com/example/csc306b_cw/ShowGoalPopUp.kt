@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.DialogFragment
 import org.json.JSONArray
@@ -33,11 +34,11 @@ private const val ARG_PARAM2 = "param2"
  * Use the [ShowGoalPopUp.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ShowGoalPopUp(mainAct: MainActivity, detailsObj: JSONObject) : DialogFragment() {
+class ShowGoalPopUp(detailsObj: JSONObject) : DialogFragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    val mainActivity = mainAct
+    lateinit var mainActivity : MainActivity
     val detailsObj = detailsObj
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +53,8 @@ class ShowGoalPopUp(mainAct: MainActivity, detailsObj: JSONObject) : DialogFragm
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        mainActivity = context as MainActivity
+
         // Inflate the layout for this fragment
         val popupView = inflater.inflate(R.layout.fragment_show_goal_pop_up, container, false)
 
@@ -163,6 +166,7 @@ class ShowGoalPopUp(mainAct: MainActivity, detailsObj: JSONObject) : DialogFragm
         }
         mainActivity.goalFragment.refresh()
         dismiss()
+        Toast.makeText(mainActivity, "Goal deleted", Toast.LENGTH_LONG).show()
     }
 
 //    companion object {

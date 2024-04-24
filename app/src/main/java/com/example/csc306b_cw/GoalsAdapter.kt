@@ -78,7 +78,7 @@ class GoalsAdapter (private val goalsArrayList : MutableList<GoalsData>, mainAct
                     toast.show()
                 }else {
                     //Implement code to make popup to show details of log
-                    val detailPopUp = ShowGoalPopUp(mainActivity, detailsToShow)
+                    val detailPopUp = ShowGoalPopUp(detailsToShow)
                     detailPopUp.show(
                         (mainActivity as AppCompatActivity).supportFragmentManager,
                         "showPopUp"

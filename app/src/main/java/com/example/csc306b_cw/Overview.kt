@@ -30,11 +30,11 @@ private const val ARG_PARAM2 = "param2"
  * Use the [Overview.newInstance] factory method to
  * create an instance of this fragment.
  */
-class Overview(mainActivity: MainActivity) : Fragment() {
+class Overview() : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    var mainActivity = mainActivity
+    lateinit var mainActivity: MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,9 +48,17 @@ class Overview(mainActivity: MainActivity) : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        mainActivity = context as MainActivity
         // Inflate the layout for this fragment
         val overviewView = inflater.inflate(R.layout.fragment_overview, container, false)
 
+        addData(overviewView)
+
+        return overviewView
+    }
+
+    private fun addData(overviewView: View) {
         val groupedList = analyseLogs()
         val chartDetailBox = overviewView.findViewById<LinearLayout>(R.id.chartDetailsBox)
         val detailHoursBox = overviewView.findViewById<LinearLayout>(R.id.hoursList)
@@ -133,10 +141,9 @@ class Overview(mainActivity: MainActivity) : Fragment() {
 
         }
         totalHourText.setText("${mainActivity.getText(R.string.totalHoursLogged)} ${totalHour}")
+        totalHourText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25.0f)
 
         pieChart.startAnimation()
-
-        return overviewView
     }
 
 
