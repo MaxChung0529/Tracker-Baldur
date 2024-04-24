@@ -13,7 +13,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.BufferedWriter
 import java.io.File
+import java.io.FileWriter
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -75,49 +77,15 @@ class Goals() : Fragment() {
     }
 
     private fun fillRecyclerView(contentView: View) {
-        var adapter = GoalsAdapter(getGoals(), mainActivity)
+        var adapter = GoalsAdapter(getStoredGoals(), mainActivity)
         val recyclerView = contentView.findViewById<RecyclerView>(R.id.goalsRecycler)
         recyclerView.adapter = adapter
         val layoutManager = LinearLayoutManager(this.activity)
         recyclerView.layoutManager = layoutManager
     }
 
-    private fun getGoals(): ArrayList<GoalsData> {
-        val list = ArrayList<GoalsData>()
 
-        try {
-            val root = mainActivity.getExternalFilesDir(null)?.absolutePath
-            var myDir = File("$root/TrackerBaldur")
-
-            val fileName = "goalsData.json"
-            val file = File(myDir, fileName)
-
-            val jsonString = file.bufferedReader().use { it.readText() }
-            val outputJson = JSONObject(jsonString)
-            val goals = outputJson.getJSONArray("goals") as JSONArray
-
-            for (i in 0 until goals.length()) {
-                val goalName = goals.getJSONObject(i).getString("goalName")
-                val interval = goals.getJSONObject(i).getInt("interval")
-                val intervalUnit = goals.getJSONObject(i).getString("unit")
-                val durationPerUnit = goals.getJSONObject(i).getDouble("durationPerUnit")
-                val progressNow = goals.getJSONObject(i).getDouble("progressNow")
-                val progressGoal = goals.getJSONObject(i).getDouble("progressGoal")
-                val deadline = goals.getJSONObject(i).getString("deadline")
-                val description = goals.getJSONObject(i).getString("description")
-                val imgSrc = goals.getJSONObject(i).getString("imgSrc")
-                list.add(
-                    GoalsData(goalName, interval, intervalUnit, durationPerUnit, progressNow, progressGoal, deadline, description, imgSrc)
-                )
-                }
-        }catch (e: Exception) {
-            Log.d("LOL",e.message.toString())
-        }
-        return list
-
-    }
-
-    private fun getStoredGoals(): ArrayList<GoalsData> {
+    fun getStoredGoals(): ArrayList<GoalsData> {
         val list = ArrayList<GoalsData>()
         var file: File? = null
         val root = mainActivity.getExternalFilesDir(null)?.absolutePath
@@ -152,6 +120,75 @@ class Goals() : Fragment() {
             return list
         }
     }
+
+    private fun refreshStoredGoals(storedGoals: ArrayList<GoalsData>){
+
+        val tmpJSONArray = JSONArray()
+        for (i in 0 until storedGoals.size) {
+            val tmpGoal = storedGoals[i]
+
+            tmpJSONArray.put(
+                createJsonData(tmpGoal.goalName, tmpGoal.interval.toString(), tmpGoal.unit,
+                    tmpGoal.durationPerUnit, tmpGoal.progressNow, tmpGoal.progressGoal, tmpGoal.deadline,
+                    tmpGoal.description, tmpGoal.imgSrc)
+            )
+        }
+
+
+        var file: File? = null
+        val root = mainActivity.getExternalFilesDir(null)?.absolutePath
+        val myDir = File("$root/TrackerBaldur")
+
+        if (!myDir.exists()) {
+            myDir.mkdirs()
+        }
+
+        val goalsArray = JSONObject()
+
+        goalsArray.put("goals",tmpJSONArray)
+
+        val fileName = "goalsData.json"
+        file = File(myDir, fileName)
+        try {
+            val output = BufferedWriter(FileWriter(file))
+            output.write(goalsArray.toString())
+            output.close()
+        }catch (e: Exception) {
+            Log.d("goal-saving", e.message.toString())
+        }
+    }
+
+    fun addHourToGoal(goal: GoalsData, numToAdd: Double) {
+
+        val storedGoals = getStoredGoals()
+
+        for (i in 0 until storedGoals.size) {
+            if (goal == storedGoals[i]) {
+                storedGoals[i].progressNow?.plus(numToAdd)
+                refreshStoredGoals(storedGoals)
+            }
+        }
+
+    }
+
+    private fun createJsonData(goalName: String?, interval: String?, unit: String?, duration: Double?
+                               , progressNow: Double?, progressGoal: Double?, deadline: String?
+                               , description: String?, imgSrc: String?): JSONObject {
+        var json = JSONObject()
+
+        json.put("goalName", goalName)
+        json.put("interval", interval)
+        json.put("unit", unit)
+        json.put("durationPerUnit", duration)
+        json.put("progressNow", progressNow)
+        json.put("progressGoal", progressGoal)
+        json.put("deadline", deadline)
+        json.put("description", description)
+        json.put("imgSrc", imgSrc)
+
+        return json
+    }
+
 
 //    companion object {
 //        /**

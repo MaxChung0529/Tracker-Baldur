@@ -485,15 +485,15 @@ class AddGoalPopUp(mainAct: MainActivity) : DialogFragment() {
 
         tmpJSONArray.put(entry)
 
-        val logsArray = JSONObject()
+        val goalsArray = JSONObject()
 
-        logsArray.put("goals",tmpJSONArray)
+        goalsArray.put("goals",tmpJSONArray)
 
         val fileName = "goalsData.json"
         file = File(myDir, fileName)
         try {
             val output = BufferedWriter(FileWriter(file))
-            output.write(logsArray.toString())
+            output.write(goalsArray.toString())
             output.close()
         }catch (e: Exception) {
             Log.d("goal-saving", e.message.toString())

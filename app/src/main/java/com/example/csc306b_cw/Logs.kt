@@ -365,7 +365,7 @@ class Logs() : Fragment(){
     }
 
     private fun showPopUp(){
-        val showPopUp = AddLogPopUp(mainAct)
+        val showPopUp = AddLogPopUp()
         showPopUp.show((activity as AppCompatActivity).supportFragmentManager, "showPopUp")
     }
 
