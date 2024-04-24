@@ -6,7 +6,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     tools:context=".MainActivity">
 
     <!-- Card view for displaying the -->
@@ -43,7 +42,6 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginBottom="15dp"
-
                 />
 
             <!--Creating another linear layout -->

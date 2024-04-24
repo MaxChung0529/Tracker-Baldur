@@ -5,7 +5,6 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.Intent
 import android.graphics.Bitmap
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
@@ -80,10 +79,10 @@ class EditLogActivity : AppCompatActivity() {
 
 
         val btnsIcons = ArrayList<ButtonIcons>()
-        btnsIcons.add(ButtonIcons("Reading", R.color.purple, R.drawable.baseline_book_24))
-        btnsIcons.add(ButtonIcons("Work", R.color.blue, R.drawable.baseline_work_24))
-        btnsIcons.add(ButtonIcons("Church", R.color.green, R.drawable.baseline_church_24))
-        btnsIcons.add(ButtonIcons("Workout", R.color.red, R.drawable.baseline_directions_bike_24))
+        btnsIcons.add(ButtonIcons("Reading", R.color.purple, R.drawable.reading))
+        btnsIcons.add(ButtonIcons("Work", R.color.blue, R.drawable.work))
+        btnsIcons.add(ButtonIcons("Church", R.color.green, R.drawable.church))
+        btnsIcons.add(ButtonIcons("Workout", R.color.red, R.drawable.workou))
 
 
         try {

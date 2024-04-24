@@ -55,11 +55,16 @@ class Settings() : Fragment() {
 
         // Inflate the layout for this fragment
         val settingView =  inflater.inflate(R.layout.fragment_settings, container, false)
-
-        val themeSwitch = settingView.findViewById<Switch>(R.id.theme_switch)
-
         val DarkModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         var isDarkModeOn = DarkModeFlags == Configuration.UI_MODE_NIGHT_YES
+
+        val themeSwitch = settingView.findViewById<Switch>(R.id.theme_switch)
+        if (isDarkModeOn) {
+            themeSwitch.isChecked = true
+        }else {
+            themeSwitch.isChecked = false
+        }
+
 
         themeSwitch.setOnClickListener{
 
@@ -69,11 +74,9 @@ class Settings() : Fragment() {
             editor.commit()
 
             if (isDarkModeOn) {
-                themeSwitch.isChecked = false
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
             }else{
-                themeSwitch.isChecked = true
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             }
         }

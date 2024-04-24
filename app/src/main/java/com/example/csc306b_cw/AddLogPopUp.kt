@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.icu.text.SimpleDateFormat
@@ -27,21 +26,17 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentController
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileOutputStream
 import java.io.FileWriter
-import java.io.InputStreamReader
 import java.io.OutputStream
-import java.io.OutputStreamWriter
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-import kotlin.math.log
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -94,10 +89,10 @@ class AddLogPopUp() : DialogFragment() {
         val titleInput = popUpView.findViewById<EditText>(R.id.title_input)
 
         val btnsIcons = ArrayList<ButtonIcons>()
-        btnsIcons.add(ButtonIcons("Reading", R.color.purple, R.drawable.baseline_book_24))
-        btnsIcons.add(ButtonIcons("Work", R.color.blue, R.drawable.baseline_work_24))
-        btnsIcons.add(ButtonIcons("Church", R.color.green, R.drawable.baseline_church_24))
-        btnsIcons.add(ButtonIcons("Workout", R.color.red, R.drawable.baseline_directions_bike_24))
+        btnsIcons.add(ButtonIcons("Reading", R.color.purple, R.drawable.reading))
+        btnsIcons.add(ButtonIcons("Work", R.color.blue, R.drawable.work))
+        btnsIcons.add(ButtonIcons("Church", R.color.green, R.drawable.church))
+        btnsIcons.add(ButtonIcons("Workout", R.color.red, R.drawable.workou))
 
 
         try {

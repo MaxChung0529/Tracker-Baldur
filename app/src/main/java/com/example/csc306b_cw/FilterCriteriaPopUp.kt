@@ -6,7 +6,6 @@ import android.content.Context
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -19,8 +18,6 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.fragment.app.DialogFragment
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.ArrayList
 import java.util.Locale
 
@@ -99,7 +96,7 @@ class FilterCriteriaPopUp(mainActivity: MainActivity, logFragment: Logs) : Dialo
             for (i in 0..btnsValues.size - 1) {
                 val btn = Button(buttonsScroll.context)
 
-                val drawableImg = btn.context.resources.getDrawable(R.drawable.baseline_book_24)
+                val drawableImg = btn.context.resources.getDrawable(R.drawable.reading)
                 drawableImg?.setBounds(5, 5, 5, 5)
 
                 btn.setCompoundDrawables(drawableImg, null,null,null)

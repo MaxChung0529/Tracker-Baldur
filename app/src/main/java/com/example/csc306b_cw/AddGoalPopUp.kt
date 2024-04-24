@@ -109,7 +109,7 @@ class AddGoalPopUp(mainAct: MainActivity) : DialogFragment() {
             for (i in 0..btnsValues.size - 1) {
                 val btn = Button(buttonsScroll.context)
 
-                val drawableImg = btn.context.resources.getDrawable(R.drawable.baseline_book_24)
+                val drawableImg = btn.context.resources.getDrawable(R.drawable.reading)
                 drawableImg?.setBounds(5, 5, 5, 5)
 
                 btn.setCompoundDrawables(drawableImg, null,null,null)
