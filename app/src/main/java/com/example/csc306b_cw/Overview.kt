@@ -1,14 +1,19 @@
 package com.example.csc306b_cw
 
 import android.annotation.SuppressLint
+import android.app.DatePickerDialog
 import android.graphics.Color
+import android.icu.text.SimpleDateFormat
+import android.icu.util.Calendar
 import android.os.Bundle
 import android.text.Layout.Alignment
+import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -18,6 +23,9 @@ import org.eazegraph.lib.models.PieModel
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -35,6 +43,16 @@ class Overview() : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     lateinit var mainActivity: MainActivity
+    lateinit var overviewView: View
+    val calendar = Calendar.getInstance()
+    var currentlyChosenYear : Int = calendar.get(Calendar.YEAR)
+    var currentlyChosenMonth : Int = calendar.get(Calendar.MONTH)
+    var currentlyChosenDay : Int = calendar.get(Calendar.DAY_OF_MONTH)
+    var startDateSet = false
+    var endDateSet = false
+    var startDate = ""
+    var endDate = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,24 +67,40 @@ class Overview() : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        startDateSet = false
+        endDateSet = false
+
         mainActivity = context as MainActivity
         // Inflate the layout for this fragment
-        val overviewView = inflater.inflate(R.layout.fragment_overview, container, false)
+        overviewView = inflater.inflate(R.layout.fragment_overview, container, false)
 
-        addData(overviewView)
+        val startDateBtn = overviewView.findViewById<Button>(R.id.overviewStartDate)
+        val endDateBtn = overviewView.findViewById<Button>(R.id.overviewEndDate)
+
+        startDateBtn.setOnClickListener{
+            showDatePicker(startDateBtn, "Start")
+        }
+
+        endDateBtn.setOnClickListener{
+            showDatePicker(endDateBtn, "End")
+        }
 
         return overviewView
     }
 
-    private fun addData(overviewView: View) {
+    private fun addData() {
         val groupedList = analyseLogs()
         val chartDetailBox = overviewView.findViewById<LinearLayout>(R.id.chartDetailsBox)
+        chartDetailBox.removeAllViews()
         val detailHoursBox = overviewView.findViewById<LinearLayout>(R.id.hoursList)
+        detailHoursBox.removeAllViews()
         val totalHourText = overviewView.findViewById<TextView>(R.id.overviewTotalHours)
 
         var totalHour = 0.0
 
         val pieChart = overviewView.findViewById<PieChart>(R.id.piechart);
+        pieChart.clearChart()
+        Log.d("PieChartSlice", groupedList.size.toString())
 
         for (i in 0 until groupedList.size) {
 
@@ -83,7 +117,7 @@ class Overview() : Fragment() {
             val chartDetailRow = LinearLayout(chartDetailBox.context)
 
             val rowParam = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f)
+                LinearLayout.LayoutParams.WRAP_CONTENT)
             rowParam.setMargins(15,15,15,15)
 
             chartDetailRow.layoutParams = rowParam
@@ -146,21 +180,6 @@ class Overview() : Fragment() {
         pieChart.startAnimation()
     }
 
-
-    private fun createParams() : ViewGroup.LayoutParams {
-        var left = 10
-        var right = 10
-
-        val params = ConstraintLayout.LayoutParams(
-            ConstraintLayout.LayoutParams.MATCH_PARENT,
-            ConstraintLayout.LayoutParams.WRAP_CONTENT
-        )
-        params.setMargins(left, 0, right, 0)
-
-        return params
-    }
-
-
     @SuppressLint("DiscouragedApi")
     fun findColour(name: String?): Int {
 
@@ -194,6 +213,11 @@ class Overview() : Fragment() {
     private fun analyseLogs(): ArrayList<Pair<String, Double>> {
         val storedLogs = getStoredLogs()
 
+        val formatter = SimpleDateFormat("dd-MM-yyyy")
+
+        val startingDate = formatter.parse(startDate)
+        val endingDate = formatter.parse(endDate)
+
         val pairList = ArrayList<Pair<String, Double>>()
         val activityList = ArrayList<String>()
         val hourList = ArrayList<Double>()
@@ -203,17 +227,23 @@ class Overview() : Fragment() {
                 val tmpLog = storedLogs.getJSONObject(i)
                 val tmpLogActName = tmpLog.getString("activityName")
 
-                val duration =
-                    tmpLog.getString("endingTime").replace(":",".").toDouble() -
-                            tmpLog.getString("startingTime").replace(":",".").toDouble()
+                val tmpLogDate = formatter.parse(tmpLog.getString("date"))
 
-                if (!activityList.contains(tmpLogActName)) {
-                    activityList.add(tmpLogActName)
+                if ((tmpLogDate.after(startingDate) && tmpLogDate.before(endingDate))
+                    || (tmpLogDate == startingDate || tmpLogDate == endingDate)) {
 
-                    hourList.add(duration)
-                }else {
-                    val position = activityList.indexOf(tmpLogActName)
-                    hourList[position] += duration
+                    val duration =
+                        tmpLog.getString("endingTime").replace(":", ".").toDouble() -
+                                tmpLog.getString("startingTime").replace(":", ".").toDouble()
+
+                    if (!activityList.contains(tmpLogActName)) {
+
+                        activityList.add(tmpLogActName)
+                        hourList.add(duration)
+                    } else {
+                        val position = activityList.indexOf(tmpLogActName)
+                        hourList[position] += duration
+                    }
                 }
             }
 
@@ -246,6 +276,41 @@ class Overview() : Fragment() {
             val logs = JSONArray()
             return logs
         }
+    }
+
+    private fun showDatePicker(datePickerBtn: Button, startOrEnd: String) {
+        val datePickerDialog = DatePickerDialog(mainActivity,
+            {DatePicker, year: Int, month: Int, day: Int ->
+                val selectedDate = Calendar.getInstance()
+                selectedDate.set(year, month, day)
+
+                currentlyChosenYear = year
+                currentlyChosenMonth = month
+                currentlyChosenDay = day
+
+                val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+                val formattedDate = dateFormat.format((selectedDate.time))
+                datePickerBtn.setText(formattedDate)
+
+                if (startOrEnd == "Start") {
+                    startDate = formattedDate
+                    startDateSet = true
+                }else {
+                    endDate = formattedDate
+                    endDateSet = true
+                }
+
+                if (startDateSet && endDateSet) {
+                    addData()
+                }
+
+            },
+            currentlyChosenYear,
+            currentlyChosenMonth,
+            currentlyChosenDay
+
+        )
+        datePickerDialog.show()
     }
 
 //    companion object {

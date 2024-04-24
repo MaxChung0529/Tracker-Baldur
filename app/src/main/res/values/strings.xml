@@ -59,6 +59,9 @@
     <string name="deleteGoal">Delete Goal</string>
     <string name="Search">Search</string>
     <string name="allDate">All Date</string>
+    <string name="startDate">Start Date</string>
+    <string name="endDate">End Date</string>
+    <string name="to"> To </string>
 
 
     <!--Dummy Data-->

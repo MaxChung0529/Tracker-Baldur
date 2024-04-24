@@ -35,26 +35,30 @@
 
                 <Button
                     android:id="@+id/search"
-                    android:layout_width="46dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_gravity="start"
                     app:icon="@drawable/baseline_find_in_page_24"
                     app:iconGravity="textStart"
-                    app:iconPadding="0dp" />
+                    app:iconPadding="0dp"
+                    app:cornerRadius="8dp"
+                    android:elevation="8dp"/>
 
 
             </LinearLayout>
 
             <Button
                 android:id="@+id/filter"
-                android:layout_width="46dp"
-                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_gravity="end"
                 android:visibility="visible"
                 app:icon="@drawable/baseline_filter_list_alt_24"
                 app:iconGravity="textStart"
                 app:iconPadding="0dp"
-                tools:visibility="visible" />
+                tools:visibility="visible"
+                app:cornerRadius="8dp"
+                android:elevation="8dp"/>
 
             <Spinner
                 android:id="@+id/sortSpinner"

@@ -10,13 +10,54 @@
 
     <!-- Card view for displaying the -->
     <!-- Pie chart and details of pie chart -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/overviewStartDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:textSize="19.5sp"
+            android:layout_marginEnd="20dp"
+            app:cornerRadius="8dp"
+            android:text="@string/startDate" />
+
+        <TextView
+            android:id="@+id/dateTodate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="19.5sp"
+            android:layout_margin="8dp"
+            android:text="@string/to" />
+
+        <Button
+            android:id="@+id/overviewEndDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:textSize="19.5sp"
+            android:layout_marginStart="20dp"
+            app:cornerRadius="8dp"
+            android:text="@string/endDate" />
+    </LinearLayout>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewGraph"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="300dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="95dp"
         android:elevation="15dp"
         app:cardCornerRadius="10dp">
 
@@ -66,7 +107,7 @@
     <!-- Use of programming languages -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/cardViewGraph"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
