@@ -276,8 +276,9 @@ class AddLogPopUp() : DialogFragment() {
 
         for (i in 0 until storedGoals.size) {
 
-            val logDuration = entry.getString("endingTime").replace(":",".").toDouble() -
-                    entry.getString("startingTime").replace(":",".").toDouble()
+            val logDuration =
+                entry.getString("endingTime").replace(":",".").toDouble() -
+                        entry.getString("startingTime").replace(":",".").toDouble()
 
             if (entry.getString("activityName") == storedGoals[i].goalName
                 && logDuration >= storedGoals[i].durationPerUnit!!
@@ -287,8 +288,10 @@ class AddLogPopUp() : DialogFragment() {
                 val oldGoal = storedGoals[i]
                 storedGoals[i].progressNow?.plus(logDuration)
 
-                storedGoals[i] = GoalsData(oldGoal.goalName, oldGoal.interval, oldGoal.unit, oldGoal.durationPerUnit,
-                    oldGoal.progressNow?.plus(logDuration)?.times(100.00)?.div(100), oldGoal.progressGoal, oldGoal.deadline, oldGoal.description, oldGoal.imgSrc)
+                storedGoals[i] = GoalsData(oldGoal.goalName, oldGoal.interval, oldGoal.unit
+                    , oldGoal.durationPerUnit
+                    , oldGoal.progressNow?.plus(logDuration)?.times(100.00)?.div(100)
+                    , oldGoal.progressGoal, oldGoal.deadline, oldGoal.description, oldGoal.imgSrc)
 
                 refreshStoredGoals(storedGoals)
             }

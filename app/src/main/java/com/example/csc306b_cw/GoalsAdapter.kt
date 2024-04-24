@@ -130,10 +130,16 @@ class GoalsAdapter (private val goalsArrayList : MutableList<GoalsData>, mainAct
         val item = goalsArrayList[position]
 
 
-
         holder.catBar.setBackgroundColor(mainActivity.getColor(findColour(item.goalName.toString())))
 
         holder.goalName.text = item.goalName
+
+
+        if (item.progressNow!! >= item.progressGoal!!) {
+            val achieved = mainActivity.getDrawable(R.drawable.achieved)
+            holder.goalName.setCompoundDrawablesWithIntrinsicBounds(achieved, null, null, null)
+        }
+
         holder.progress.text =  "${item.progressNow}/${item.progressGoal}"
         holder.deadline.text = item.deadline
 
