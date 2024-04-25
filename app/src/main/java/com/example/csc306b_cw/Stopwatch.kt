@@ -1,10 +1,13 @@
 package com.example.csc306b_cw
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import com.example.csc306b_cw.databinding.ActivityMainBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,6 +23,8 @@ class Stopwatch : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    lateinit var serviceIntent: Intent
+    lateinit var mainActivity: MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,8 +38,31 @@ class Stopwatch : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        mainActivity = context as MainActivity
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_stopwatch, container, false)
+        val stopwatchView = inflater.inflate(R.layout.fragment_stopwatch, container, false)
+
+        val startStopTimer = stopwatchView.findViewById<Button>(R.id.startTimer)
+        val resetTimer = stopwatchView.findViewById<Button>(R.id.startTimer)
+
+        startStopTimer.setOnClickListener{
+            startStopTimer()
+        }
+
+        resetTimer.setOnClickListener{
+            resetTimer()
+        }
+        return stopwatchView
+    }
+
+    private fun resetTimer() {
+
+    }
+
+    private fun startStopTimer() {
+
     }
 
     companion object {
@@ -44,7 +72,7 @@ class Stopwatch : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment Stopwatch.
+         * @return A new instance of fragment StopwatchT.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic

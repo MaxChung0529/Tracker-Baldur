@@ -62,6 +62,9 @@
     <string name="startDate">Start Date</string>
     <string name="endDate">End Date</string>
     <string name="to"> To </string>
+    <string name="timer">0:00:00</string>
+    <string name="startTimer">Start</string>
+    <string name="resetTimer">Reset</string>
 
 
     <!--Dummy Data-->

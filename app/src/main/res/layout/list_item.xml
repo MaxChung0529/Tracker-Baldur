@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:clickable="true"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="wrap_content"
+    android:minHeight="80dp"
     android:layout_margin="5dp"
     android:elevation="8dp"
     app:cardCornerRadius="8dp">
@@ -14,7 +15,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_gravity="center">
 
         <Button
             android:id="@+id/catColor"

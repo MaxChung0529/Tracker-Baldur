@@ -17,6 +17,12 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildFeatures {
+
+        viewBinding = true
+
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -25,12 +31,6 @@ android {
                 "proguard-rules.pro"
             )
         }
-    }
-
-    buildFeatures {
-
-        viewBinding = true
-
     }
 
     compileOptions {

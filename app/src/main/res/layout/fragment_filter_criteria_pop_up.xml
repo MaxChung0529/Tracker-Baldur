@@ -65,24 +65,7 @@
             android:id="@+id/filterCatBtnScroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-
-            <Button
-                android:id="@+id/catBtn1"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:backgroundTint="@color/light_gray"
-                android:drawableLeft="@drawable/reading"
-                android:elevation="8dp"
-                android:stateListAnimator="@null"
-                android:text="@string/reading"
-                android:textColor="@color/black" />
-
-
-        </LinearLayout>
+            android:orientation="horizontal"/>
     </HorizontalScrollView>
 
     <LinearLayout

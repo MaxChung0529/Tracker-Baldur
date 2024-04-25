@@ -1,21 +1,11 @@
 package com.example.csc306b_cw
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.content.res.Configuration
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
-import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.csc306b_cw.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.json.JSONArray
@@ -23,7 +13,6 @@ import org.json.JSONObject
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
-import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     var logFragment = Logs()
     var goalFragment = Goals()
     var overviewFragment = Overview()
+    var stopwatchFragment = Stopwatch()
     var settingFragment = Settings()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,12 +43,11 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.logs -> replaceFragment(logFragment)
                 R.id.goals -> replaceFragment(goalFragment)
-                R.id.stopwatch -> replaceFragment(Stopwatch())
+                R.id.stopwatch -> replaceFragment(stopwatchFragment)
                 R.id.overview -> replaceFragment(overviewFragment)
                 R.id.settings -> replaceFragment(settingFragment)
 
                 else ->{
-
                 }
             }
             true
