@@ -104,6 +104,8 @@ class AddLogPopUp() : DialogFragment() {
 
             startTimeBtn.setText(startingTime)
             endTimeBtn.setText(endingTime)
+
+            //Clear stored time
             sharedPref.edit().clear().apply()
         }
 
