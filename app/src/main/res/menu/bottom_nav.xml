@@ -17,7 +17,7 @@
         android:id="@+id/overview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:icon="@drawable/baseline_density_medium_24"
+        android:icon="@drawable/baseline_bar_chart_24"
         android:title="@string/overview" />
     <item
         android:id="@+id/stopwatch"

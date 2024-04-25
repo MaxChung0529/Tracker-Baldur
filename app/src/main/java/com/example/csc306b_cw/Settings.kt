@@ -65,7 +65,6 @@ class Settings() : Fragment() {
             themeSwitch.isChecked = false
         }
 
-
         themeSwitch.setOnClickListener{
 
             val sharedPreferences = mainActivity.getSharedPreferences("DarkModePref", Context.MODE_PRIVATE)
@@ -91,9 +90,8 @@ class Settings() : Fragment() {
 
             val goalsFile = File(myDir, "goalsData.csv")
 
-            FileOutputStream(dataFile).apply { writeGoalCsv() }
+            FileOutputStream(goalsFile).apply { writeGoalCsv() }
         }
-
         return settingView
     }
     fun OutputStream.writeDataCsv() {
@@ -191,23 +189,23 @@ class Settings() : Fragment() {
         Toast.makeText(mainActivity, "Goals export to ${file}", Toast.LENGTH_LONG).show()
     }
 
-//    companion object {
-//        /**
-//         * Use this factory method to create a new instance of
-//         * this fragment using the provided parameters.
-//         *
-//         * @param param1 Parameter 1.
-//         * @param param2 Parameter 2.
-//         * @return A new instance of fragment Settings.
-//         */
-//        // TODO: Rename and change types and number of parameters
-//        @JvmStatic
-//        fun newInstance(param1: String, param2: String, mainActivity: MainActivity) =
-//            Settings().apply {
-//                arguments = Bundle().apply {
-//                    putString(ARG_PARAM1, param1)
-//                    putString(ARG_PARAM2, param2)
-//                }
-//            }
-//    }
+    companion object {
+        /**
+         * Use this factory method to create a new instance of
+         * this fragment using the provided parameters.
+         *
+         * @param param1 Parameter 1.
+         * @param param2 Parameter 2.
+         * @return A new instance of fragment Settings.
+         */
+        // TODO: Rename and change types and number of parameters
+        @JvmStatic
+        fun newInstance(param1: String, param2: String, mainActivity: MainActivity) =
+            Settings().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_PARAM1, param1)
+                    putString(ARG_PARAM2, param2)
+                }
+            }
+    }
 }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.icu.text.SimpleDateFormat
@@ -61,6 +62,10 @@ class AddLogPopUp() : DialogFragment() {
     var currentlyChosenYear : Int = calendar.get(Calendar.YEAR)
     var currentlyChosenMonth : Int = calendar.get(Calendar.MONTH)
     var currentlyChosenDay : Int = calendar.get(Calendar.DAY_OF_MONTH)
+    var startingHour = 0
+    var startingMinute = 0
+    var endingHour = 0
+    var endingMinute = 0
 
     @SuppressLint("ResourceAsColor", "UseCompatLoadingForDrawables")
     override fun onCreateView(
@@ -69,6 +74,7 @@ class AddLogPopUp() : DialogFragment() {
     ): View? {
 
         mainActivity = context as MainActivity
+
 
         val popUpView = inflater.inflate(R.layout.fragment_add_log_pop_up, container, false)
         val startTimeBtn = popUpView.findViewById<Button>(R.id.start_time_picker)
@@ -85,6 +91,20 @@ class AddLogPopUp() : DialogFragment() {
         val currentTime = LocalTime.now()
         startTimeBtn.setText(currentTime.format(timeFormat))
         endTimeBtn.setText(currentTime.plusHours(1).format(timeFormat))
+
+        val sharedPref = mainActivity.getSharedPreferences("TimerPref", Context.MODE_PRIVATE)
+        val startingTime = sharedPref.getString("Starting Time", null)
+        val endingTime = sharedPref.getString("Ending Time", null)
+
+        if (startingTime != null && endingTime != null) {
+            startingHour = startingTime.split(":")[0].toInt()
+            startingMinute = startingTime.split(":")[1].toInt()
+            endingHour = endingTime.split(":")[0].toInt()
+            endingMinute = endingTime.split(":")[1].toInt()
+
+            startTimeBtn.setText(startingTime)
+            endTimeBtn.setText(endingTime)
+        }
 
         val titleInput = popUpView.findViewById<EditText>(R.id.title_input)
 
@@ -386,20 +406,6 @@ class AddLogPopUp() : DialogFragment() {
         }
     }
 
-//    fun addHourToGoal(goal: GoalsData, numToAdd: Double) {
-//
-//        val storedGoals = getStoredGoals()
-//
-//        for (i in 0 until storedGoals.size) {
-//            if (goal.goalName == storedGoals[i].goalName
-//                && goal.deadline == storedGoals[i].deadline
-//                && goal.progressGoal == storedGoals[i].progressGoal
-//                && goal.description == storedGoals[i].description) {
-//            }
-//        }
-//
-//    }
-
     private fun getStoredLogs(): JSONArray {
         var file: File? = null
         val root = mainActivity.getExternalFilesDir(null)?.absolutePath
@@ -519,7 +525,25 @@ class AddLogPopUp() : DialogFragment() {
 
             endTimeBtn.setText(SimpleDateFormat("HH:mm").format(calendarTime.time))
         }
-        TimePickerDialog(mainActivity, timeSetListener, calendarTime.get(Calendar.HOUR_OF_DAY), calendarTime.get(Calendar.MINUTE), true).show()
+
+        if (startingHour == 0 || startingMinute == 0) {
+            TimePickerDialog(
+                mainActivity,
+                timeSetListener,
+                calendarTime.get(Calendar.HOUR_OF_DAY),
+                calendarTime.get(Calendar.MINUTE),
+                true
+            ).show()
+        }else {
+            TimePickerDialog(
+                mainActivity,
+                timeSetListener,
+                startingHour,
+                startingMinute,
+                true
+            ).show()
+        }
+
         return startTime
     }
 
@@ -537,7 +561,23 @@ class AddLogPopUp() : DialogFragment() {
                 endTimeBtn.setText(endTime)
         }
 
-        TimePickerDialog(mainActivity, timeSetListener, calendarTime.get(Calendar.HOUR_OF_DAY), calendarTime.get(Calendar.MINUTE), true).show()
+        if (endingHour == 0 || endingMinute == 0) {
+            TimePickerDialog(
+                mainActivity,
+                timeSetListener,
+                calendarTime.get(Calendar.HOUR_OF_DAY),
+                calendarTime.get(Calendar.MINUTE),
+                true
+            ).show()
+        }else {
+            TimePickerDialog(
+                mainActivity,
+                timeSetListener,
+                endingHour,
+                endingMinute,
+                true
+            ).show()
+        }
     }
     private fun addLog(title: EditText, startTimeBtn: Button, endTimeBtn: Button, popupView: View): String?{
 

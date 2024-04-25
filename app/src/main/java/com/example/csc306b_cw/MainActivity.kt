@@ -4,7 +4,10 @@ import android.content.Context
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
+import android.view.View
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.csc306b_cw.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -13,6 +16,7 @@ import org.json.JSONObject
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 

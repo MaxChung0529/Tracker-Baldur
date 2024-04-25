@@ -6,6 +6,16 @@
         <item name="colorSecondary">@color/purple</item>
     </style>
 
+    <style name="FontSizeSmall">
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="FontSizeMedium">
+        <item name="android:textSize">18.5sp</item>
+    </style>
+    <style name="FontSizeLarge">
+        <item name="android:textSize">28sp</item>
+    </style>
+
     <style name="Theme.CSC306BCW" parent="Base.Theme.CSC306BCW" />
 
     <style name="Theme.CSC306BCW.NoActionBar">

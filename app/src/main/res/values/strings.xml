@@ -64,6 +64,8 @@
     <string name="to"> To </string>
     <string name="timer">0:00:00</string>
     <string name="startTimer">Start</string>
+    <string name="pauseTimer">Pause</string>
+    <string name="resumetimer">Resume</string>
     <string name="resetTimer">Reset</string>
 
 

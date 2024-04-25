@@ -77,7 +77,7 @@ class GoalsAdapter (private val goalsArrayList : MutableList<GoalsData>, mainAct
                     val toast = Toast.makeText(mainActivity, "Details not found", Toast.LENGTH_LONG)
                     toast.show()
                 }else {
-                    //Implement code to make popup to show details of log
+                    //Implement code to make popup to show details of goals
                     val detailPopUp = ShowGoalPopUp(detailsToShow)
                     detailPopUp.show(
                         (mainActivity as AppCompatActivity).supportFragmentManager,
