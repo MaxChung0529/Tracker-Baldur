@@ -104,6 +104,7 @@ class AddLogPopUp() : DialogFragment() {
 
             startTimeBtn.setText(startingTime)
             endTimeBtn.setText(endingTime)
+            sharedPref.edit().clear().apply()
         }
 
         val titleInput = popUpView.findViewById<EditText>(R.id.title_input)
