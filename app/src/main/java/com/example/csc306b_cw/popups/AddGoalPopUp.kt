@@ -51,7 +51,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [AddGoalPopUp.newInstance] factory method to
  * create an instance of this fragment.
  */
-class AddGoalPopUp(mainAct: MainActivity) : DialogFragment() {
+class AddGoalPopUp() : DialogFragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -59,7 +59,7 @@ class AddGoalPopUp(mainAct: MainActivity) : DialogFragment() {
     var imageSrc: String? = null
     var btnChosen = false
     var bitMapUri: Uri? = null
-    var mainActivity = mainAct
+    lateinit var mainActivity : MainActivity
     val calendar = Calendar.getInstance()
     var chosenInterval: Int = 1
     var chosenIntervalUnit: String? = "Day(s)"
@@ -81,6 +81,8 @@ class AddGoalPopUp(mainAct: MainActivity) : DialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        mainActivity = context as MainActivity
         // Inflate the layout for this fragment
         val popupView = inflater.inflate(R.layout.fragment_add_goal_pop_up, container, false)
 
@@ -89,32 +91,33 @@ class AddGoalPopUp(mainAct: MainActivity) : DialogFragment() {
         if (isDarkModeOn) {
             popupView.findViewById<ImageView>(R.id.goal_image).setImageDrawable(
                 mainActivity.getDrawable(R.drawable.backgroundstuffdark))
+        }else {
+            popupView.findViewById<ImageView>(R.id.goal_image).setImageDrawable(
+                mainActivity.getDrawable(R.drawable.backgroundstuff))
         }
 
         val goalTitle = popupView.findViewById<TextView>(R.id.goal_title_input)
         val totalHours = popupView.findViewById<TextView>(R.id.goal_total_hours)
         val goalDescription = popupView.findViewById<EditText>(R.id.goal_description)
 
-
-        val btnsValues = ArrayList<String>()
-        btnsValues.add("Reading")
-        btnsValues.add("Work")
-        btnsValues.add("Church")
-        btnsValues.add("Workout")
+        val btnsIcons = mainActivity.getButtonIcons()
 
 
         try {
             val buttonsScroll = popupView.findViewById<LinearLayout>(R.id.goalCatBtnScroll)
-            var catBtns = java.util.ArrayList<Button>()
-            for (i in 0..btnsValues.size - 1) {
+            var catBtns = ArrayList<Button>()
+            for (i in 0..btnsIcons.size - 1) {
                 val btn = Button(buttonsScroll.context)
 
-                val drawableImg = btn.context.resources.getDrawable(R.drawable.reading)
-                drawableImg?.setBounds(5, 5, 5, 5)
+                val btnIcon = mainActivity.getDrawable(btnsIcons.get(i).vector)
+                Log.d("DrawableID", btnIcon.toString())
+                if (btnIcon != null) {
+                    btnIcon.setTintList(mainActivity.getColorStateList(mainActivity.findColour(btnsIcons.get(i).category)))
+                }
 
-                btn.setCompoundDrawables(drawableImg, null,null,null)
+                btn.setCompoundDrawablesWithIntrinsicBounds(btnIcon, null, null, null)
 
-                btn.setText(btnsValues.get(i))
+                btn.setText(btnsIcons.get(i).category)
                 btn.height = 40
                 btn.setTextColor(R.color.black)
                 btn.elevation = 8F
@@ -127,7 +130,7 @@ class AddGoalPopUp(mainAct: MainActivity) : DialogFragment() {
 
                     if (!btnChosen) {
                         btn.isSelected = true
-                        btn.backgroundTintList = mainActivity.getColorStateList(R.color.purple)
+                        btn.backgroundTintList = mainActivity.getColorStateList(R.color.gray)
                         btnChosen = true
                         goalTitle.setText(btn.text)
 
@@ -143,7 +146,7 @@ class AddGoalPopUp(mainAct: MainActivity) : DialogFragment() {
                                 catBtns.get(i).backgroundTintList = mainActivity.getColorStateList(R.color.light_gray)
                             }
                             btn.isSelected = true
-                            btn.backgroundTintList = mainActivity.getColorStateList(R.color.purple)
+                            btn.backgroundTintList = mainActivity.getColorStateList(R.color.gray)
                             btnChosen = true
                             goalTitle.setText(btn.text)
                         }
@@ -292,7 +295,7 @@ class AddGoalPopUp(mainAct: MainActivity) : DialogFragment() {
         submitBtn.setOnClickListener{
             if (goalTitle.text.toString() != ""
                     && goalTitle.text != null
-                    && totalHours.text != "Total hour(s): 0.0") {
+                    && totalHrs > 0) {
                 Toast.makeText(mainActivity, "Goal added!", Toast.LENGTH_LONG).show()
 
                 try {
@@ -319,9 +322,9 @@ class AddGoalPopUp(mainAct: MainActivity) : DialogFragment() {
                 builder.setPositiveButton("Okay") { dialog, which ->
                 }
                 builder.show()
-            }else if (totalHours.text == "Total hour(s): 0.0") {
+            }else if (totalHrs <= 0) {
                 val builder = AlertDialog.Builder(mainActivity)
-                builder.setTitle("Total hours cannot be 0! Please set the deadline! ")
+                builder.setTitle("Total hours must be more than 0! Please choose the deadline again! ")
                 builder.setPositiveButton("Okay") { dialog, which ->
                 }
                 builder.show()
@@ -501,54 +504,23 @@ class AddGoalPopUp(mainAct: MainActivity) : DialogFragment() {
         dismiss()
     }
 
-
-    @SuppressLint("DiscouragedApi")
-    fun findColour(name: String?): Int {
-
-        var file: File? = null
-        val root = mainActivity.getExternalFilesDir(null)?.absolutePath
-        var myDir = File("$root/TrackerBaldur")
-        val fileName = "colours.json"
-        file = File(myDir, fileName)
-
-        val coloursJSONString = file.bufferedReader().use {
-            it.readText()
-        }
-
-        val outputJson = JSONObject(coloursJSONString)
-        val colours = outputJson.getJSONArray("colours") as JSONArray
-
-        for (i in 0 until colours.length()) {
-            if (name == colours.getJSONObject(i).getString("Name")) {
-                val colorName = colours.getJSONObject(i).getString("Colour")
-
-                val res = mainActivity.getResources()
-                val packageName: String = mainActivity.getPackageName()
-
-                val colorId = res.getIdentifier(colorName, "color", packageName)
-                return colorId
+    companion object {
+        /**
+         * Use this factory method to create a new instance of
+         * this fragment using the provided parameters.
+         *
+         * @param param1 Parameter 1.
+         * @param param2 Parameter 2.
+         * @return A new instance of fragment AddGoalPopUp.
+         */
+        // TODO: Rename and change types and number of parameters
+        @JvmStatic
+        fun newInstance(param1: String, param2: String) =
+            AddGoalPopUp().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_PARAM1, param1)
+                    putString(ARG_PARAM2, param2)
+                }
             }
-        }
-        return -1
     }
-
-//    companion object {
-//        /**
-//         * Use this factory method to create a new instance of
-//         * this fragment using the provided parameters.
-//         *
-//         * @param param1 Parameter 1.
-//         * @param param2 Parameter 2.
-//         * @return A new instance of fragment AddGoalPopUp.
-//         */
-//        // TODO: Rename and change types and number of parameters
-//        @JvmStatic
-//        fun newInstance(param1: String, param2: String) =
-//            AddGoalPopUp().apply {
-//                arguments = Bundle().apply {
-//                    putString(ARG_PARAM1, param1)
-//                    putString(ARG_PARAM2, param2)
-//                }
-//            }
-//    }
 }

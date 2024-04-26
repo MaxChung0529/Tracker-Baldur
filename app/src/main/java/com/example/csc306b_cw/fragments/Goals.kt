@@ -68,7 +68,7 @@ class Goals() : Fragment() {
     }
 
     private fun showPopUp(){
-        val showPopUp = AddGoalPopUp(mainActivity)
+        val showPopUp = AddGoalPopUp()
         showPopUp.show((activity as AppCompatActivity).supportFragmentManager, "showPopUp")
     }
 

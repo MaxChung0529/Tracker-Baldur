@@ -18,11 +18,11 @@
     },
     {
       "Name": "Social",
-      "Colour": "red"
+      "Colour": "yellow"
     },
     {
       "Name": "Gaming",
-      "Colour": "red"
+      "Colour": "orange"
     }
   ]
 }

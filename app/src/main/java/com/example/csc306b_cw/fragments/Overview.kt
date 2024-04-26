@@ -104,7 +104,7 @@ class Overview() : Fragment() {
 
         for (i in 0 until groupedList.size) {
 
-            val colour = mainActivity.getColor(findColour(groupedList[i].first))
+            val colour = mainActivity.getColor(mainActivity.findColour(groupedList[i].first))
             pieChart.addPieSlice(
                 PieModel(
                     groupedList[i].first, groupedList[i].second.toFloat(),
@@ -178,36 +178,6 @@ class Overview() : Fragment() {
         totalHourText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25.0f)
 
         pieChart.startAnimation()
-    }
-
-    @SuppressLint("DiscouragedApi")
-    fun findColour(name: String?): Int {
-
-        var file: File? = null
-        val root = mainActivity.getExternalFilesDir(null)?.absolutePath
-        var myDir = File("$root/TrackerBaldur")
-        val fileName = "colours.json"
-        file = File(myDir, fileName)
-
-        val coloursJSONString = file.bufferedReader().use {
-            it.readText()
-        }
-
-        val outputJson = JSONObject(coloursJSONString)
-        val colours = outputJson.getJSONArray("colours") as JSONArray
-
-        for (i in 0 until colours.length()) {
-            if (name == colours.getJSONObject(i).getString("Name")) {
-                val colorName = colours.getJSONObject(i).getString("Colour")
-
-                val res = mainActivity.getResources()
-                val packageName: String = mainActivity.getPackageName()
-
-                val colorId = res.getIdentifier(colorName, "color", packageName)
-                return colorId
-            }
-        }
-        return -1
     }
 
     private fun analyseLogs(): ArrayList<Pair<String, Double>> {

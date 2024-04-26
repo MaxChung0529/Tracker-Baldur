@@ -94,7 +94,8 @@
             android:elevation="8dp"
             android:layout_margin="0dp"
             android:stateListAnimator="@null"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            app:cornerRadius="8dp"/>
 
         <TextView
             android:id="@+id/edit_end_time"
@@ -115,7 +116,8 @@
             android:elevation="8dp"
             android:layout_margin="3dp"
             android:stateListAnimator="@null"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            app:cornerRadius="8dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -128,6 +130,7 @@
             android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:text="@string/description"
+            android:layout_marginStart="5dp"
             android:textSize="19.5sp"/>
 
         <EditText
@@ -144,15 +147,38 @@
         android:layout_height="220dp"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/edit_upload_image"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="5dp"
-            android:elevation="8dp"
-            android:stateListAnimator="@null"
-            android:text="@string/image_upload_button" />
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/edit_upload_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:elevation="8dp"
+                android:stateListAnimator="@null"
+                android:text="@string/image_upload_button"
+                app:cornerRadius="8dp" />
+
+            <Button
+                android:id="@+id/removeImgBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:elevation="8dp"
+                android:padding="0dp"
+                android:stateListAnimator="@null"
+                android:text="@string/removeImg"
+                app:cornerRadius="8dp" />
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/edit_log_image"
@@ -178,7 +204,8 @@
             android:elevation="8dp"
             android:stateListAnimator="@null"
             android:layout_gravity="center"
-            android:text="@string/cancel_submit" />
+            android:text="@string/cancel_submit"
+            app:cornerRadius="8dp"/>
 
         <Button
             android:id="@+id/submitEditBtn"
@@ -190,7 +217,8 @@
             android:stateListAnimator="@null"
             android:layout_weight="1"
             android:layout_gravity="center"
-            android:text="@string/editBtn" />
+            android:text="@string/editBtn"
+            app:cornerRadius="8dp"/>
     </LinearLayout>
 
 

@@ -15,6 +15,9 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.w3c.dom.Text
 import java.io.File
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Date
 
 class GoalsAdapter (private val goalsArrayList : MutableList<GoalsData>, mainActivity: MainActivity) : RecyclerView.Adapter<GoalsAdapter.ViewHolder>() {
     var mainActivity = mainActivity
@@ -88,35 +91,6 @@ class GoalsAdapter (private val goalsArrayList : MutableList<GoalsData>, mainAct
         }
 
     }
-    @SuppressLint("DiscouragedApi")
-    fun findColour(name: String?): Int{
-
-        var file: File? = null
-        val root = mainActivity.getExternalFilesDir(null)?.absolutePath
-        var myDir = File("$root/TrackerBaldur")
-        val fileName = "colours.json"
-        file = File(myDir, fileName)
-
-        val coloursJSONString = file.bufferedReader().use {
-            it.readText()
-        }
-
-        val outputJson = JSONObject(coloursJSONString)
-        val colours = outputJson.getJSONArray("colours") as JSONArray
-
-        for (i in 0 until colours.length()) {
-            if (name == colours.getJSONObject(i).getString("Name")) {
-                val colorName = colours.getJSONObject(i).getString("Colour")
-
-                val res = mainActivity.getResources()
-                val packageName: String = mainActivity.getPackageName()
-
-                val colorId = res.getIdentifier(colorName, "color", packageName)
-                return colorId
-            }
-        }
-        return -1
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -130,7 +104,7 @@ class GoalsAdapter (private val goalsArrayList : MutableList<GoalsData>, mainAct
         val item = goalsArrayList[position]
 
 
-        holder.catBar.setBackgroundColor(mainActivity.getColor(findColour(item.goalName.toString())))
+        holder.catBar.setBackgroundColor(mainActivity.getColor(mainActivity.findColour(item.goalName.toString())))
 
         holder.goalName.text = item.goalName
 
@@ -138,6 +112,9 @@ class GoalsAdapter (private val goalsArrayList : MutableList<GoalsData>, mainAct
         if (item.progressNow!! >= item.progressGoal!!) {
             val achieved = mainActivity.getDrawable(R.drawable.achieved)
             holder.goalName.setCompoundDrawablesWithIntrinsicBounds(achieved, null, null, null)
+        }else if (LocalDate.now().isAfter(LocalDate.parse(item.deadline, DateTimeFormatter.ofPattern("dd-MM-yyyy")))) {
+            val failed = mainActivity.getDrawable(R.drawable.failed)
+            holder.goalName.setCompoundDrawablesWithIntrinsicBounds(failed, null, null, null)
         }
 
         holder.progress.text =  "${item.progressNow}/${item.progressGoal}"

@@ -58,6 +58,7 @@ class Logs() : Fragment(){
     var currentLogList = ArrayList<LogsData>()
     lateinit var contentView: View
     lateinit var sortSpinner: Spinner
+    lateinit var datePickerBtn : Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,7 +91,7 @@ class Logs() : Fragment(){
             showFilterPopUp()
         }
 
-        val datePickerBtn = contentView.findViewById<Button>(R.id.date_picker_btn)
+        datePickerBtn = contentView.findViewById<Button>(R.id.date_picker_btn)
 
         datePickerBtn.setText(dateToShow)
         datePickerBtn.setOnClickListener {
@@ -144,9 +145,8 @@ class Logs() : Fragment(){
 
     fun refresh() {
         fillRecyclerView(sortLogs("ASC", getDateLogs()), contentView)
+        datePickerBtn.setText(dateToShow)
     }
-
-
 
     private fun getStoredLogs(): JSONArray {
         var file: File? = null
@@ -213,6 +213,7 @@ class Logs() : Fragment(){
 
         //Change Date
         if (formattedDate != null) {
+            datePickerBtn.setText(dateToShow)
             fillRecyclerView(sortLogs("ASC", getDateLogs()), contentView)
         }
         //Change Sorting Order
@@ -292,6 +293,8 @@ class Logs() : Fragment(){
         val filterPref = mainAct.getSharedPreferences("filterPref", Context.MODE_PRIVATE)
 
         val dateToFiter = filterPref.getString("filterDate", "Any Date")
+        datePickerBtn.setText(dateToFiter)
+
         val filterName = filterPref.getString("filterTitle", "")
         val filterSymbol = filterPref.getString("logicSymbol", "")
         val filterHour = filterPref.getInt("filterHours",0)
@@ -360,7 +363,7 @@ class Logs() : Fragment(){
     }
 
     private fun showFilterPopUp(){
-        val showPopUp = FilterCriteriaPopUp(mainAct, this)
+        val showPopUp = FilterCriteriaPopUp()
         showPopUp.show((activity as AppCompatActivity).supportFragmentManager, "showPopUp")
     }
 

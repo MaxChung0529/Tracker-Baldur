@@ -3,6 +3,7 @@ package com.example.csc306b_cw
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -74,9 +75,19 @@ class ShowGoalPopUp(detailsObj: JSONObject) : DialogFragment() {
         popupView.findViewById<TextView>(R.id.goalDetailDescContent).setText(detailsObj.getString("description"))
 
         try {
+            val detailImage = popupView.findViewById<ImageView>(R.id.goalDetailImage)
+
             if (detailsObj.getString("imgSrc") != "") {
-                val detailImage = popupView.findViewById<ImageView>(R.id.goalDetailImage)
                 detailImage.setImageURI(Uri.parse(detailsObj.getString("imgSrc")))
+            }else {
+                val DarkModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+                val isDarkModeOn = DarkModeFlags == Configuration.UI_MODE_NIGHT_YES
+
+                if (!isDarkModeOn) {
+                    detailImage.setImageDrawable(mainActivity.getDrawable(R.drawable.backgroundstuff))
+                }else {
+                    detailImage.setImageDrawable(mainActivity.getDrawable(R.drawable.backgroundstuffdark))
+                }
             }
         }catch (e: Exception){
             Log.d("ImgSrcLOL", e.message.toString())

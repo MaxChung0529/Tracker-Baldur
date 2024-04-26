@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
@@ -35,6 +36,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 class EditLogActivity : AppCompatActivity() {
+//    lateinit var mainActivity: MainActivity
     var date: String? = null
     var activityName: String? = null
     var startingTime: String? = null
@@ -47,7 +49,7 @@ class EditLogActivity : AppCompatActivity() {
     var currentlyChosenYear : Int = calendar.get(Calendar.YEAR)
     var currentlyChosenMonth : Int = calendar.get(Calendar.MONTH)
     var currentlyChosenDay : Int = calendar.get(Calendar.DAY_OF_MONTH)
-    var imageView: ImageView? = null
+//    var imageView: ImageView? = null
     var imageSrc: String? = null
     var btnChosen = false
     var bitMapUri: Uri? = null
@@ -78,11 +80,7 @@ class EditLogActivity : AppCompatActivity() {
         titleInput.setText(activityName)
 
 
-        val btnsIcons = ArrayList<ButtonIcons>()
-        btnsIcons.add(ButtonIcons("Reading", R.color.purple, R.drawable.reading))
-        btnsIcons.add(ButtonIcons("Work", R.color.blue, R.drawable.work))
-        btnsIcons.add(ButtonIcons("Church", R.color.green, R.drawable.church))
-        btnsIcons.add(ButtonIcons("Workout", R.color.red, R.drawable.workou))
+        val btnsIcons = getButtonIcons()
 
 
         try {
@@ -90,21 +88,21 @@ class EditLogActivity : AppCompatActivity() {
             var catBtns = java.util.ArrayList<Button>()
             for (i in 0..btnsIcons.size - 1) {
                 val btn = Button(buttonsScroll.context)
-                btn.layoutParams = createParams()
-                btn.setBackgroundColor(R.color.light_gray)
+
+                val btnIcon = getDrawable(btnsIcons.get(i).vector)
+                Log.d("DrawableID", btnIcon.toString())
+                if (btnIcon != null) {
+                    btnIcon.setTintList(getColorStateList(findColour(btnsIcons.get(i).category)))
+                }
+
+                btn.setCompoundDrawablesWithIntrinsicBounds(btnIcon, null, null, null)
 
                 btn.setText(btnsIcons.get(i).category)
                 btn.height = 40
                 btn.setTextColor(R.color.black)
                 btn.elevation = 8F
                 btn.isSelected = false
-
-                val btnIcon = getDrawable(btnsIcons.get(i).vector)
-                if (btnIcon != null) {
-                    btnIcon.setTintList(getColorStateList(btnsIcons.get(i).color))
-                }
-
-                btn.setCompoundDrawablesWithIntrinsicBounds(btnIcon, null, null, null)
+                btn.backgroundTintList = getColorStateList(R.color.light_gray)
 
                 btn.backgroundTintList = getColorStateList(R.color.light_gray)
 
@@ -165,7 +163,10 @@ class EditLogActivity : AppCompatActivity() {
         val descriptionBox = findViewById<EditText>(R.id.editDescription)
         descriptionBox.setText(description)
 
-        imageView = findViewById<ImageView>(R.id.edit_log_image)
+        val imageView = findViewById<ImageView>(R.id.edit_log_image)
+        if (imgSrc != "") {
+            imageView.setImageURI(Uri.parse(imgSrc))
+        }
 
         val galleryImage = registerForActivityResult(
             ActivityResultContracts.GetContent(),
@@ -173,6 +174,20 @@ class EditLogActivity : AppCompatActivity() {
                 bitMapUri = it
                 imageView?.setImageURI(bitMapUri)
             })
+
+        val removeImgBtn = findViewById<Button>(R.id.removeImgBtn)
+        removeImgBtn.setOnClickListener{
+            val DarkModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+            val isDarkModeOn = DarkModeFlags == Configuration.UI_MODE_NIGHT_YES
+
+            if (!isDarkModeOn) {
+                imageView.setImageDrawable(getDrawable(R.drawable.backgroundstuff))
+            }else {
+                imageView.setImageDrawable(getDrawable(R.drawable.backgroundstuffdark))
+            }
+
+            imgSrc = ""
+        }
 
         val uploadImageBtn = findViewById<Button>(R.id.edit_upload_image)
         uploadImageBtn.setOnClickListener{
@@ -192,14 +207,13 @@ class EditLogActivity : AppCompatActivity() {
             if (text == "Log edited"){
 
                 try {
-                    imageSrc = saveImage(MediaStore.Images.Media.getBitmap(contentResolver, bitMapUri))
+                    imgSrc = saveImage(MediaStore.Images.Media.getBitmap(contentResolver, bitMapUri))
                 }catch (e: Exception) {
                     Log.d("ImageURI", e.message.toString())
                 }
                 Toast.makeText(this, "Log Edited", Toast.LENGTH_LONG).show()
 
                 replaceLog(startingTimeBtn, endingTimeBtn, descriptionBox)
-//                mainActivity.logFragment.refresh()
                 setResult(Activity.RESULT_OK)
                 finish()
 
@@ -218,21 +232,6 @@ class EditLogActivity : AppCompatActivity() {
                 builder.show()
             }
         }
-
-
-    }
-
-    private fun createParams() : ViewGroup.LayoutParams {
-        var left = 10
-        var right = 10
-
-        val params = ConstraintLayout.LayoutParams(
-            ConstraintLayout.LayoutParams.MATCH_PARENT,
-            ConstraintLayout.LayoutParams.WRAP_CONTENT
-        )
-        params.setMargins(left, 0, right, 0)
-
-        return params
     }
 
     private fun showDatePicker(datePickerBtn: Button) {
@@ -257,6 +256,68 @@ class EditLogActivity : AppCompatActivity() {
 
         )
         datePickerDialog.show()
+    }
+
+    @SuppressLint("DiscouragedApi")
+    fun findColour(name: String?): Int{
+
+        var file: File? = null
+        val root = getExternalFilesDir(null)?.absolutePath
+        var myDir = File("$root/TrackerBaldur")
+        val fileName = "colours.json"
+        file = File(myDir, fileName)
+
+        val coloursJSONString = file.bufferedReader().use {
+            it.readText()
+        }
+
+        val outputJson = JSONObject(coloursJSONString)
+        val colours = outputJson.getJSONArray("colours") as JSONArray
+
+        for (i in 0 until colours.length()) {
+            if (name == colours.getJSONObject(i).getString("Name")) {
+                val colorName = colours.getJSONObject(i).getString("Colour")
+
+                val res = getResources()
+                val packageName: String = getPackageName()
+
+                val colorId = res.getIdentifier(colorName, "color", packageName)
+                return colorId
+            }
+        }
+        return -1
+    }
+
+    @SuppressLint("DiscouragedApi")
+    fun getButtonIcons(): ArrayList<ButtonIcons> {
+        var btnList = ArrayList<ButtonIcons>()
+
+        try {
+
+            val coloursFile = "catColors.json"
+            val jsonString = application.assets.open(coloursFile).bufferedReader().use {
+                it.readText()
+            }
+
+            val outputJson = JSONObject(jsonString)
+            val colours = outputJson.getJSONArray("colours") as JSONArray
+
+            val res = getResources()
+            val packageName: String = getPackageName()
+
+            if (colours.length() > 0) {
+                for (i in 0 until colours.length()) {
+                    val tmpName = colours.getJSONObject(i).getString("Name")
+                    val tmpColour = findColour(colours.getJSONObject(i).getString("Colour"))
+
+                    val vectorID = res.getIdentifier(tmpName.lowercase(), "drawable", packageName)
+                    btnList.add(ButtonIcons(tmpName, tmpColour, vectorID))
+                }
+            }
+        }catch (e: Exception) {
+            Log.d("Buttons-finding", e.message.toString())
+        }
+        return btnList
     }
 
     private fun pickStartTime(startTimeBtn: Button, endTimeBtn: Button): String?{
@@ -321,7 +382,7 @@ class EditLogActivity : AppCompatActivity() {
         }catch (e: Exception) {
             Log.d("Images-saving", e.message.toString())
         }
-        return fileName
+        return file.toString()
     }
 
     private fun getStoredLogs(): JSONArray {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -230,7 +231,8 @@
                 android:gravity="center"
                 android:layout_gravity="center"
                 android:textSize="19.5sp"
-                android:layout_marginEnd="25dp"/>
+                android:layout_marginEnd="25dp"
+                app:cornerRadius="8dp" />
 
             <Button
                 android:id="@+id/deleteBtn"
@@ -240,7 +242,8 @@
                 android:textAlignment="center"
                 android:gravity="center"
                 android:layout_gravity="center"
-                android:textSize="19.5sp"/>
+                android:textSize="19.5sp"
+                app:cornerRadius="8dp" />
         </LinearLayout>
 
     </LinearLayout>

@@ -31,13 +31,12 @@ private const val ARG_PARAM2 = "param2"
  * Use the [FilterCriteriaPopUp.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FilterCriteriaPopUp(mainActivity: MainActivity, logFragment: Logs) : DialogFragment() {
+class FilterCriteriaPopUp() : DialogFragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-//    var mainActivity = activity as MainActivity
-    var mainActivity = mainActivity
-    var logFragment = logFragment
+    lateinit var mainActivity : MainActivity
+    lateinit var logFragment : Logs
     val calendar = Calendar.getInstance()
     var currentlyChosenYear : Int = calendar.get(Calendar.YEAR)
     var currentlyChosenMonth : Int = calendar.get(Calendar.MONTH)
@@ -61,6 +60,10 @@ class FilterCriteriaPopUp(mainActivity: MainActivity, logFragment: Logs) : Dialo
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        mainActivity = context as MainActivity
+        logFragment = mainActivity.logFragment
+
         // Inflate the layout for this fragment
         val popupView = inflater.inflate(R.layout.fragment_filter_criteria_pop_up, container, false)
 
@@ -83,25 +86,24 @@ class FilterCriteriaPopUp(mainActivity: MainActivity, logFragment: Logs) : Dialo
 
         val filterTitle = popupView.findViewById<EditText>(R.id.filter_title_input)
 
-        val btnsValues = ArrayList<String>()
-        btnsValues.add("Reading")
-        btnsValues.add("Work")
-        btnsValues.add("Church")
-        btnsValues.add("Workout")
+        val btnsIcons = mainActivity.getButtonIcons()
 
 
         try {
             val buttonsScroll = popupView.findViewById<LinearLayout>(R.id.filterCatBtnScroll)
-            var catBtns = java.util.ArrayList<Button>()
-            for (i in 0..btnsValues.size - 1) {
+            var catBtns = ArrayList<Button>()
+            for (i in 0..btnsIcons.size - 1) {
                 val btn = Button(buttonsScroll.context)
 
-                val drawableImg = btn.context.resources.getDrawable(R.drawable.reading)
-                drawableImg?.setBounds(5, 5, 5, 5)
+                val btnIcon = mainActivity.getDrawable(btnsIcons.get(i).vector)
+                Log.d("DrawableID", btnIcon.toString())
+                if (btnIcon != null) {
+                    btnIcon.setTintList(mainActivity.getColorStateList(mainActivity.findColour(btnsIcons.get(i).category)))
+                }
 
-                btn.setCompoundDrawables(drawableImg, null,null,null)
+                btn.setCompoundDrawablesWithIntrinsicBounds(btnIcon, null, null, null)
 
-                btn.setText(btnsValues.get(i))
+                btn.setText(btnsIcons.get(i).category)
                 btn.height = 40
                 btn.setTextColor(R.color.black)
                 btn.elevation = 8F
@@ -238,23 +240,23 @@ class FilterCriteriaPopUp(mainActivity: MainActivity, logFragment: Logs) : Dialo
         datePickerDialog.show()
     }
 
-//    companion object {
-//        /**
-//         * Use this factory method to create a new instance of
-//         * this fragment using the provided parameters.
-//         *
-//         * @param param1 Parameter 1.
-//         * @param param2 Parameter 2.
-//         * @return A new instance of fragment FilterCriteriaPopUp.
-//         */
-//        // TODO: Rename and change types and number of parameters
-//        @JvmStatic
-//        fun newInstance(param1: String, param2: String) =
-//            FilterCriteriaPopUp().apply {
-//                arguments = Bundle().apply {
-//                    putString(ARG_PARAM1, param1)
-//                    putString(ARG_PARAM2, param2)
-//                }
-//            }
-//    }
+    companion object {
+        /**
+         * Use this factory method to create a new instance of
+         * this fragment using the provided parameters.
+         *
+         * @param param1 Parameter 1.
+         * @param param2 Parameter 2.
+         * @return A new instance of fragment FilterCriteriaPopUp.
+         */
+        // TODO: Rename and change types and number of parameters
+        @JvmStatic
+        fun newInstance(param1: String, param2: String) =
+            FilterCriteriaPopUp().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_PARAM1, param1)
+                    putString(ARG_PARAM2, param2)
+                }
+            }
+    }
 }

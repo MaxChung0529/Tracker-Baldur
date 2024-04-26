@@ -203,7 +203,8 @@
             android:layout_marginStart="5dp"
             android:elevation="8dp"
             android:stateListAnimator="@null"
-            android:text="@string/image_upload_button" />
+            android:text="@string/image_upload_button"
+            app:cornerRadius="8dp" />
 
         <ImageView
             android:id="@+id/goal_image"
@@ -230,7 +231,8 @@
             android:elevation="8dp"
             android:stateListAnimator="@null"
             android:layout_gravity="center"
-            android:text="@string/cancel_submit" />
+            android:text="@string/cancel_submit"
+            app:cornerRadius="8dp" />
 
         <Button
             android:id="@+id/goal_submit_btn"
@@ -242,7 +244,8 @@
             android:stateListAnimator="@null"
             android:layout_weight="1"
             android:layout_gravity="center"
-            android:text="@string/submit_goal" />
+            android:text="@string/submit_goal"
+            app:cornerRadius="8dp" />
     </LinearLayout>
 
 

@@ -3,10 +3,13 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#808080</color>
-    <color name="purple">#7F07FF</color>
     <color name="dark_purple">#784ea3</color>
     <color name="light_gray">#B5B5B5</color>
+    <color name="purple">#7F07FF</color>
     <color name="blue">#03A9F4</color>
     <color name="green">#00CF1C</color>
     <color name="red">#CF0011</color>
+    <color name="yellow">#FFD503</color>
+    <color name="orange">#FF8503</color>
+    <color name="pink">#E603FF</color>
 </resources>

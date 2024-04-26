@@ -124,7 +124,8 @@
             android:elevation="8dp"
             android:stateListAnimator="@null"
             android:layout_gravity="center"
-            android:text="@string/cancel_submit" />
+            android:text="@string/cancel_submit"
+            app:cornerRadius="8dp"  />
 
         <Button
             android:id="@+id/filter_submit_btn"
@@ -136,7 +137,8 @@
             android:stateListAnimator="@null"
             android:layout_weight="1"
             android:layout_gravity="center"
-            android:text="Filter Logs" />
+            android:text="@string/filterLog"
+            app:cornerRadius="8dp"  />
     </LinearLayout>
 
 

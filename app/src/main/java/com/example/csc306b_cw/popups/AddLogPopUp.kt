@@ -75,7 +75,6 @@ class AddLogPopUp() : DialogFragment() {
 
         mainActivity = context as MainActivity
 
-
         val popUpView = inflater.inflate(R.layout.fragment_add_log_pop_up, container, false)
         val startTimeBtn = popUpView.findViewById<Button>(R.id.start_time_picker)
         val endTimeBtn = popUpView.findViewById<Button>(R.id.end_time_picker)
@@ -85,6 +84,9 @@ class AddLogPopUp() : DialogFragment() {
         if (isDarkModeOn) {
             popUpView.findViewById<ImageView>(R.id.log_image).setImageDrawable(
                 mainActivity.getDrawable(R.drawable.backgroundstuffdark))
+        }else {
+            popUpView.findViewById<ImageView>(R.id.log_image).setImageDrawable(
+                mainActivity.getDrawable(R.drawable.backgroundstuff))
         }
 
         val timeFormat = DateTimeFormatter.ofPattern("HH:mm")
@@ -111,34 +113,27 @@ class AddLogPopUp() : DialogFragment() {
 
         val titleInput = popUpView.findViewById<EditText>(R.id.title_input)
 
-        val btnsIcons = ArrayList<ButtonIcons>()
-        btnsIcons.add(ButtonIcons("Reading", R.color.purple, R.drawable.reading))
-        btnsIcons.add(ButtonIcons("Work", R.color.blue, R.drawable.work))
-        btnsIcons.add(ButtonIcons("Church", R.color.green, R.drawable.church))
-        btnsIcons.add(ButtonIcons("Workout", R.color.red, R.drawable.workou))
-
+        val btnsIcons = mainActivity.getButtonIcons()
 
         try {
             val buttonsScroll = popUpView.findViewById<LinearLayout>(R.id.catBtnScroll)
             var catBtns = java.util.ArrayList<Button>()
             for (i in 0..btnsIcons.size - 1) {
                 val btn = Button(buttonsScroll.context)
-                btn.layoutParams = createParams()
-                btn.setBackgroundColor(R.color.light_gray)
+
+                val btnIcon = mainActivity.getDrawable(btnsIcons.get(i).vector)
+                Log.d("DrawableID", btnIcon.toString())
+                if (btnIcon != null) {
+                    btnIcon.setTintList(mainActivity.getColorStateList(mainActivity.findColour(btnsIcons.get(i).category)))
+                }
+
+                btn.setCompoundDrawablesWithIntrinsicBounds(btnIcon, null, null, null)
 
                 btn.setText(btnsIcons.get(i).category)
                 btn.height = 40
                 btn.setTextColor(R.color.black)
                 btn.elevation = 8F
                 btn.isSelected = false
-
-                val btnIcon = mainActivity.getDrawable(btnsIcons.get(i).vector)
-                if (btnIcon != null) {
-                    btnIcon.setTintList(mainActivity.getColorStateList(findColour(btnsIcons.get(i).category)))
-                }
-
-                btn.setCompoundDrawablesWithIntrinsicBounds(btnIcon, null, null, null)
-
                 btn.backgroundTintList = mainActivity.getColorStateList(R.color.light_gray)
 
                 catBtns.add(btn)
@@ -204,7 +199,6 @@ class AddLogPopUp() : DialogFragment() {
         submit_btn.setOnClickListener{
             val title = popUpView.findViewById<EditText>(R.id.title_input)
             val description = popUpView.findViewById<EditText>(R.id.description)
-//            val text = addLog(title, startTimeBtn, endTimeBtn)
             val text = addLog(title, startTimeBtn, endTimeBtn, popUpView)
             if (text == "Log added"){
 
@@ -278,11 +272,11 @@ class AddLogPopUp() : DialogFragment() {
         }
 
         startTimeBtn.setOnClickListener{
-            val time = pickStartTime(startTimeBtn, endTimeBtn)
+            pickStartTime(startTimeBtn, endTimeBtn)
         }
 
         endTimeBtn.setOnClickListener{
-            val time = pickEndTime(startTimeBtn, endTimeBtn)
+            pickEndTime(startTimeBtn, endTimeBtn)
         }
 
         // Inflate the layout for this fragment
@@ -301,6 +295,7 @@ class AddLogPopUp() : DialogFragment() {
             if (entry.getString("activityName") == storedGoals[i].goalName
                 && logDuration >= storedGoals[i].durationPerUnit!!
                 && storedGoals[i].progressNow!! < storedGoals[i].progressGoal!!
+                && LocalDate.now().isBefore(LocalDate.parse(storedGoals[i].deadline, DateTimeFormatter.ofPattern("dd-MM-yyyy")))
             ){
 
                 val oldGoal = storedGoals[i]
@@ -429,19 +424,6 @@ class AddLogPopUp() : DialogFragment() {
             val logs = JSONArray()
             return logs
         }
-    }
-
-    private fun createParams() : ViewGroup.LayoutParams {
-        var left = 10
-        var right = 10
-
-        val params = ConstraintLayout.LayoutParams(
-            ConstraintLayout.LayoutParams.MATCH_PARENT,
-            ConstraintLayout.LayoutParams.WRAP_CONTENT
-        )
-        params.setMargins(left, 0, right, 0)
-
-        return params
     }
     private fun saveImage(bitmap: Bitmap): String{
         var fileOutputStream : OutputStream
@@ -620,35 +602,5 @@ class AddLogPopUp() : DialogFragment() {
             textToShow = "Log added"
         }
         return textToShow
-    }
-
-    @SuppressLint("DiscouragedApi")
-    fun findColour(name: String?): Int {
-
-        var file: File? = null
-        val root = mainActivity.getExternalFilesDir(null)?.absolutePath
-        var myDir = File("$root/TrackerBaldur")
-        val fileName = "colours.json"
-        file = File(myDir, fileName)
-
-        val coloursJSONString = file.bufferedReader().use {
-            it.readText()
-        }
-
-        val outputJson = JSONObject(coloursJSONString)
-        val colours = outputJson.getJSONArray("colours") as JSONArray
-
-        for (i in 0 until colours.length()) {
-            if (name == colours.getJSONObject(i).getString("Name")) {
-                val colorName = colours.getJSONObject(i).getString("Colour")
-
-                val res = mainActivity.getResources()
-                val packageName: String = mainActivity.getPackageName()
-
-                val colorId = res.getIdentifier(colorName, "color", packageName)
-                return colorId
-            }
-        }
-        return -1
     }
 }

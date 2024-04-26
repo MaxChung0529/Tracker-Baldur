@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.Instrumentation.ActivityResult
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -62,7 +63,7 @@ class ShowDetailsPopUp(detailsObj: JSONObject) : DialogFragment() {
         popUpView.findViewById<TextView>(R.id.detailDescContent).setText(detailsObj.getString("description"))
 
         val catColour = popUpView.findViewById<Button>(R.id.catColor)
-        catColour.setBackgroundColor(mainActivity.getColor(findColour(detailsObj.getString("activityName"))))
+        catColour.setBackgroundColor(mainActivity.getColor(mainActivity.findColour(detailsObj.getString("activityName"))))
 
 
         val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult(),
@@ -114,9 +115,19 @@ class ShowDetailsPopUp(detailsObj: JSONObject) : DialogFragment() {
         }
 
         try {
+            val detailImage = popUpView.findViewById<ImageView>(R.id.detailImage)
+
             if (detailsObj.getString("imgSrc") != "") {
-                val detailImage = popUpView.findViewById<ImageView>(R.id.detailImage)
                 detailImage.setImageURI(Uri.parse(detailsObj.getString("imgSrc")))
+            }else {
+                val DarkModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+                val isDarkModeOn = DarkModeFlags == Configuration.UI_MODE_NIGHT_YES
+
+                if (!isDarkModeOn) {
+                    detailImage.setImageDrawable(mainActivity.getDrawable(R.drawable.backgroundstuff))
+                }else {
+                    detailImage.setImageDrawable(mainActivity.getDrawable(R.drawable.backgroundstuffdark))
+                }
             }
         }catch (e: Exception){
             Log.d("ImgSrcLOL", e.message.toString())
@@ -124,30 +135,6 @@ class ShowDetailsPopUp(detailsObj: JSONObject) : DialogFragment() {
 
         // Inflate the layout for this fragment
         return popUpView
-    }
-
-
-    @SuppressLint("DiscouragedApi")
-    fun findColour(name: String?): Int {
-        val coloursJSONString = mainActivity.assets.open("catColors.json").bufferedReader().use {
-            it.readText()
-        }
-
-        val outputJson = JSONObject(coloursJSONString)
-        val colours = outputJson.getJSONArray("colours") as JSONArray
-
-        for (i in 0 until colours.length()) {
-            if (name == colours.getJSONObject(i).getString("Name")) {
-                val colorName = colours.getJSONObject(i).getString("Colour")
-
-                val res = mainActivity.getResources()
-                val packageName: String = mainActivity.getPackageName()
-
-                val colorId = res.getIdentifier(colorName, "color", packageName)
-                return colorId
-            }
-        }
-        return -1
     }
 
     private fun confirmDelete() {

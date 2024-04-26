@@ -1,17 +1,23 @@
 package com.example.csc306b_cw
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.Switch
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
@@ -37,6 +43,7 @@ class Settings() : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     lateinit var mainActivity: MainActivity
+    var categoryColours = ArrayList<Pair<String, String>>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,7 +99,84 @@ class Settings() : Fragment() {
 
             FileOutputStream(goalsFile).apply { writeGoalCsv() }
         }
+
+        getCatColours()
+        val categoryScroll = settingView.findViewById<LinearLayout>(R.id.categoriesScroll)
+
+
+        val rowParam = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            1f
+        )
+        rowParam.setMargins(5,5,5,5)
+
+        val colourParam = LinearLayout.LayoutParams(65,
+            65)
+        colourParam.setMargins(5,15,25,15)
+
+        for (i in 0 until categoryColours.size) {
+
+            val row = LinearLayout(categoryScroll.context)
+            row.orientation = LinearLayout.HORIZONTAL
+            row.gravity = Gravity.CENTER
+            row.layoutParams = rowParam
+
+            val colourBtn = Button(row.context)
+            colourBtn.layoutParams = colourParam
+            colourBtn.setBackgroundColor(mainActivity.getColor(mainActivity.findColour(categoryColours[i].first)))
+
+            row.addView(colourBtn)
+
+            val catText = TextView(row.context)
+            val rowTextParam = LinearLayout.LayoutParams(250,
+                LinearLayout.LayoutParams.MATCH_PARENT)
+            catText.setText(categoryColours[i].first)
+            catText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25f)
+            catText.layoutParams = rowTextParam
+
+            row.addView(catText)
+
+            categoryScroll.addView(row)
+        }
+
+
+//        val row = LinearLayout(categoryScroll.context)
+//        row.orientation = LinearLayout.HORIZONTAL
+//        row.gravity = Gravity.CENTER
+//        row.layoutParams = rowParam
+//
+//        val colourBtn = Button(row.context)
+//        colourBtn.compoundDrawables
+//        colourBtn.layoutParams = colourParam
+//
+//        row.addView(colourBtn)
+//        categoryScroll.addView(row)
+
+
         return settingView
+    }
+
+    private fun getCatColours() {
+
+        var file: File? = null
+        val root = mainActivity.getExternalFilesDir(null)?.absolutePath
+        var myDir = File("$root/TrackerBaldur")
+        val fileName = "colours.json"
+        file = File(myDir, fileName)
+
+        val coloursJSONString = file.bufferedReader().use {
+            it.readText()
+        }
+
+        val outputJson = JSONObject(coloursJSONString)
+        val colours = outputJson.getJSONArray("colours") as JSONArray
+
+        for (i in 0 until colours.length()) {
+            val catString = colours.getJSONObject(i).getString("Name")
+            val catColour = colours.getJSONObject(i).getString("Colour")
+            categoryColours.add(Pair(catString, catColour))
+        }
     }
     fun OutputStream.writeDataCsv() {
 
