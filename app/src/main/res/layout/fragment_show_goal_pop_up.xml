@@ -176,7 +176,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="@string/deleteGoal"
-                app:cornerRadius="8dp"  />
+                app:cornerRadius="8dp"/>
         </LinearLayout>
     </LinearLayout>
 

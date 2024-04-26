@@ -112,6 +112,7 @@
         app:iconGravity="textStart"
         app:iconPadding="0dp"
         tools:visibility="visible"
-        android:contentDescription="TODO" />
+        android:contentDescription="TODO"
+        android:theme="@style/Theme.Material3.Dark"/>
 
 </FrameLayout>

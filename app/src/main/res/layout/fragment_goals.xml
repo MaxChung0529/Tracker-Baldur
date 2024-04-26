@@ -44,5 +44,6 @@
         app:iconPadding="0dp"
         tools:visibility="visible"
         android:src="@drawable/baseline_add_24"
-        android:contentDescription="goal" />
+        android:contentDescription="goal"
+        android:theme="@style/Theme.Material3.Dark"/>
 </FrameLayout>

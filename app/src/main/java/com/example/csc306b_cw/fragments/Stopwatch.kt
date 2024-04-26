@@ -3,6 +3,7 @@ package com.example.csc306b_cw
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
@@ -65,6 +66,9 @@ class Stopwatch : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        val DarkModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val isDarkModeOn = DarkModeFlags == Configuration.UI_MODE_NIGHT_YES
 
         mainActivity = context as MainActivity
 

@@ -183,7 +183,7 @@ class EditLogActivity : AppCompatActivity() {
             if (!isDarkModeOn) {
                 imageView.setImageDrawable(getDrawable(R.drawable.backgroundstuff))
             }else {
-                imageView.setImageDrawable(getDrawable(R.drawable.backgroundstuffdark))
+                imageView.setImageDrawable(getDrawable(R.drawable.backgroundstuffblack))
             }
 
             imgSrc = ""

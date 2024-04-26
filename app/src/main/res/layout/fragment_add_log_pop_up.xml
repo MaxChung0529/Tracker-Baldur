@@ -93,7 +93,7 @@
             android:layout_margin="0dp"
             android:stateListAnimator="@null"
             android:textAlignment="center"
-            app:cornerRadius="8dp" />
+            app:cornerRadius="8dp"/>
 
         <TextView
             android:id="@+id/end_time"
@@ -114,7 +114,7 @@
             android:layout_margin="3dp"
             android:stateListAnimator="@null"
             android:textAlignment="center"
-            app:cornerRadius="8dp"  />
+            app:cornerRadius="8dp"/>
     </LinearLayout>
 
     <EditText
@@ -139,7 +139,7 @@
             android:elevation="8dp"
             android:stateListAnimator="@null"
             android:text="@string/image_upload_button"
-            app:cornerRadius="8dp"  />
+            app:cornerRadius="8dp"/>
 
         <ImageView
             android:id="@+id/log_image"
@@ -166,7 +166,7 @@
             android:stateListAnimator="@null"
             android:layout_gravity="center"
             android:text="@string/cancel_submit"
-            app:cornerRadius="8dp"  />
+            app:cornerRadius="8dp"/>
 
         <Button
             android:id="@+id/submit_btn"
@@ -179,7 +179,7 @@
             android:layout_weight="1"
             android:layout_gravity="center"
             android:text="@string/submit"
-            app:cornerRadius="8dp" />
+            app:cornerRadius="8dp"/>
     </LinearLayout>
 
 

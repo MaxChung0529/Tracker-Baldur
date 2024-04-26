@@ -27,7 +27,7 @@
             android:textSize="19.5sp"
             android:layout_marginEnd="20dp"
             app:cornerRadius="8dp"
-            android:text="@string/startDate" />
+            android:text="@string/startDate"/>
 
         <TextView
             android:id="@+id/dateTodate"
@@ -41,14 +41,14 @@
             android:id="@+id/overviewEndDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="15dp"
-            android:paddingEnd="15dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:textSize="19.5sp"
             android:layout_marginStart="20dp"
-            app:cornerRadius="8dp"
-            android:text="@string/endDate" />
+            android:paddingStart="15dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="15dp"
+            android:paddingBottom="8dp"
+            android:text="@string/endDate"
+            android:textSize="19.5sp"
+            app:cornerRadius="8dp"/>
     </LinearLayout>
 
     <androidx.cardview.widget.CardView
