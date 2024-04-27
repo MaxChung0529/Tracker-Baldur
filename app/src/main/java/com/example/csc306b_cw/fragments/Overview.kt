@@ -7,7 +7,6 @@ import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.text.Layout.Alignment
-import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -100,7 +99,6 @@ class Overview() : Fragment() {
 
         val pieChart = overviewView.findViewById<PieChart>(R.id.piechart);
         pieChart.clearChart()
-        Log.d("PieChartSlice", groupedList.size.toString())
 
         for (i in 0 until groupedList.size) {
 

@@ -3,13 +3,10 @@ package com.example.csc306b_cw
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
-import android.app.Instrumentation.ActivityResult
 import android.content.Intent
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +15,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import org.json.JSONArray
@@ -129,8 +125,7 @@ class ShowDetailsPopUp(detailsObj: JSONObject) : DialogFragment() {
                     detailImage.setImageDrawable(mainActivity.getDrawable(R.drawable.backgroundstuffdark))
                 }
             }
-        }catch (e: Exception){
-            Log.d("ImgSrcLOL", e.message.toString())
+        }catch (_: Exception){
         }
 
         // Inflate the layout for this fragment
@@ -181,8 +176,7 @@ class ShowDetailsPopUp(detailsObj: JSONObject) : DialogFragment() {
             val output = BufferedWriter(FileWriter(file))
             output.write(logsArray.toString())
             output.close()
-        }catch (e: Exception) {
-            Log.d("logs-saving", e.message.toString())
+        }catch (_: Exception) {
         }
     }
 

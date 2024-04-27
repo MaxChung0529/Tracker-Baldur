@@ -1,8 +1,6 @@
 package com.example.csc306b_cw
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.ColorDrawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,8 +50,7 @@ class LogsAdapter (private val itemsArrayList : MutableList<LogsData>, mainActiv
                             detailsToShow = logs.getJSONObject(i)
                         }
                     }
-                }catch (e: Exception) {
-                    Log.d("LOL",e.message.toString())
+                }catch (_: Exception) {
                 }
 
                 if (detailsToShow == null) {

@@ -1,12 +1,10 @@
 package com.example.csc306b_cw
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -153,22 +151,8 @@ class Goals() : Fragment() {
             val output = BufferedWriter(FileWriter(file))
             output.write(goalsArray.toString())
             output.close()
-        }catch (e: Exception) {
-            Log.d("goal-saving", e.message.toString())
+        }catch (_: Exception) {
         }
-    }
-
-    fun addHourToGoal(goal: GoalsData, numToAdd: Double) {
-
-        val storedGoals = getStoredGoals()
-
-        for (i in 0 until storedGoals.size) {
-            if (goal == storedGoals[i]) {
-                storedGoals[i].progressNow?.plus(numToAdd)
-                refreshStoredGoals(storedGoals)
-            }
-        }
-
     }
 
     private fun createJsonData(goalName: String?, interval: String?, unit: String?, duration: Double?
@@ -189,24 +173,23 @@ class Goals() : Fragment() {
         return json
     }
 
-
-//    companion object {
-//        /**
-//         * Use this factory method to create a new instance of
-//         * this fragment using the provided parameters.
-//         *
-//         * @param param1 Parameter 1.
-//         * @param param2 Parameter 2.
-//         * @return A new instance of fragment Goals.
-//         */
-//        // TODO: Rename and change types and number of parameters
-//        @JvmStatic
-//        fun newInstance(param1: String, param2: String) =
-//            Goals().apply {
-//                arguments = Bundle().apply {
-//                    putString(ARG_PARAM1, param1)
-//                    putString(ARG_PARAM2, param2)
-//                }
-//            }
-//    }
+    companion object {
+        /**
+         * Use this factory method to create a new instance of
+         * this fragment using the provided parameters.
+         *
+         * @param param1 Parameter 1.
+         * @param param2 Parameter 2.
+         * @return A new instance of fragment Goals.
+         */
+        // TODO: Rename and change types and number of parameters
+        @JvmStatic
+        fun newInstance(param1: String, param2: String) =
+            Goals().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_PARAM1, param1)
+                    putString(ARG_PARAM2, param2)
+                }
+            }
+    }
 }

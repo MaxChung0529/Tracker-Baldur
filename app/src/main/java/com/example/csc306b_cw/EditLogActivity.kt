@@ -13,8 +13,6 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -23,7 +21,6 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.constraintlayout.widget.ConstraintLayout
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedWriter
@@ -36,7 +33,6 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 class EditLogActivity : AppCompatActivity() {
-//    lateinit var mainActivity: MainActivity
     var date: String? = null
     var activityName: String? = null
     var startingTime: String? = null
@@ -49,8 +45,10 @@ class EditLogActivity : AppCompatActivity() {
     var currentlyChosenYear : Int = calendar.get(Calendar.YEAR)
     var currentlyChosenMonth : Int = calendar.get(Calendar.MONTH)
     var currentlyChosenDay : Int = calendar.get(Calendar.DAY_OF_MONTH)
-//    var imageView: ImageView? = null
-    var imageSrc: String? = null
+    var recordedStartHour = 0
+    var recordedStartMinute = 0
+    var recordedEndHour = 0
+    var recordedEndMinute = 0
     var btnChosen = false
     var bitMapUri: Uri? = null
     lateinit var titleInput: EditText
@@ -63,9 +61,27 @@ class EditLogActivity : AppCompatActivity() {
         val extra = intent.extras
         if (extra != null) {
             date = extra.getString("date")
+
+            val splitDate = date?.split("-")
+            currentlyChosenDay = splitDate?.get(0)?.toInt()!!
+            currentlyChosenMonth = splitDate?.get(1)?.toInt()!!
+            currentlyChosenYear = splitDate?.get(2)?.toInt()!!
+
+            chosenDate = date.toString()
+
             activityName = extra.getString("activityName")
             startingTime = extra.getString("startingTime")
+
+            val splitStartTime = startingTime?.split(":")
+            recordedStartHour = splitStartTime?.get(0)?.toInt()!!
+            recordedStartMinute = splitStartTime[1].toInt()
+
             endingTime = extra.getString("endingTime")
+
+            val splitEndTime = startingTime?.split(":")
+            recordedEndHour = splitEndTime?.get(0)?.toInt()!!
+            recordedEndMinute = splitEndTime[1].toInt()
+
             description = extra.getString("description")
             imgSrc = extra.getString("imgSrc")
         }
@@ -90,7 +106,6 @@ class EditLogActivity : AppCompatActivity() {
                 val btn = Button(buttonsScroll.context)
 
                 val btnIcon = getDrawable(btnsIcons.get(i).vector)
-                Log.d("DrawableID", btnIcon.toString())
                 if (btnIcon != null) {
                     btnIcon.setTintList(getColorStateList(findColour(btnsIcons.get(i).category)))
                 }
@@ -143,8 +158,7 @@ class EditLogActivity : AppCompatActivity() {
 
                 buttonsScroll.addView(btn)
             }
-        }catch (e: Exception) {
-            Log.d("IDK", e.message.toString())
+        }catch (_: Exception) {
         }
 
         val startingTimeBtn = findViewById<Button>(R.id.edit_start_time_picker)
@@ -181,7 +195,7 @@ class EditLogActivity : AppCompatActivity() {
             val isDarkModeOn = DarkModeFlags == Configuration.UI_MODE_NIGHT_YES
 
             if (!isDarkModeOn) {
-                imageView.setImageDrawable(getDrawable(R.drawable.backgroundstuff))
+                imageView.setImageDrawable(getDrawable(R.drawable.backgroundstuffedit))
             }else {
                 imageView.setImageDrawable(getDrawable(R.drawable.backgroundstuffblack))
             }
@@ -208,8 +222,7 @@ class EditLogActivity : AppCompatActivity() {
 
                 try {
                     imgSrc = saveImage(MediaStore.Images.Media.getBitmap(contentResolver, bitMapUri))
-                }catch (e: Exception) {
-                    Log.d("ImageURI", e.message.toString())
+                }catch (_: Exception) {
                 }
                 Toast.makeText(this, "Log Edited", Toast.LENGTH_LONG).show()
 
@@ -238,7 +251,7 @@ class EditLogActivity : AppCompatActivity() {
         val datePickerDialog = DatePickerDialog(this,
             {DatePicker, year: Int, month: Int, day: Int ->
                 val selectedDate = Calendar.getInstance()
-                selectedDate.set(year, month, day)
+                selectedDate.set(currentlyChosenYear, currentlyChosenMonth, currentlyChosenDay)
 
                 currentlyChosenYear = year
                 currentlyChosenMonth = month
@@ -314,8 +327,7 @@ class EditLogActivity : AppCompatActivity() {
                     btnList.add(ButtonIcons(tmpName, tmpColour, vectorID))
                 }
             }
-        }catch (e: Exception) {
-            Log.d("Buttons-finding", e.message.toString())
+        }catch (_: Exception) {
         }
         return btnList
     }
@@ -333,7 +345,7 @@ class EditLogActivity : AppCompatActivity() {
 
             endTimeBtn.setText(SimpleDateFormat("HH:mm").format(calendarTime.time))
         }
-        TimePickerDialog(this, timeSetListener, calendarTime.get(Calendar.HOUR_OF_DAY), calendarTime.get(Calendar.MINUTE), true).show()
+        TimePickerDialog(this, timeSetListener, recordedStartHour, recordedStartMinute, true).show()
         return startTime
     }
 
@@ -351,14 +363,13 @@ class EditLogActivity : AppCompatActivity() {
             endTimeBtn.setText(endTime)
         }
 
-        TimePickerDialog(this, timeSetListener, calendarTime.get(Calendar.HOUR_OF_DAY), calendarTime.get(Calendar.MINUTE), true).show()
+            TimePickerDialog(this, timeSetListener, recordedEndHour, recordedEndMinute, true).show()
     }
 
     private fun browseImage(galleryImage: ActivityResultLauncher<String>) {
         try {
             galleryImage.launch("image/*")
-        }catch (e: Exception) {
-            Log.d("LOL", e.message.toString())
+        }catch (_: Exception) {
         }
     }
 
@@ -379,8 +390,7 @@ class EditLogActivity : AppCompatActivity() {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
             fileOutputStream.flush()
             fileOutputStream.close()
-        }catch (e: Exception) {
-            Log.d("Images-saving", e.message.toString())
+        }catch (_: Exception) {
         }
         return file.toString()
     }
@@ -455,8 +465,7 @@ class EditLogActivity : AppCompatActivity() {
                 val output = BufferedWriter(FileWriter(file))
                 output.write(logsArray.toString())
                 output.close()
-            } catch (e: Exception) {
-                Log.d("logs-saving", e.message.toString())
+            } catch (_: Exception) {
             }
     }
 
@@ -491,8 +500,7 @@ class EditLogActivity : AppCompatActivity() {
             val output = BufferedWriter(FileWriter(file))
             output.write(logsArray.toString())
             output.close()
-        }catch (e: Exception) {
-            Log.d("logs-saving", e.message.toString())
+        }catch (_: Exception) {
         }
     }
 

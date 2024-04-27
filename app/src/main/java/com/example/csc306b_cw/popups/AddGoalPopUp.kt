@@ -10,7 +10,6 @@ import android.icu.util.Calendar
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -110,7 +109,6 @@ class AddGoalPopUp() : DialogFragment() {
                 val btn = Button(buttonsScroll.context)
 
                 val btnIcon = mainActivity.getDrawable(btnsIcons.get(i).vector)
-                Log.d("DrawableID", btnIcon.toString())
                 if (btnIcon != null) {
                     btnIcon.setTintList(mainActivity.getColorStateList(mainActivity.findColour(btnsIcons.get(i).category)))
                 }
@@ -155,8 +153,7 @@ class AddGoalPopUp() : DialogFragment() {
 
                 buttonsScroll.addView(btn)
             }
-        }catch (e: Exception) {
-            Log.d("IDK", e.message.toString())
+        }catch (_: Exception) {
         }
 
 
@@ -202,8 +199,7 @@ class AddGoalPopUp() : DialogFragment() {
                 override fun onNothingSelected(parent: AdapterView<*>?) {
                 }
             }
-        }catch (e: Exception) {
-            Log.d("LOL", e.message.toString())
+        }catch (_: Exception) {
         }
 
 
@@ -229,8 +225,7 @@ class AddGoalPopUp() : DialogFragment() {
                 override fun onNothingSelected(parent: AdapterView<*>?) {
                 }
             }
-        }catch (e: Exception) {
-            Log.d("LOL", e.message.toString())
+        }catch (_: Exception) {
         }
 
         val intervalLogDurationSpinner = popupView.findViewById<Spinner>(R.id.intervalDurationHourSpinner)
@@ -258,8 +253,7 @@ class AddGoalPopUp() : DialogFragment() {
                 override fun onNothingSelected(parent: AdapterView<*>?) {
                 }
             }
-        }catch (e: Exception) {
-            Log.d("LOL", e.message.toString())
+        }catch (_: Exception) {
         }
 
         val logDurationMinuteSpinner = popupView.findViewById<Spinner>(R.id.intervalDurationMinuteSpinner)
@@ -287,8 +281,7 @@ class AddGoalPopUp() : DialogFragment() {
                 override fun onNothingSelected(parent: AdapterView<*>?) {
                 }
             }
-        }catch (e: Exception) {
-            Log.d("LOL", e.message.toString())
+        }catch (_: Exception) {
         }
 
         val submitBtn = popupView.findViewById<Button>(R.id.goal_submit_btn)
@@ -306,7 +299,6 @@ class AddGoalPopUp() : DialogFragment() {
                         )
                     )
                 }catch (e: Exception) {
-                    Log.d("ImageURI", e.message.toString())
                     imageSrc = ""
                 }
 
@@ -391,8 +383,7 @@ class AddGoalPopUp() : DialogFragment() {
     private fun browseImage(galleryImage: ActivityResultLauncher<String>) {
         try {
             galleryImage.launch("image/*")
-        }catch (e: Exception) {
-            Log.d("LOL", e.message.toString())
+        }catch (_: Exception) {
         }
     }
 
@@ -414,8 +405,7 @@ class AddGoalPopUp() : DialogFragment() {
             Toast.makeText(mainActivity, "Image saved", Toast.LENGTH_LONG).show()
             fileOutputStream.flush()
             fileOutputStream.close()
-        }catch (e: Exception) {
-            Log.d("Images-saving", e.message.toString())
+        }catch (_: Exception) {
         }
         return file.toString()
     }
@@ -498,8 +488,7 @@ class AddGoalPopUp() : DialogFragment() {
             val output = BufferedWriter(FileWriter(file))
             output.write(goalsArray.toString())
             output.close()
-        }catch (e: Exception) {
-            Log.d("goal-saving", e.message.toString())
+        }catch (_: Exception) {
         }
         dismiss()
     }

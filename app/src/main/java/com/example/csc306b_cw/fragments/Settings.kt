@@ -1,12 +1,9 @@
 package com.example.csc306b_cw
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import androidx.fragment.app.Fragment
@@ -15,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
-import android.widget.ScrollView
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
@@ -26,7 +22,6 @@ import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
-import kotlin.properties.Delegates
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -65,6 +60,8 @@ class Settings() : Fragment() {
         val DarkModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         var isDarkModeOn = DarkModeFlags == Configuration.UI_MODE_NIGHT_YES
 
+
+
         val themeSwitch = settingView.findViewById<Switch>(R.id.theme_switch)
         if (isDarkModeOn) {
             themeSwitch.isChecked = true
@@ -86,6 +83,8 @@ class Settings() : Fragment() {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             }
         }
+
+        val fontPref = mainActivity.getSharedPreferences("FontPref", Context.MODE_PRIVATE)
 
         val exportBtn = settingView.findViewById<Button>(R.id.exportBtn)
         exportBtn.setOnClickListener{
@@ -141,23 +140,11 @@ class Settings() : Fragment() {
         }
 
 
-//        val row = LinearLayout(categoryScroll.context)
-//        row.orientation = LinearLayout.HORIZONTAL
-//        row.gravity = Gravity.CENTER
-//        row.layoutParams = rowParam
-//
-//        val colourBtn = Button(row.context)
-//        colourBtn.compoundDrawables
-//        colourBtn.layoutParams = colourParam
-//
-//        row.addView(colourBtn)
-//        categoryScroll.addView(row)
-
-
         return settingView
     }
 
     private fun getCatColours() {
+        categoryColours.clear()
 
         var file: File? = null
         val root = mainActivity.getExternalFilesDir(null)?.absolutePath

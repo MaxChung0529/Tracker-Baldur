@@ -12,7 +12,6 @@ import android.icu.util.Calendar
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +23,6 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import org.json.JSONArray
@@ -122,7 +120,6 @@ class AddLogPopUp() : DialogFragment() {
                 val btn = Button(buttonsScroll.context)
 
                 val btnIcon = mainActivity.getDrawable(btnsIcons.get(i).vector)
-                Log.d("DrawableID", btnIcon.toString())
                 if (btnIcon != null) {
                     btnIcon.setTintList(mainActivity.getColorStateList(mainActivity.findColour(btnsIcons.get(i).category)))
                 }
@@ -167,8 +164,7 @@ class AddLogPopUp() : DialogFragment() {
 
                 buttonsScroll.addView(btn)
             }
-        }catch (e: Exception) {
-            Log.d("IDK", e.message.toString())
+        }catch (_: Exception) {
         }
 
         val datePicker = popUpView.findViewById<Button>(R.id.add_log_date_picker)
@@ -207,7 +203,6 @@ class AddLogPopUp() : DialogFragment() {
                 try {
                     imageSrc = saveImage(MediaStore.Images.Media.getBitmap(mainActivity.contentResolver, bitMapUri))
                 }catch (e: Exception) {
-                    Log.d("ImageURI", e.message.toString())
                     imageSrc = ""
                 }
 
@@ -243,8 +238,7 @@ class AddLogPopUp() : DialogFragment() {
                     val output = BufferedWriter(FileWriter(file))
                     output.write(logsArray.toString())
                     output.close()
-                }catch (e: Exception) {
-                    Log.d("logs-saving", e.message.toString())
+                }catch (_: Exception) {
                 }
 
                 checkGoalsMatch(entry)
@@ -399,8 +393,7 @@ class AddLogPopUp() : DialogFragment() {
             val output = BufferedWriter(FileWriter(file))
             output.write(goalsArray.toString())
             output.close()
-        }catch (e: Exception) {
-            Log.d("goal-saving", e.message.toString())
+        }catch (_: Exception) {
         }
     }
 
@@ -443,8 +436,7 @@ class AddLogPopUp() : DialogFragment() {
             Toast.makeText(mainActivity, "Image saved", Toast.LENGTH_LONG).show()
             fileOutputStream.flush()
             fileOutputStream.close()
-        }catch (e: Exception) {
-            Log.d("Images-saving", e.message.toString())
+        }catch (_: Exception) {
         }
         return file.toString()
     }
@@ -452,8 +444,7 @@ class AddLogPopUp() : DialogFragment() {
     private fun browseImage(galleryImage: ActivityResultLauncher<String>) {
         try {
             galleryImage.launch("image/*")
-        }catch (e: Exception) {
-            Log.d("LOL", e.message.toString())
+        }catch (_: Exception) {
         }
     }
     private fun showDatePicker(datePickerBtn: Button) {
@@ -550,7 +541,7 @@ class AddLogPopUp() : DialogFragment() {
             TimePickerDialog(
                 mainActivity,
                 timeSetListener,
-                calendarTime.get(Calendar.HOUR_OF_DAY),
+                endTimeBtn.text.split(":")[0].toInt(),
                 calendarTime.get(Calendar.MINUTE),
                 true
             ).show()

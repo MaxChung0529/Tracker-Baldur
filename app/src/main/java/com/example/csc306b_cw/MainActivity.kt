@@ -5,10 +5,6 @@ import android.content.Context
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
-import android.view.View
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.csc306b_cw.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -17,12 +13,10 @@ import org.json.JSONObject
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
-import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var bottomNavBar: BottomNavigationView
     var justSwitched = false
     var logFragment = Logs()
     var goalFragment = Goals()
@@ -134,8 +128,7 @@ class MainActivity : AppCompatActivity() {
                     btnList.add(ButtonIcons(tmpName, tmpColour, vectorID))
                 }
             }
-        }catch (e: Exception) {
-            Log.d("Buttons-finding", e.message.toString())
+        }catch (_: Exception) {
         }
         return btnList
     }
@@ -179,8 +172,7 @@ class MainActivity : AppCompatActivity() {
                 val output = BufferedWriter(FileWriter(file))
                 output.write(coloursArray.toString())
                 output.close()
-            } catch (e: Exception) {
-                Log.d("logs-saving", e.message.toString())
+            } catch (_: Exception) {
             }
         }
     }

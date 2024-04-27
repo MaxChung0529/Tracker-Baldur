@@ -6,7 +6,6 @@ import android.content.Context
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -96,7 +95,6 @@ class FilterCriteriaPopUp() : DialogFragment() {
                 val btn = Button(buttonsScroll.context)
 
                 val btnIcon = mainActivity.getDrawable(btnsIcons.get(i).vector)
-                Log.d("DrawableID", btnIcon.toString())
                 if (btnIcon != null) {
                     btnIcon.setTintList(mainActivity.getColorStateList(mainActivity.findColour(btnsIcons.get(i).category)))
                 }
@@ -116,7 +114,7 @@ class FilterCriteriaPopUp() : DialogFragment() {
 
                     if (!btnChosen) {
                         btn.isSelected = true
-                        btn.backgroundTintList = mainActivity.getColorStateList(R.color.purple)
+                        btn.backgroundTintList = mainActivity.getColorStateList(R.color.gray)
                         btnChosen = true
                         filterTitle.setText(btn.text)
 
@@ -132,7 +130,7 @@ class FilterCriteriaPopUp() : DialogFragment() {
                                 catBtns.get(i).backgroundTintList = mainActivity.getColorStateList(R.color.light_gray)
                             }
                             btn.isSelected = true
-                            btn.backgroundTintList = mainActivity.getColorStateList(R.color.purple)
+                            btn.backgroundTintList = mainActivity.getColorStateList(R.color.gray)
                             btnChosen = true
                             filterTitle.setText(btn.text)
                         }
@@ -142,8 +140,7 @@ class FilterCriteriaPopUp() : DialogFragment() {
 
                 buttonsScroll.addView(btn)
             }
-        }catch (e: Exception) {
-            Log.d("IDK", e.message.toString())
+        }catch (_: Exception) {
         }
 
         val greaterLessSpinner = popupView.findViewById<Spinner>(R.id.greaterOrLessThanSpinner)

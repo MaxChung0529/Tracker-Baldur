@@ -5,8 +5,6 @@ import android.content.Context
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.os.Bundle
-import android.preference.PreferenceManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,17 +13,15 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.PopupWindow
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import java.io.InputStreamReader
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import org.json.JSONArray
@@ -44,21 +40,22 @@ private const val ARG_PARAM2 = "param2"
  * Use the [Logs.newInstance] factory method to
  * create an instance of this fragment.
  */
-class Logs() : Fragment(){
+class Logs() : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    lateinit var mainAct : MainActivity
-//    val mainAct = mainActivity
+    lateinit var mainActivity: MainActivity
+
+    //    val mainAct = mainActivity
     val calendar = Calendar.getInstance()
-    var currentlyChosenYear : Int = calendar.get(Calendar.YEAR)
-    var currentlyChosenMonth : Int = calendar.get(Calendar.MONTH)
-    var currentlyChosenDay : Int = calendar.get(Calendar.DAY_OF_MONTH)
+    var currentlyChosenYear: Int = calendar.get(Calendar.YEAR)
+    var currentlyChosenMonth: Int = calendar.get(Calendar.MONTH)
+    var currentlyChosenDay: Int = calendar.get(Calendar.DAY_OF_MONTH)
     var dateToShow: String = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
     var currentLogList = ArrayList<LogsData>()
     lateinit var contentView: View
     lateinit var sortSpinner: Spinner
-    lateinit var datePickerBtn : Button
+    lateinit var datePickerBtn: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,21 +70,27 @@ class Logs() : Fragment(){
         savedInstanceState: Bundle?
     ): View? {
 
-        mainAct = context as MainActivity
+        mainActivity = context as MainActivity
         // Inflate the layout for this fragment
-        contentView = inflater.inflate(R.layout.fragment_logs, container,false)
+        contentView = inflater.inflate(R.layout.fragment_logs, container, false)
         val recyclerView = contentView.findViewById<RecyclerView>(R.id.recycler)
+        recyclerView.addItemDecoration(
+            DividerItemDecoration(
+                mainActivity,
+                LinearLayoutManager.HORIZONTAL
+            )
+        )
 
         val date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
         val dataList = getDateLogs()
-        var adapter = LogsAdapter(dataList, mainAct, date)
+        var adapter = LogsAdapter(dataList, mainActivity, date)
         recyclerView.adapter = adapter
         val layoutManager = LinearLayoutManager(this.activity)
         recyclerView.layoutManager = layoutManager
 
 
         val filterLogBtn = contentView.findViewById<Button>(R.id.filter)
-        filterLogBtn.setOnClickListener{
+        filterLogBtn.setOnClickListener {
             showFilterPopUp()
         }
 
@@ -100,18 +103,23 @@ class Logs() : Fragment(){
 
         val searchInput = contentView.findViewById<EditText>(R.id.searchInput)
         val searchBtn = contentView.findViewById<Button>(R.id.search)
-        searchBtn.setOnClickListener{
+        searchBtn.setOnClickListener {
             if (searchInput.text.toString() != "") {
                 searchLogs(searchInput.text.toString(), datePickerBtn)
             }
         }
 
         sortSpinner = contentView.findViewById<Spinner>(R.id.sortSpinner)
-        val sortValArray = arrayOf("Starting time(ASC)", "Starting time(DESC)", "Duration(ASC)", "Duration(DESC)")
+        val sortValArray =
+            arrayOf("Starting time(ASC)", "Starting time(DESC)", "Duration(ASC)", "Duration(DESC)")
 
         try {
             sortSpinner.adapter =
-                ArrayAdapter(mainAct, android.R.layout.simple_spinner_dropdown_item, sortValArray)
+                ArrayAdapter(
+                    mainActivity,
+                    android.R.layout.simple_spinner_dropdown_item,
+                    sortValArray
+                )
 
 
             sortSpinner.onItemSelectedListener = object : OnItemSelectedListener {
@@ -127,16 +135,15 @@ class Logs() : Fragment(){
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
-                    val toast = Toast.makeText(mainAct, "LOL", Toast.LENGTH_LONG)
+                    val toast = Toast.makeText(mainActivity, "LOL", Toast.LENGTH_LONG)
                     toast.show()
                 }
             }
-        }catch (e: Exception) {
-            Log.d("LOL", e.message.toString())
+        } catch (_: Exception) {
         }
 
         val addLogBtn = contentView.findViewById<FloatingActionButton>(R.id.addLog)
-        addLogBtn.setOnClickListener{
+        addLogBtn.setOnClickListener {
             showPopUp()
         }
 
@@ -150,7 +157,7 @@ class Logs() : Fragment(){
 
     private fun getStoredLogs(): JSONArray {
         var file: File? = null
-        val root = mainAct.getExternalFilesDir(null)?.absolutePath
+        val root = mainActivity.getExternalFilesDir(null)?.absolutePath
         var myDir = File("$root/TrackerBaldur")
 
         val fileName = "logsData.json"
@@ -167,7 +174,7 @@ class Logs() : Fragment(){
         val list = ArrayList<LogsData>()
 
         try {
-            val root = mainAct.getExternalFilesDir(null)?.absolutePath
+            val root = mainActivity.getExternalFilesDir(null)?.absolutePath
             var myDir = File("$root/TrackerBaldur")
 
             val fileName = "logsData.json"
@@ -191,8 +198,10 @@ class Logs() : Fragment(){
                             activityName,
                             startingTime,
                             endingTime,
-                            Math.round((endingTime.replace(":",".").toDouble()
-                                    - startingTime.replace(":",".").toDouble()) * 100.00)
+                            Math.round(
+                                (endingTime.replace(":", ".").toDouble()
+                                        - startingTime.replace(":", ".").toDouble()) * 100.00
+                            )
                                     / 100.00,
                             description,
                             imgSrc
@@ -200,14 +209,18 @@ class Logs() : Fragment(){
                     )
                 }
             }
-        }catch (e: Exception) {
-            Log.d("LOL",e.message.toString())
+        } catch (_: Exception) {
         }
         currentLogList = list
         return list
     }
 
-    private fun changeLogs(contentView: View, formattedDate: String?, sortString: String?, filter: Boolean?) {
+    private fun changeLogs(
+        contentView: View,
+        formattedDate: String?,
+        sortString: String?,
+        filter: Boolean?
+    ) {
         val recyclerView = contentView.findViewById<RecyclerView>(R.id.recycler)
         recyclerView?.adapter?.notifyDataSetChanged()
 
@@ -228,7 +241,7 @@ class Logs() : Fragment(){
     }
 
     private fun fillRecyclerView(dataList: ArrayList<LogsData>, contentView: View) {
-        var adapter = LogsAdapter(dataList, mainAct, dateToShow)
+        var adapter = LogsAdapter(dataList, mainActivity, dateToShow)
         val recyclerView = contentView.findViewById<RecyclerView>(R.id.recycler)
         recyclerView.adapter = adapter
         val layoutManager = LinearLayoutManager(this.activity)
@@ -249,7 +262,8 @@ class Logs() : Fragment(){
             val imgSrc = tmpLog.getString("imgSrc")
 
             if (activityName.lowercase().contains(words.lowercase())
-                || description.lowercase().contains(words.lowercase())) {
+                || description.lowercase().contains(words.lowercase())
+            ) {
 
                 searchedLogsList.add(
                     LogsData(
@@ -257,8 +271,10 @@ class Logs() : Fragment(){
                         activityName,
                         startingTime,
                         endingTime,
-                        Math.round((endingTime.replace(":",".").toDouble()
-                                - startingTime.replace(":",".").toDouble()) * 100.00)
+                        Math.round(
+                            (endingTime.replace(":", ".").toDouble()
+                                    - startingTime.replace(":", ".").toDouble()) * 100.00
+                        )
                                 / 100.00,
                         description,
                         imgSrc
@@ -268,7 +284,7 @@ class Logs() : Fragment(){
 
         }
 
-        datePickerBtn.setText(mainAct.getString(R.string.allDate))
+        datePickerBtn.setText(mainActivity.getString(R.string.allDate))
         fillRecyclerView(searchedLogsList, contentView)
     }
 
@@ -276,11 +292,11 @@ class Logs() : Fragment(){
 
         if (criteria == "Starting time(DESC)") {
             logList.sortByDescending { it.startingTime }
-        }else if (criteria == "Duration(ASC)"){
+        } else if (criteria == "Duration(ASC)") {
             logList.sortBy { it.duration }
-        }else if (criteria == "Duration(DESC)"){
+        } else if (criteria == "Duration(DESC)") {
             logList.sortByDescending { it.duration }
-        }else {
+        } else {
             logList.sortBy { it.startingTime }
         }
 
@@ -290,14 +306,14 @@ class Logs() : Fragment(){
     private fun filterLogs(contentView: View): ArrayList<LogsData> {
 
         val recyclerView = contentView.findViewById<RecyclerView>(R.id.recycler)
-        val filterPref = mainAct.getSharedPreferences("filterPref", Context.MODE_PRIVATE)
+        val filterPref = mainActivity.getSharedPreferences("filterPref", Context.MODE_PRIVATE)
 
         val dateToFiter = filterPref.getString("filterDate", "Any Date")
         datePickerBtn.setText(dateToFiter)
 
         val filterName = filterPref.getString("filterTitle", "")
         val filterSymbol = filterPref.getString("logicSymbol", "")
-        val filterHour = filterPref.getInt("filterHours",0)
+        val filterHour = filterPref.getInt("filterHours", 0)
 
         val editor = filterPref.edit()
         editor.clear()
@@ -308,7 +324,7 @@ class Logs() : Fragment(){
 
         try {
 
-            val root = mainAct.getExternalFilesDir(null)?.absolutePath
+            val root = mainActivity.getExternalFilesDir(null)?.absolutePath
             var myDir = File("$root/TrackerBaldur")
 
             val fileName = "logsData.json"
@@ -327,8 +343,10 @@ class Logs() : Fragment(){
                 val description = logs.getJSONObject(i).getString("description")
                 val imgSrc = logs.getJSONObject(i).getString("imgSrc")
 
-                val duration = Math.round((endingTime.replace(":",".").toDouble()
-                        - startingTime.replace(":",".").toDouble()) * 100.00) / 100.00
+                val duration = Math.round(
+                    (endingTime.replace(":", ".").toDouble()
+                            - startingTime.replace(":", ".").toDouble()) * 100.00
+                ) / 100.00
 
                 val recordNotMatched = (dateToFiter != "Any Date" && date != dateToFiter)
                         || (filterName != "" && filterName != activityName)
@@ -353,8 +371,7 @@ class Logs() : Fragment(){
                     )
                 }
             }
-        }catch (e: Exception) {
-            Log.d("LOL",e.message.toString())
+        } catch (_: Exception) {
         }
         currentLogList = list
         return list
@@ -362,20 +379,25 @@ class Logs() : Fragment(){
 
     }
 
-    private fun showFilterPopUp(){
+    private fun showFilterPopUp() {
         val showPopUp = FilterCriteriaPopUp()
         showPopUp.show((activity as AppCompatActivity).supportFragmentManager, "showPopUp")
     }
 
-    private fun showPopUp(){
+    private fun showPopUp() {
         val showPopUp = AddLogPopUp()
         showPopUp.show((activity as AppCompatActivity).supportFragmentManager, "showPopUp")
     }
 
-    private fun showDatePicker(datePickerBtn: Button, dataList: ArrayList<LogsData>, contentView: View) {
+    private fun showDatePicker(
+        datePickerBtn: Button,
+        dataList: ArrayList<LogsData>,
+        contentView: View
+    ) {
 
-        val datePickerDialog = DatePickerDialog(mainAct,
-            {DatePicker, year: Int, month: Int, day: Int ->
+        val datePickerDialog = DatePickerDialog(
+            mainActivity,
+            { DatePicker, year: Int, month: Int, day: Int ->
                 val selectedDate = Calendar.getInstance()
                 selectedDate.set(year, month, day)
 
@@ -402,29 +424,29 @@ class Logs() : Fragment(){
 
         )
         datePickerDialog.show()
-        }
+    }
 
     fun needToFilter() {
         changeLogs(contentView, null, null, true)
     }
-}
 
-//        companion object {
-//        /**
-//         * Use this factory method to create a new instance of
-//         * this fragment using the provided parameters.
-//         *
-//         * @param param1 Parameter 1.
-//         * @param param2 Parameter 2.
-//         * @return A new instance of fragment Goals.
-//         */
-//        // TODO: Rename and change types and number of parameters
-//        @JvmStatic
-//        fun newInstance(param1: String, param2: String) =
-//            Logs().apply {
-//                arguments = Bundle().apply {
-//                    putString(ARG_PARAM1, param1)
-//                    putString(ARG_PARAM2, param2)
-//                }
-//            }
-//    }
+    companion object {
+        /**
+         * Use this factory method to create a new instance of
+         * this fragment using the provided parameters.
+         *
+         * @param param1 Parameter 1.
+         * @param param2 Parameter 2.
+         * @return A new instance of fragment Goals.
+         */
+        // TODO: Rename and change types and number of parameters
+        @JvmStatic
+        fun newInstance(param1: String, param2: String) =
+            Logs().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_PARAM1, param1)
+                    putString(ARG_PARAM2, param2)
+                }
+            }
+    }
+}
