@@ -44,7 +44,7 @@
         <EditText
             android:id="@+id/filter_title_input"
             android:layout_width="235dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:ems="10"
@@ -86,17 +86,17 @@
         <Spinner
             android:id="@+id/greaterOrLessThanSpinner"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
+            android:layout_marginStart="5dp"
             android:textAlignment="textEnd"
-            tools:ignore="RtlCompat"
-            android:layout_marginStart="5dp"/>
+            tools:ignore="RtlCompat" />
 
         <Spinner
             android:id="@+id/greaterOrLessThanNumSpinner"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
 
         <TextView
             android:id="@+id/filterDurationHour"

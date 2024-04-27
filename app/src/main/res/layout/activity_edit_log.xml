@@ -41,11 +41,11 @@
 
         <EditText
             android:id="@+id/edit_title_input"
-            android:layout_width="235dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:ems="10"
+            android:ems="15"
             android:hint="@string/cat_title_hint"
             android:inputType="text"
             android:textAlignment="center" />
@@ -95,7 +95,8 @@
             android:layout_margin="0dp"
             android:stateListAnimator="@null"
             android:textAlignment="center"
-            app:cornerRadius="8dp"/>
+            app:cornerRadius="8dp"
+            android:text="@string/starting_time"/>
 
         <TextView
             android:id="@+id/edit_end_time"
@@ -117,7 +118,8 @@
             android:layout_margin="3dp"
             android:stateListAnimator="@null"
             android:textAlignment="center"
-            app:cornerRadius="8dp"/>
+            app:cornerRadius="8dp"
+            android:text="@string/ending_time"/>
     </LinearLayout>
 
     <LinearLayout

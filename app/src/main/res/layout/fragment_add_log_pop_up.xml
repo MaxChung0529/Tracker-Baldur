@@ -41,7 +41,7 @@
         <EditText
             android:id="@+id/title_input"
             android:layout_width="235dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:ems="10"
@@ -93,7 +93,8 @@
             android:layout_margin="0dp"
             android:stateListAnimator="@null"
             android:textAlignment="center"
-            app:cornerRadius="8dp"/>
+            app:cornerRadius="8dp"
+            android:text="@string/starting_time"/>
 
         <TextView
             android:id="@+id/end_time"
@@ -114,7 +115,8 @@
             android:layout_margin="3dp"
             android:stateListAnimator="@null"
             android:textAlignment="center"
-            app:cornerRadius="8dp"/>
+            app:cornerRadius="8dp"
+            android:text="@string/ending_time"/>
     </LinearLayout>
 
     <EditText

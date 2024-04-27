@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.csc306b_cw"
+    namespace = "com.example.csc306b"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.csc306b_cw"
+        applicationId = "com.example.csc306b"
         minSdk = 28
         targetSdk = 34
         versionCode = 1

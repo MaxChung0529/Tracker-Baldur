@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CSC306B-CW</string>
+    <string name="app_name">Baldur</string>
     <string name="name">Name</string>
     <string name="reply">Reply</string>
     <string name="askName">Howdy stranger! I am Baldur, What is your name?</string>
@@ -72,11 +72,6 @@
 
 
     <!--Dummy Data-->
-    <string name="date1">Apr 15</string>
-    <string name="date2">Apr 16</string>
-    <string name="date3">Apr 17</string>
-    <string name="date4">Apr 18</string>
-    <string name="date5">Apr 19</string>
     <string name="starting_time">7 pm</string>
     <string name="ending_time">8 pm</string>
     <string name="duration_hour">1 hour</string>
