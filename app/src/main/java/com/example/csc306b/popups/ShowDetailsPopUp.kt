@@ -73,7 +73,7 @@ class ShowDetailsPopUp(detailsObj: JSONObject) : DialogFragment() {
 
         val editLogBtn = popUpView.findViewById<Button>(R.id.editBtn)
         editLogBtn.setOnClickListener{
-            //Implicit Intent?
+            //Explicit intent
             val editLogIntent = Intent(mainActivity, EditLogActivity::class.java)
             editLogIntent.putExtra("date", detailsObj.getString("date"))
             editLogIntent.putExtra("activityName", detailsObj.getString("activityName"))
@@ -82,9 +82,7 @@ class ShowDetailsPopUp(detailsObj: JSONObject) : DialogFragment() {
             editLogIntent.putExtra("description", detailsObj.getString("description"))
             editLogIntent.putExtra("imgSrc",detailsObj.getString("imgSrc"))
 
-//            startActivity(editLogIntent)
             startForResult.launch(editLogIntent)
-//            dismiss()
         }
 
         val deleteLogBtn = popUpView.findViewById<Button>(R.id.deleteBtn)
